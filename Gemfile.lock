@@ -153,9 +153,6 @@ GEM
     nokogiri (1.12.5-x64-mingw32)
       racc (~> 1.4)
     orm_adapter (0.5.0)
-    pg (1.3.4)
-    pg (1.3.4-x64-mingw-ucrt)
-    pg (1.3.4-x64-mingw32)
     puma (5.6.5)
       nio4r (~> 2.0)
     racc (1.6.1)
@@ -269,7 +266,6 @@ DEPENDENCIES
   devise
   importmap-rails
   jbuilder
-  pg
   puma (~> 5.0)
   rails (~> 7.0.4)
   refile!
