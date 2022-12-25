@@ -64,14 +64,14 @@ group :development do
 end
 
 # 開発環境、テスト環境
-group :development, :test do 
-  gem 'sqlite3' # sqlite3
-end
+# group :development, :test do 
+gem 'sqlite3' # sqlite3
+# end
 
 # 本番環境
-group :production do 
-  gem 'pg' # PostgreSQL
-end
+# group :production do 
+#   gem 'pg' # PostgreSQL
+# end
 
 gem 'devise'
 gem "refile", require: "refile/rails", github: 'manfe/refile'
