@@ -40,6 +40,9 @@
             <div class="navbar-item">
               <div class="field is-grouped">
                 <p class="control">
+                  <%= link_to "グループ一覧", groups_path, class: " button is-warning is-light" %>
+                </p>
+                <p class="control">
                   <%= link_to "ユーザー一覧", users_path, class: " button is-warning is-light" %>
                 </p>
                 <p class="control">
@@ -51,6 +54,9 @@
         </div>
       <% else %>
         <div id="navbarExampleTransparentExample" class="navbar-menu">
+          <div class="navbar-item">
+            <%= link_to "グループ一覧", groups_path, class: "navbar-item button is-warning is-light" %>
+          </div>
           <div class="navbar-item">
             <%= link_to "ユーザー一覧", users_path, class: "navbar-item button is-warning is-light" %>
           </div>

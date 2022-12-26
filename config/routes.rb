@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root to: "home#index"
   resources :users
-  resources :groups do    #ここ！
+  resources :groups do
     get "join" => "groups#join"
   end
 end
