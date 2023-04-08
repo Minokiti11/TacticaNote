@@ -1,80 +1,83 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>TacticaNote</title>
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+    <head>
+      <title>TacticaNote</title>
+      <%= csrf_meta_tags %>
+      <%= csp_meta_tag %>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" integrity="sha256-UzFD2WYH2U1dQpKDjjZK72VtPeWP50NoJjd26rnAdUI=" crossorigin="anonymous" />
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-  </head>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" integrity="sha256-UzFD2WYH2U1dQpKDjjZK72VtPeWP50NoJjd26rnAdUI=" crossorigin="anonymous" />
+      <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+      <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    </head>
 
-  <body>
-    <% if flash[:notice] %>
-      <div class="notification is-info">
-        <p class="notice"><%= notice %></p>
-      </div>
-    <% end %>
-
-    <% if flash[:alert] %>
-      <div class="notification is-danger">
-        <p class="alert"><%= alert %></p>
-      </div>
-    <% end %>
-
-    <nav class="navbar is-warning">
-      <div class="navbar-brand">
-        <%= link_to root_path, class: "navbar-item" do %>
-          <h1 class="title is-4">TacticaNote</h1>
+    <body>
+        <% if flash[:notice] %>
+          <div class="notification is-info">
+            <p class="notice"><%= notice %></p>
+          </div>
         <% end %>
-        <div class="navbar-burger burger" data-target="navbarExampleTransparentExample">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </div>
-      <% if user_signed_in? %>
-        <div id="navbarExampleTransparentExample" class="navbar-menu">
-          <div class="navbar-end">
-            <div class="navbar-item">
-              <div class="field is-grouped">
-                <p class="control">
-                  <%= link_to "グループ一覧", groups_path, class: " button is-warning is-light" %>
-                </p>
-                <p class="control">
-                  <%= link_to "ユーザー一覧", users_path, class: " button is-warning is-light" %>
-                </p>
-                <p class="control">
-                  <%= button_to "ログアウト", destroy_user_session_path, method: :delete, class: "button is-warning is-light" %>
-                </p>
-              </div>
+
+        <% if flash[:alert] %>
+          <div class="notification is-danger">
+            <p class="alert"><%= alert %></p>
+          </div>
+        <% end %>
+
+        <nav class = "navbar" style="background-color: rgb(55, 68, 81);">
+            <div class="navbar-brand" style="height: 100px;">
+                <%= link_to root_path, class: "navbar-item" do %>
+                  <h1 class="title is-3" style="color: rgb(255,255,255);">TacticaNote</h1>
+                <% end %>
+
+                <div class="navbar-burger burger" data-target="navbarExampleTransparentExample">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
             </div>
-          </div>
-        </div>
-      <% else %>
-        <div id="navbarExampleTransparentExample" class="navbar-menu">
-          <div class="navbar-item">
-            <%= link_to "グループ一覧", groups_path, class: "navbar-item button is-warning is-light" %>
-          </div>
-          <div class="navbar-item">
-            <%= link_to "ユーザー一覧", users_path, class: "navbar-item button is-warning is-light" %>
-          </div>
-          <div class="navbar-end">
-            <div class="navbar-item">
-              <div class="field is-grouped">
-                <p class="control">
-                  <%= link_to "ログイン", new_user_session_path, class: "button is-warning is-light" %>
-                </p>
-                <p class="control">
-                  <%= link_to "新規登録", new_user_registration_path, class: "button is-warning is-light" %>
-                </p>
+      
+
+            <% if user_signed_in? %>
+              <div id="navbarExampleTransparentExample" class="navbar-menu">
+                <div class="navbar-end">
+                  <div class="navbar-item">
+                    <div class="field is-grouped">
+                      <p class="control">
+                        <%= link_to "グループ一覧", groups_path, style: "color: white;", class: " button is-link" %>
+                      </p>
+                      <p class="control">
+                        <%= link_to "ユーザー一覧", users_path, style: "color: white;", class: " button is-link" %>
+                      </p>
+                      <p class="control">
+                        <%= button_to "ログアウト", destroy_user_session_path, method: :delete, style: "color: white;", class: "button is-link" %>
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
-      <% end %>
-    </nav>
-    <%= yield %>
-  </body>
+            <% else %>
+              <div id="navbarExampleTransparentExample" class="navbar-menu">
+                <div class="navbar-item">
+                  <%= link_to "グループ一覧", groups_path, style: "color: white;", class: "navbar-item button is-link" %>
+                </div>
+                <div class="navbar-item">
+                  <%= link_to "ユーザー一覧", users_path, style: "color: white;", class: "navbar-item button is-link" %>
+                </div>
+                <div class="navbar-end">
+                  <div class="navbar-item">
+                    <div class="field is-grouped">
+                      <p class="control">
+                        <%= link_to "ログイン", new_user_session_path, style: "color: white;", class: "button is-link" %>
+                      </p>
+                      <p class="control">
+                        <%= link_to "新規登録", new_user_registration_path,style: "color: white;",  class: "button is-link" %>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+      </nav>
+      <%= yield %>
+    </body>
 </html>

@@ -1,5 +1,5 @@
 <div class='col-md-8 offset-md-1'>
-    <h2>Groups</h2>
+    <h2 class="title is-3" style="margin: 10px;">Groups</h2>
     <table class='table table-hover table-inverse'>
     <thead>
         <tr>
@@ -11,24 +11,23 @@
     </thead>
     <tbody>
         <% @groups.each do |group| %>
-            <tr>
-                <td><%= attachment_image_tag(group, :image, :fill, 50, 50, fallback: "no-image-icon.png") %></td>
-                <td><%= link_to group.name, group_path(group) %></td>
-                <td><%= group.introduction %></td>
-                <td>
-                    <p class="has-icons-left">
-                        <span class="icon is-small is-left">
-                            <%= attachment_image_tag(group, :image, :fill, 50, 50, fallback: "group.png") %>
-                        </span>
-                        <%= group.users.count %>
-                    </p>
-                </td>
-                <td>
-                    <% if group.owner_id == current_user.id %>
-                        <%= link_to 'Edit', edit_group_path(group), class: "button is-success" %>
-                    <% end %>
-                </td>
-            </tr>
+            <% if !(group.name == "ibukiti7") %>
+                <tr>
+                    <td><%= attachment_image_tag(group, :image, size: "50x50", fallback: "no-image-icon.jpg")%></td>
+                    <td><%= link_to group.name, group_path(group) %></td>
+                    <td><%= group.introduction %></td>
+                    <td>
+                        <p class="has-icons-left">
+                            <%= group.users.count %>
+                        </p>
+                    </td>
+                    <td>
+                        <% if group.owner_id == current_user.id %>
+                            <%= link_to 'Edit', edit_group_path(group), class: "button is-success" %>
+                        <% end %>
+                    </td>
+                </tr>
+            <% end %>
         <% end %>
     </tbody>
     </table>

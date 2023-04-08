@@ -19,6 +19,6 @@ module TacticaNote
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
     # デプロイするサービスのホストを追加する
-    config.hosts << 'tactica-note.onrender.com'
+    # config.hosts << 'tactica-note.onrender.com'
   end
 end
