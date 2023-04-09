@@ -39,6 +39,9 @@
 
             <% if user_signed_in? %>
               <div id="navbarExampleTransparentExample" class="navbar-menu">
+                <div class="navbar-item">
+                  <%= link_to "ABOUT", about_path, style: "color: white;", class: "navbar-item button is-link" %>
+                </div>
                 <div class="navbar-end">
                   <div class="navbar-item">
                     <div class="field is-grouped">
