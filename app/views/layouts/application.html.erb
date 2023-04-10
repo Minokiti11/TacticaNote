@@ -25,7 +25,7 @@
 
         <nav class = "navbar" style="background-color: rgb(55, 68, 81);">
             <div class="navbar-brand" style="height: 100px;">
-                <%= link_to root_path, class: "navbar-item" do %>
+                <%= link_to root_path, class: "navbar-item" do %>9
                   <h1 class="title is-3" style="color: rgb(255,255,255);">TacticaNote</h1>
                 <% end %>
 
@@ -40,7 +40,7 @@
             <% if user_signed_in? %>
               <div id="navbarExampleTransparentExample" class="navbar-menu">
                 <div class="navbar-item">
-                  <%= link_to "ABOUT", about_path, style: "color: white;", class: "navbar-item button is-link" %>
+                  <%= link_to "ABOUT", "about", style: "color: white;", class: "navbar-item button is-link" %>
                 </div>
                 <div class="navbar-end">
                   <div class="navbar-item">
