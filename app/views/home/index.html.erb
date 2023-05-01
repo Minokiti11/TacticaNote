@@ -1,19 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html style = "margin: 0;">
     <head>
       <title>TacticaNote</title>
-      <%= csrf_meta_tags %>
-      <%= csp_meta_tag %>
 
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" integrity="sha256-UzFD2WYH2U1dQpKDjjZK72VtPeWP50NoJjd26rnAdUI=" crossorigin="anonymous" />
-      <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-      <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
     </head>
 
     <body>
-        <h1 class="title" style= "margin: 20px;">Communication for possession.</h1>
-        <div class="button is-link " style= "margin: 20px;"><%=link_to "グループを作成",new_group_path, style: "color: white;" %></div>
-        <hr>
+        <div class="container" style="max-width: 100vw;">
+            <h1 class="title" style= "
+              position: absolute;
+              top: 7%;
+              left:50%;
+              transform: translate(-50%,-7%);
+              font-size: 95px;
+              color: white;
+              text-align:center;
+              z-index: 1;
+              ">
+            Communication for possession.
+            </h1>
+            <%= image_tag "background.jpeg", style: "
+              width: 100%;
+              height: auto;
+              opacity: 0.9;
+              z-index: -1;
+            "
+            %>
+
+            <div class="button is-link is-rounded " style = "
+              position: absolute;
+              top: 25%;
+              left:50%;
+              transform: translate(-50%,-25%);
+              width: 208px;
+              height: 78px;
+              color: blue;
+            ">
+            <%=link_to "Get Started", new_group_path, style: "color: white; font-size: 25px;"%></div>
+
+            <div class="button is-link is-rounded" style = "
+              position: absolute;
+              top: 70%;
+              left:50%;
+              transform: translate(-50%,-70%);
+              width: 160px;
+              height: 60px;
+            ">
+            <%=link_to "グループを作成",new_group_path, style: "color: white; font-size: 17px;"%></div>
+        </div>
     </body>
 </html>
 

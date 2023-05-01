@@ -6,7 +6,7 @@
       <%= csp_meta_tag %>
 
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" integrity="sha256-UzFD2WYH2U1dQpKDjjZK72VtPeWP50NoJjd26rnAdUI=" crossorigin="anonymous" />
-      <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+      <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
       <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
     </head>
 
@@ -25,7 +25,7 @@
 
         <nav class = "navbar" style="background-color: rgb(55, 68, 81);">
             <div class="navbar-brand" style="height: 100px;">
-                <%= link_to root_path, class: "navbar-item" do %>9
+                <%= link_to root_path, class: "navbar-item" do %>
                   <h1 class="title is-3" style="color: rgb(255,255,255);">TacticaNote</h1>
                 <% end %>
 
@@ -40,7 +40,7 @@
             <% if user_signed_in? %>
               <div id="navbarExampleTransparentExample" class="navbar-menu">
                 <div class="navbar-item">
-                  <%= link_to "ABOUT", "about", style: "color: white;", class: "navbar-item button is-link" %>
+                  <%= link_to "ABOUT", "about", style: "font-size: 20px; color: white; margin-left: 30px" %>
                 </div>
                 <div class="navbar-end">
                   <div class="navbar-item">

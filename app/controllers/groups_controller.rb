@@ -4,6 +4,8 @@ class GroupsController < ApplicationController
   
     def index
       @groups = Group.all
+      @group_joining = GroupUser.where(user_id: current_user.id)
+      @group_lists_none = "グループに参加していません。"
     end
   
     def show
@@ -18,6 +20,7 @@ class GroupsController < ApplicationController
 
     def new
       @group = Group.new
+      @group.users << current_user
     end
   
     def create

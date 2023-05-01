@@ -6,12 +6,13 @@
       <%= csp_meta_tag %>
 
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" integrity="sha256-UzFD2WYH2U1dQpKDjjZK72VtPeWP50NoJjd26rnAdUI=" crossorigin="anonymous" />
-      <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+      <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
       <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
     </head>
 
     <body>
-        <h1 class="title" style= "margin: 20px;">Communication for possession.</h1>
+        <h1 class = "title is-2" style="margin: 30px;">ABOUT</h1>
+        <h1 class="title" style= "margin: 30px;">Communication for possession.</h1>
         <div class="button is-link " style= "margin: 20px;"><%=link_to "グループを作成",new_group_path, style: "color: white;" %></div>
         <hr>
     </body>

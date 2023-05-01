@@ -4,6 +4,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root to: "home#index"
+  get "about" => "home#about"
   resources :users
   resources :groups do
     get "join" => "groups#join"
