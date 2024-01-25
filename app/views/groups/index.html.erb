@@ -1,0 +1,33 @@
+<div class='col-md-8 offset-md-1'>
+    <h2 class="title is-3" style="margin: 10px;">Groups</h2>
+    <table class='table table-hover table-inverse'>
+    <thead>
+        <tr>
+        <th></th>
+        <th>グループ名</th>
+        <th>紹介文</th>
+        <th colspan="3"><%= image_tag 'group.png', size: "23x23" %></th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @groups.each do |group| %>
+            <tr>
+                <td></td>
+                <%# <td><%= attachment_image_tag(group, :image, size: "50x50", fallback: "no-image-icon.jpg")%>
+                <td><%= link_to group.name, group_path(group) %></td>
+                <td><%= group.introduction %></td>
+                <td>
+                    <p class="has-icons-left">
+                        <%= group.users.count %>
+                    </p>
+                </td>
+                <td>
+                    <% if group.owner_id == current_user.id %>
+                        <%= link_to 'Edit', edit_group_path(group), class: "button is-success" %>
+                    <% end %>
+                </td>
+            </tr>
+        <% end %>
+    </tbody>
+    </table>
+</div>
