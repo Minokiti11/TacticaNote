@@ -92,4 +92,5 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   config.session_store :redis_store, servers: 'redis://localhost:6379/0', expire_in: 1.day
+  config.active_record.sqlite3_production_warning=false
 end
