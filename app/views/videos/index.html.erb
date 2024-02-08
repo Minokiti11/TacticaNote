@@ -1,20 +1,19 @@
-<h1 style="margin: 20px;">試合映像</h1>
+<h1 style="margin: 20px;">試合 映像</h1>
 
 <%=link_to "Upload Video",new_video_path, class: "btn btn-outline-dark", style: "border-width: 2px; border-radius: 0; margin: 20px; font-size: 17px;"%>
 
+<div class="card-deck">
 <% @videos.each do |video| %>
-    <div class="card-deck">
-        <%= link_to video_path(video), class: "card w-25 mb-3 ", style: "text-decoration: none; color: black; margin: 20px;" do %>
-            <% if video.video.attached? %>
-                <video src="<%= rails_blob_path(video.video) %>" class = "card-img-top" alt="..." type="video/mp4" controls></video>
-            <% end %>
-            
-            <div class="card-body">
-                <h5 class="card-title"><%= video.title %></h5>
-                <p class="card-text"><%= video.introduction%></p>
-                <p class="card-text"><small class="text-body-secondary"><time><%= video.updated_at.strftime("%Y-%m-%d %H:%M") %></time>更新</small></p>
-            </div>
+    <%= link_to video_path(video), class: "card w-25 mb-3 ", style: "text-decoration: none; color: black; margin: 20px;" do %>
+        <% if video.video.attached? %>
+            <video src="<%= rails_blob_path(video.video) %>" class = "card-img-top" alt="..." type="video/mp4" controls></video>
         <% end %>
-    </div>
+        
+        <div class="card-body">
+            <h5 class="card-title"><%= video.title %></h5>
+            <p class="card-text"><%= video.introduction%></p>
+            <p class="card-text"><small class="text-body-secondary"><time><%= video.updated_at.strftime("%Y-%m-%d %H:%M") %></time>更新</small></p>
+        </div>
+    <% end %>
 <% end %>
-
+</div>
