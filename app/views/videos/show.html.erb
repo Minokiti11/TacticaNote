@@ -1,6 +1,6 @@
 <div class="mb-3" style="margin: 50px;">
   <% if @video.video.attached? %>
-    <video src="<%= rails_blob_path(@video.video) %>" type="video/mp4" controls></video>
+    <video style="width: 80%;" src="<%= rails_blob_path(@video.video) %>" type="video/mp4" controls></video>
     <h3 style="margin-top: 20px;"><%= @video.title %></h3> <br>
     <p><%= @video.introduction %></p>
   <% end %>
