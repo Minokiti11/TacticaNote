@@ -70,7 +70,7 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
-  gem "webdrivers"
+  gem "webdrivers", "~> 5.3.0"
 end
 
 
@@ -85,7 +85,10 @@ gem 'net-http'
 
 gem "ruby-openai"
 
-gem 'aws-sdk-s3', require: false
+# gem 'aws-sdk-s3', require: false
 
 gem "guard-livereload", require: false
 gem "rack-livereload"
+
+gem 'aws-sdk-rails'
+gem 'aws-sdk-s3', '~> 1'
