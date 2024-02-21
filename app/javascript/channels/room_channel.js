@@ -26,9 +26,9 @@ $(document).on('turbo:load', function () {
   }
   // ここまで追加
 
-  if (already_connected){
-    return
-  }
+  // if (already_connected){
+  //   return
+  // }
 
   // const chatChannelを追記
   const chatChannel = consumer.subscriptions.create({
