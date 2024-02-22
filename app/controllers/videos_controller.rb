@@ -20,9 +20,27 @@ class VideosController < ApplicationController
     def show
       @video = Video.find(params[:id])
     end
+
+    def destroy
+      @video = Video.find(params[:id])
+
+      
+      if @video.video.attached?
+        if @video.purge_later && @video.destroy
+          redirect_to videos_path
+        else
+          render :edit
+        end
+      else
+        if @video.destroy
+          redirect_to videos_path
+        else
+          render :edit
+        end
+      end
+    end
   
     private
-  
     def video_params
       params.require(:video).permit(:title, :introduction, :video)
     end
