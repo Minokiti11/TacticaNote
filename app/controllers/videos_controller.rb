@@ -25,7 +25,7 @@ class VideosController < ApplicationController
       @video = Video.find(params[:id])
       
       if @video.video.attached?
-        if @video.purge_later && @video.destroy
+        if @video.purge && @video.destroy
           render :index
         else
           # render :edit
