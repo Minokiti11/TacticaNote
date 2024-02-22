@@ -26,13 +26,13 @@ class VideosController < ApplicationController
       
       if @video.video.attached?
         if @video.purge_later && @video.destroy
-          redirect_to videos_path
+          render :index
         else
           # render :edit
         end
       else
         if @video.destroy
-          redirect_to videos_path
+          redirect_to :index
         else
           # render :edit
         end
