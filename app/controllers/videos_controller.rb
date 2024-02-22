@@ -23,19 +23,10 @@ class VideosController < ApplicationController
 
     def destroy
       @video = ActiveStorage::Attachment.find(params[:id])
-      
-      if @video.video.attached?
-        if @video.purge && @video.destroy
-          render :index
-        else
-          # render :edit
-        end
+      if @video.purge && @video.destroy
+        redirect_to videos_path
       else
-        if @video.destroy
-          redirect_to :index
-        else
-          # render :edit
-        end
+        render :edit
       end
     end
   
