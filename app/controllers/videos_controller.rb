@@ -23,7 +23,6 @@ class VideosController < ApplicationController
 
     def destroy
       @video = Video.find(params[:id])
-
       
       if @video.video.attached?
         if @video.purge_later && @video.destroy
