@@ -96,5 +96,4 @@ Rails.application.configure do
 
   # config.hosts.clear
   config.hosts << 'tactica-chat.com'
-  config.hosts << 'tactica-chat.onrender.com'
 end
