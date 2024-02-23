@@ -13,11 +13,5 @@ Rails.application.routes.draw do
     delete "all_destroy" => 'groups#all_destroy'
   end
 
-
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Defines the root path route ("/")
-  # root "articles#index"
-
   mount ActionCable.server => '/cable'
 end
