@@ -165,8 +165,6 @@ GEM
     faraday-net_http (3.0.2)
     ffi (1.15.5)
     ffi (1.15.5-x64-mingw-ucrt)
-    font-awesome-sass (6.5.1)
-      sassc (~> 2.0)
     globalid (1.1.0)
       activesupport (>= 5.0)
     google-cloud-env (2.1.1)
@@ -431,7 +429,6 @@ DEPENDENCIES
   capybara
   debug
   devise
-  font-awesome-sass
   googleauth
   importmap-rails
   jbuilder
