@@ -7,7 +7,7 @@
     <!-- Googleログインボタンの表示 ここから追加 -->
     <div id="g_id_onload"
       data-client_id="658575122134-6bmn5kdvamrk071chmcmteva3nivnjmn.apps.googleusercontent.com"
-      data-login_uri="https://tactica-chat.com/"
+      data-login_uri="https://tactica-chat.com/google_login_api/callback"
       data-auto_prompt="false">
     </div>
     <div class="g_id_signin"
@@ -18,7 +18,7 @@
       data-shape="rectangular"
       data-logo_alignment="left">
     </div>
-    
+
     <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
       <%= render "devise/shared/error_messages", resource: resource %>
       <div class="field mt-3">
