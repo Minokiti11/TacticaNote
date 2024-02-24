@@ -85,8 +85,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_24_053344) do
     t.string "username"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "provider"
-    t.string "uid"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -94,8 +92,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_24_053344) do
   create_table "videos", force: :cascade do |t|
     t.string "title"
     t.text "introduction"
+    t.integer "user_id"
+    t.integer "group_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_videos_on_group_id"
+    t.index ["user_id"], name: "index_videos_on_user_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
@@ -105,4 +107,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_24_053344) do
   add_foreign_key "messages", "groups"
   add_foreign_key "messages", "users"
   add_foreign_key "sns_credentials", "users"
+  add_foreign_key "videos", "groups"
+  add_foreign_key "videos", "users"
 end

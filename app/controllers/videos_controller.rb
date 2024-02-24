@@ -1,6 +1,6 @@
 class VideosController < ApplicationController
   def index
-      @videos = Video.all
+    @videos = Video.all
   end
   
   def new
@@ -9,8 +9,10 @@ class VideosController < ApplicationController
 
   def create
     @video = Video.new(video_params)
+    # p "current_user:", current_user
     @video.user_id = current_user.id
-    @video.group_id = current_user.group.id
+    p "current_user.group_users:", current_user.group_users[0].group_id
+    @video.group_id = current_user.group_users[0].group_id
     if @video.save
       redirect_to @video
     else

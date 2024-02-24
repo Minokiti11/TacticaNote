@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     get "join" => "groups#join"
     get 'chat' => "groups#chat"
     get 'groups/show' => 'groups#show'
+    get 'video' => "groups#video"
     delete "all_destroy" => 'groups#all_destroy'
   end
 

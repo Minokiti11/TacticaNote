@@ -68,6 +68,10 @@ class GroupsController < ApplicationController
     @messages = @group.messages
   end
 
+  def video
+    @group = Group.find(params[:group_id])
+    @videos = @group.videos
+  end
 
   private
   def group_params
