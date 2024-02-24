@@ -9,6 +9,8 @@ class VideosController < ApplicationController
 
   def create
     @video = Video.new(video_params)
+    @video.user_id = current_user.id
+    @video.group_id = current_user.group.id
     if @video.save
       redirect_to @video
     else
