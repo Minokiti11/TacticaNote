@@ -2,6 +2,11 @@
   <div class="col-lg-4 mx-auto">
     <h1 class = "text-center">Log In</h1>
 
+    <%= link_to user_google_oauth2_omniauth_authorize_path, method: :post do %>
+      <i class="fa-brands fa-google"></i>
+      Googleアカウントでサインインする
+    <% end %>
+
     <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
       <%= render "devise/shared/error_messages", resource: resource %>
       <div class="field mt-3">

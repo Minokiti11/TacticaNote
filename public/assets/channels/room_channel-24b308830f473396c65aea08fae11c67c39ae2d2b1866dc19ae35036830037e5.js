@@ -15,11 +15,28 @@ $(document).on('turbo:load', function () {
     });
   };
 
+  // ここから追加
+  let already_connected = false
+  for (let subscription of consumer.subscriptions.subscriptions) {
+    let already_connected_room_id = JSON.parse(subscription.identifier).room_id;
+    if (already_connected_room_id === room_id) {
+      already_connected = true
+      break
+    }
+  }
+  // ここまで追加
+
+  // if (already_connected){
+  //   return
+  // }
+
   // const chatChannelを追記
-  const chatChannel = consumer.subscriptions.create({ channel: 'RoomChannel', group: $('#messages').data('room_id') }, {
+  const chatChannel = consumer.subscriptions.create({
+    channel: 'RoomChannel', group: $('#messages').data('room_id'), user: userId  }, {
     connected() {
       // Called when the subscription is ready for use on the server
-      console.log("connected.")
+      console.log("connected.");
+      console.log("hello, Applied Changes");
     },
 
     disconnected() {
@@ -42,7 +59,7 @@ $(document).on('turbo:load', function () {
     speak: function (message) {
       console.log("group_id:");
       console.log($('#messages').data('room_id'));
-      return this.perform('speak', { message: message, group_id: $('#messages').data('room_id') });
+      return this.perform('speak', { message: message, group_id: $('#messages').data('room_id'), user_id: $('#messages').data('user_id')});
     }
   });
 
@@ -56,3 +73,4 @@ $(document).on('turbo:load', function () {
     }
   };
 });
+

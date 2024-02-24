@@ -85,17 +85,12 @@ gem 'net-http'
 
 gem "ruby-openai"
 
-# gem 'aws-sdk-s3', require: false
-
-gem "guard-livereload", require: false
-gem "rack-livereload"
 
 gem 'aws-sdk-rails'
 gem 'aws-sdk-s3', '~> 1'
 
 gem 'googleauth'
 
-gem 'omniauth'
 gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-github'
 gem 'omniauth-google-oauth2'

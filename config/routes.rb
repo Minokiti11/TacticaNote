@@ -1,9 +1,8 @@
 Rails.application.routes.draw do
-  get 'google_login_api/callback'
   resources :videos
   # devise_for :users
 
-  devise_for :users, controllers: { 
+  devise_for :users, controllers: {
     omniauth_callbacks: 'users/omniauth_callbacks'
   }
 
@@ -18,6 +17,5 @@ Rails.application.routes.draw do
     delete "all_destroy" => 'groups#all_destroy'
   end
 
-  post '/google_login_api/callback', to: 'google_login_api#callback'
   mount ActionCable.server => '/cable'
 end
