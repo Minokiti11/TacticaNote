@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'google_login_api/callback'
   resources :videos
   devise_for :users
 
@@ -12,6 +13,8 @@ Rails.application.routes.draw do
     get 'groups/show' => 'groups#show'
     delete "all_destroy" => 'groups#all_destroy'
   end
+
+  post '/google_login_api/callback', to: 'google_login_api#callback'
 
   mount ActionCable.server => '/cable'
 end

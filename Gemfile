@@ -92,3 +92,5 @@ gem "rack-livereload"
 
 gem 'aws-sdk-rails'
 gem 'aws-sdk-s3', '~> 1'
+
+gem 'googleauth'
