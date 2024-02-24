@@ -12,7 +12,7 @@ module ApplicationCable
         p "found verfied_user"
         verified_user
       else
-        p "nott found"
+        p "not found"
         reject_unauthorized_connection
       end
     end

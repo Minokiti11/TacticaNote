@@ -94,3 +94,8 @@ gem 'aws-sdk-rails'
 gem 'aws-sdk-s3', '~> 1'
 
 gem 'googleauth'
+
+gem 'omniauth'
+gem 'omniauth-rails_csrf_protection'
+gem 'omniauth-github'
+gem 'omniauth-google-oauth2'
