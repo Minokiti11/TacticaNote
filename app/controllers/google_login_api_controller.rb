@@ -8,7 +8,8 @@ class GoogleLoginApiController < ApplicationController
     payload = Google::Auth::IDTokens.verify_oidc(params[:credential], aud: '658575122134-6bmn5kdvamrk071chmcmteva3nivnjmn.apps.googleusercontent.com')
     user = User.find_or_create_by(email: payload['email'])
     session[:user_id] = user.id
-    redirect_to root_path, notice: 'ログインしました'
+    session[:current_user] = user
+    redirect_to root_path , notice: 'ログインしました'
   end
 
   private
