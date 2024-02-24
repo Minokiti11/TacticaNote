@@ -15,6 +15,5 @@ Rails.application.routes.draw do
   end
 
   post '/google_login_api/callback', to: 'google_login_api#callback'
-
   mount ActionCable.server => '/cable'
 end
