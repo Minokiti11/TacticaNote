@@ -2,7 +2,25 @@
   <div class="col-lg-4 mx-auto">
     <h1 class = "text-center">Log In</h1>
 
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <!-- Googleログインボタンの表示 ここから追加 -->
+    <div id="g_id_onload"
+      data-client_id="658575122134-6bmn5kdvamrk071chmcmteva3nivnjmn.apps.googleusercontent.com"
+      data-login_uri="https://tactica-chat.com/"
+      data-auto_prompt="false">
+    </div>
+    <div class="g_id_signin"
+      data-type="standard"
+      data-size="large"
+      data-theme="outline"
+      data-text="sign_in_with"
+      data-shape="rectangular"
+      data-logo_alignment="left">
+    </div>
+    
     <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
       <div class="field mt-3">
         <%= f.label :email%><br />
         <%= f.email_field :email, autocomplete: "email", placeholder: "Email", class: "form-control py-2" %>
