@@ -97,4 +97,6 @@ Rails.application.configure do
   # config.hosts.clear
   config.hosts << 'tactica-chat.com'
   config.hosts << 'tactica-chat-onrender.com'
+
+  config.action_cable.url = "ws://tactica-chat.com/cable"
 end
