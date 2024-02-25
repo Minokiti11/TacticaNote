@@ -73,7 +73,6 @@ group :test do
   gem "webdrivers", "~> 5.3.0"
 end
 
-
 gem 'devise'
 gem 'actioncable'
 gem "bootstrap", "~> 5.2"
