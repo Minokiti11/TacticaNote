@@ -1,10 +1,17 @@
-<div class="row py-5">
-  <div class="col-lg-4 mx-auto">
+<div class="row py-5" style="margin-right: 10px; margin-left: 10px;">
+  <div class="col-md-4 mx-auto">
     <h1 class = "text-center">Log In</h1>
-
+    <script src="https://accounts.google.com/gsi/client" async></script>
     <%= link_to user_google_oauth2_omniauth_authorize_path, method: :post do %>
-      <i class="fa-brands fa-google"></i>
-      Googleアカウントでサインインする
+        <div id="g_id_onload"></div>
+        <div class="g_id_signin"
+          data-type="standard"
+          data-size="large"
+          data-theme="outline"
+          data-text="sign_in_with"
+          data-shape="rectangular"
+          data-logo_alignment="left">
+        </div>
     <% end %>
 
     <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
