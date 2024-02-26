@@ -108,11 +108,12 @@ window.onload = function() {
     // フォーム内でEnterキーが押された時の動作を記述
     // event.KeyCode === 13は非推奨となっているため、event.key === 'Enter'と変更
     window.document.onkeydown = function (event) {
-      if (event.key == 'Enter') {
-        chatChannel.speak(event.target.value);
-        event.target.value = '';
-        event.preventDefault();
+      if (event.key !== 'Enter' || event.isComposing) {
+        return
       }
+      chatChannel.speak(event.target.value);
+      event.target.value = '';
+      event.preventDefault();
     };
   });
   
