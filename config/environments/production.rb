@@ -100,4 +100,7 @@ Rails.application.configure do
 
   config.action_cable.url = "ws://tactica-chat.com/cable"
   # config.session_store :redis_store, servers: 'redis://localhost:6379/0', expire_in: 1.day
+  ActionCable.server.config.disable_request_forgery_protection = true
+  config.action_cable.url = "ws://tactica-chat.com/cable" 
+  config.action_cable.allowed_request_origins = ['http://tactica-chat.com']
 end
