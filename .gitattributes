@@ -7,5 +7,5 @@ db/schema.rb linguist-generated
 vendor/* linguist-vendored
 
 *.js linguist-vendored
-*.css linguist-vendored
+# *.css linguist-vendored
 
