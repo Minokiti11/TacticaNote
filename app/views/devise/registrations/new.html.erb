@@ -29,5 +29,8 @@
         <%= f.submit "Sign Up", class: "form-control py-2 btn btn-primary fw-bold shadow"%>
       </div>
     <% end %>
+    <div class = "nav-link">
+      <%= link_to "Already have an account? Sign in", new_user_session_path, "data-turbo": false, class: "nav-link"  %>
+    </div>
   </div>
 </div>
