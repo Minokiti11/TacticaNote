@@ -53,6 +53,10 @@
         <%= f.submit "Log In", class: "form-control py-2 btn btn-primary fw-bold shadow", id: "login-btn" %>
       </div>
     <% end %>
-    <%= link_to "Sign up", new_user_registration_path, "data-turbo": false, class: "nav-link"  %>
+    <div class = "nav-link">
+      Need an account?
+      <%= link_to "Sign up", new_user_registration_path, "data-turbo": false, class: "nav-link"  %>
+    </div>
+    
   </div>
 </div>
