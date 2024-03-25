@@ -51,6 +51,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_24_053344) do
   create_table "groups", force: :cascade do |t|
     t.string "name"
     t.text "introduction"
+    t.text "teams_behaviour"
+    t.text "monthly_target"
     t.string "image_id"
     t.integer "owner_id"
     t.datetime "created_at", null: false
