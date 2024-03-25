@@ -57,7 +57,7 @@ class GroupsController < ApplicationController
 
   def update
     if @group.update(group_params)
-      redirect_to groups_path
+      redirect_to group_path
     else
       render "edit"
     end
@@ -75,7 +75,7 @@ class GroupsController < ApplicationController
 
   private
   def group_params
-    params.require(:group).permit(:id, :name, :introduction, :image)
+    params.require(:group).permit(:id, :name, :introduction, :teams_behaviour, :monthly_target, :image)
   end
 
   def ensure_correct_user
