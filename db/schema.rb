@@ -70,6 +70,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_31_124526) do
   end
 
   create_table "notes", force: :cascade do |t|
+    t.string "title"
     t.text "good"
     t.text "bad"
     t.text "next"

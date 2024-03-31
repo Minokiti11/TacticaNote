@@ -1,6 +1,7 @@
-<%= form_with model: @video, local: true do |form| %>
+<%= form_with model: @note, local: true do |form| %>
   <p>title</p><%= form.text_field :title %> <br>
-  <p>introduction</p><%= form.text_area :introduction %> <br>
-  <p>video</p><%= form.file_field :video %> <br>
+  <p>Good</p><%= form.text_area :good %> <br>
+  <p>Bad</p><%= form.text_area :bad %> <br>
+  <p>Next</p><%= form.text_area :next %> <br>
   <%= form.submit %>
 <% end %>
