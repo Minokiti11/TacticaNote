@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   resources :videos
+  resources :notes
   # devise_for :users
 
   devise_for :users, controllers: {
