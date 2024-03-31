@@ -9,7 +9,7 @@ class VideosController < ApplicationController
 
   def create
     @video = Video.new(video_params)
-    p current_user
+    p "current_user", current_user
     @video.user_id = current_user.id
     p "current_user.group_users:", current_user.group_users[0].group_id
     @video.group_id = current_user.group_users[0].group_id
