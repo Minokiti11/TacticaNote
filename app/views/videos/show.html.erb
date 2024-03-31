@@ -3,7 +3,7 @@
     <video style="width: 80%;" src="<%= rails_blob_path(@video.video) %>" type="video/mp4" controls></video>
     <h3 style="margin-top: 20px;"><%= @video.title %></h3> <br>
     <p><%= @video.introduction %></p>
-    <%= button_to 'Write Note for this video', new_note_path, class: "btn btn-success", style: "margin-top: 10px;" %>
+    <%= link_to 'Write Note for this video', new_note_path, class: "btn btn-success", style: "margin-top: 10px;" %>
     <%= button_to 'Delete this video', video_path(@video), method: :delete, class: "btn btn-danger", style: "margin-top: 10px;" %>
   <% end %>
 </div>
