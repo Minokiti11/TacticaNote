@@ -13538,7 +13538,7 @@ a {
   transition: background-color .218s, border-color .218s, box-shadow .218s;
   vertical-align: middle;
   white-space: nowrap;
-  width: auto;
+  width: 60%;
   max-width: 400px;
   min-width: -moz-min-content;
   min-width: min-content;
@@ -13616,6 +13616,6 @@ a {
 
 /* line 121, app/assets/stylesheets/application.scss */
 .gsi-material-button:not(:disabled):hover .gsi-material-button-state {
-  background-color: #303030;
+  background-color: #444444;
   opacity: 8%;
 }

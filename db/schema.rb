@@ -74,8 +74,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_31_124526) do
     t.text "good"
     t.text "bad"
     t.text "next"
+    t.integer "user_id"
+    t.integer "group_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_notes_on_group_id"
+    t.index ["user_id"], name: "index_notes_on_user_id"
   end
 
   create_table "sns_credentials", force: :cascade do |t|
@@ -117,6 +121,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_31_124526) do
   add_foreign_key "group_users", "users"
   add_foreign_key "messages", "groups"
   add_foreign_key "messages", "users"
+  add_foreign_key "notes", "groups"
+  add_foreign_key "notes", "users"
   add_foreign_key "sns_credentials", "users"
   add_foreign_key "videos", "groups"
   add_foreign_key "videos", "users"

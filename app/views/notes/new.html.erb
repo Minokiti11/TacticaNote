@@ -9,23 +9,23 @@
       <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', placeholder: 'タイトルを入力', style: "padding: 10px;" %>
     </div>
     <!-- 良い点入力フォーム -->
-    <div class="form-group">
-      <label for="note_good" class="form-label">良い点</label>
+    <div class="form-group" id="div_good">
+      <label for="note_good" class="form-label">良かった点</label>
       <%= form.text_area :good, class: 'form-control mb-3', id: 'note_good', placeholder: '良かった点を記述', style: "padding: 10px;" %>
     </div>
     <!-- 悪い点入力フォーム -->
     <div class="form-group">
-      <label for="note_bad" class="form-label">悪い点</label>
+      <label for="note_bad" class="form-label">悪かった点</label>
       <%= form.text_area :bad, class: 'form-control mb-3', id: 'note_bad', placeholder: '悪かった点を記述', style: "padding: 10px;" %>
     </div>
     <!-- 次のステップ入力フォーム -->
-    <div class="form-group">
-      <label for="note_next" class="form-label">次のステップ</label>
+    <div class="form-group" id="div_next">
+      <label for="note_next" class="form-label">次に意識すること・次に向けて取り組むこと</label>
       <%= form.text_area :next, class: 'form-control mb-3', id: 'note_next', placeholder: '次に向けて取り組むことを記述', style: "padding: 10px;" %>
     </div>
     <!-- 送信ボタン -->
     <div class="form-group">
-      <%= form.submit class: 'btn btn-primary' %>
+      <%= form.button type: 'button', onclick: 'submit();', class: 'btn btn-primary' %>
     </div>
   </div>
 <% end %>

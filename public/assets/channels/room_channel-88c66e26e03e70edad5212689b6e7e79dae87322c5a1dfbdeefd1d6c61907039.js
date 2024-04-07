@@ -106,25 +106,41 @@ window.onload = function() {
     });
   
     // フォーム内でEnterキーが押された時の動作を記述
-    // event.KeyCode === 13は非推奨となっているため、event.key === 'Enter'と変更
     window.document.onkeydown = function (event) {
-      if (event.key == 'Enter') {
-        chatChannel.speak(event.target.value);
-        event.target.value = '';
-        event.preventDefault();
+      if (event.key !== 'Enter' || event.isComposing) {
+        return
       }
+      chatChannel.speak(event.target.value);
+      event.target.value = '';
+      event.preventDefault();
     };
   });
-  
+
   onPageLoad('sessions#new', function() {
     // フォーム内でEnterキーが押された時の動作を記述
-    // event.KeyCode === 13は非推奨となっているため、event.key === 'Enter'と変更
     window.document.onkeydown = function (event) {
       if (event.key == 'Enter') {
         console.log("push login button by press return key.");
         document.querySelector("#login-btn").click();
       }
     };
+  });
+
+  onPageLoad('notes#new', function() {
+    // フォーム内でEnterキーが押された時の動作を記述
+    $('#note_good').keydown(function (event) {
+      if (event.key == 'Enter') {
+        // console.log("passed.");
+        // 一秒後に実行
+        setTimeout(function(){
+          $('<p>', {
+            style: 'color: green;',
+            text: 'ワンタッチでテンポよくショートカウンターに繋げられたのはなぜだと思いますか？考えられる理由を追加しましょう。'
+          }).appendTo('#div_good');
+        },1000);
+
+      }
+    });
   });
 }
 

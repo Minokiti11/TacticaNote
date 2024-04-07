@@ -1,9 +1,19 @@
-<div class="mb-3" style="margin: 50px;">
-  <% if @video.video.attached? %>
-    <video style="width: 80%;" src="<%= rails_blob_path(@video.video) %>" type="video/mp4" controls></video>
-    <h3 style="margin-top: 20px;"><%= @video.title %></h3> <br>
-    <p><%= @video.introduction %></p>
-    <%# <%= button_to 'Write Note with this video', > %>
-    <%= button_to 'Delete this video', video_path(@video), method: :delete, class: "btn btn-danger", style: "margin-top: 10px;"%>
-  <% end %>
+<div class="container mt-5">
+  <div class="h2" style="margin-top: 40px; margin-bottom: 50px; font-weight: 700;">
+    <%= @note.title %>
+  </div>
+  <div class="card mb-3">
+    <div class="card-header">良かった点</div>
+    <div class="card-body"><%= @note.good %></div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-header">悪かった点</div>
+    <div class="card-body"><%= @note.bad %></div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-header">次に意識すること・次に向けて取り組むこと</div>
+    <div class="card-body"><%= @note.next %></div>
+  </div>
 </div>

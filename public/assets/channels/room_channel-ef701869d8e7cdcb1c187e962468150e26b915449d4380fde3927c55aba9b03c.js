@@ -106,24 +106,62 @@ window.onload = function() {
     });
   
     // フォーム内でEnterキーが押された時の動作を記述
-    // event.KeyCode === 13は非推奨となっているため、event.key === 'Enter'と変更
     window.document.onkeydown = function (event) {
-      if (event.key == 'Enter') {
-        chatChannel.speak(event.target.value);
-        event.target.value = '';
-        event.preventDefault();
+      if (event.key !== 'Enter' || event.isComposing) {
+        return
       }
+      chatChannel.speak(event.target.value);
+      event.target.value = '';
+      event.preventDefault();
     };
   });
-  
+
   onPageLoad('sessions#new', function() {
     // フォーム内でEnterキーが押された時の動作を記述
-    // event.KeyCode === 13は非推奨となっているため、event.key === 'Enter'と変更
     window.document.onkeydown = function (event) {
       if (event.key == 'Enter') {
+        console.log("push login button by press return key.");
         document.querySelector("#login-btn").click();
       }
     };
+  });
+
+  onPageLoad('notes#new', function() {
+    $('<p>', {
+      id: 'advice_for_good',
+      style: 'color: green;',
+      text: ''
+    }).appendTo('#div_good');
+
+    $('<p>', {
+      id: 'advice_for_bad',
+      style: 'color: green;',
+      text: ''
+    }).appendTo('#div_bad');
+
+    // フォーム内でEnterキーが押された時の動作を記述
+    $('#note_good').keydown(function (event) {
+      if (event.key == 'Enter') {
+        console.log("passed.");
+        // 一秒後に実行
+        setTimeout(function(){
+          $('#advice_for_good').text("ワンタッチでテンポよくショートカウンターに繋げられたのはなぜだと思いますか？考えられる理由を追加しましょう。");
+        },1000);
+        
+      }
+    });
+
+    // フォーム内でEnterキーが押された時の動作を記述
+    $('#note_bad').keydown(function (event) {
+      if (event.key == 'Enter') {
+        // console.log("passed.");
+        // 一秒後に実行
+        setTimeout(function(){
+          $('#advice_for_bad').text("");
+        },1000);
+        
+      }
+    });
   });
 }
 
