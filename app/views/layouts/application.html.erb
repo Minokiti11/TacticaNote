@@ -11,9 +11,11 @@
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="turbolinks-visit-control" content="reload">
+    
     <%= favicon_link_tag 'icon5.ico' %>
     
   </head>
+
 
   <body data-controller="<%= controller_name %>" data-action="<%= action_name %>">
     <%= render 'layouts/navbar' %>
@@ -31,5 +33,6 @@
       </div>
     <% end %>
     <%= yield %>
+
   </body>
 </html>

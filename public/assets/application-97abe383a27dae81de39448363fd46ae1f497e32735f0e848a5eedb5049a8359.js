@@ -11,4 +11,4 @@ $(function(){
 import "channels";
 import "@rails/actioncable";
 import "popper"
-import "bootstrap"
+import "bootstrap";

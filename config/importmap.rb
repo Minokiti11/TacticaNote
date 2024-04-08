@@ -11,3 +11,5 @@ pin_all_from "app/javascript/channels", under: "channels"
 pin_all_from "app/javascript/controllers", under: "controllers"
 pin "@hotwired/turbo", to: "https://ga.jspm.io/npm:@hotwired/turbo@8.0.3/dist/turbo.es2017-esm.js"
 pin "jquery", to: "https://ga.jspm.io/npm:jquery@3.7.1/dist/jquery.js"
+pin "popper", to: 'popper.js', preload: true
+pin "bootstrap", to: 'bootstrap.min.js', preload: true
