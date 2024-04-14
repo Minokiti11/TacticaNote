@@ -15,7 +15,19 @@ class GroupsController < ApplicationController
   def join
     @group = Group.find(params[:group_id])
     @group.users << current_user
-    redirect_to  groups_path
+    redirect_to groups_path
+  end
+
+  def join_by_invite
+    token = params[:invite_token]
+    group = Group.find_by(invite_token: token, invite_token_expires_at: [nil, Time.current..])
+    if group
+      # ユーザーをグループに追加する処理
+      group.users << current_user
+      redirect_to group_path(group), notice: 'グループに参加しました。'
+    else
+      redirect_to root_path, alert: '無効な招待リンクです。'
+    end
   end
 
   def new
@@ -73,9 +85,19 @@ class GroupsController < ApplicationController
     @videos = @group.videos
   end
 
+  def generate_invite_link
+    @group = Group.find(params[:id])
+    @group.generate_invite_token
+    @group.save
+    @group_invite_link = "localhost:3000/groups/#{params[:id]}/join/#{@group.invite_token}"
+    flash[:notice] = "招待リンクを発行しました: #{@group_invite_link}"
+    redirect_to group_path(@group)
+  end
+
   private
+
   def group_params
-    params.require(:group).permit(:id, :name, :introduction, :teams_behaviour, :monthly_target, :image)
+    params.require(:group).permit(:id, :name, :introduction, :teams_behaviour, :monthly_target, :image, :invite_token, :invite_token_expires_at)
   end
 
   def ensure_correct_user

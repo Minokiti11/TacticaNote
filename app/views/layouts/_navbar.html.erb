@@ -14,8 +14,8 @@
         <ul class="navbar-nav ml-auto">
           <% if current_user %>
             <li> <%= link_to "Edit Account", edit_user_registration_path, class: "nav-link" %></li>
-            <li> <%= link_to "Create Groups", new_group_path, class: "nav-link" %></li>
-            <li> <%= link_to "Groups", groups_path, class: "nav-link" %></li>
+            <li> <%= link_to "グループを作成", new_group_path, class: "nav-link" %></li>
+            <li> <%= link_to "グループ一覧", groups_path, class: "nav-link" %></li>
             <%# <li class="nav-item"> <%= link_to "Videos", videos_path, class: "nav-link" %></li>
             <li> <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "btn btn-outline-primary btn-sm rounded", style:"width: 85px; height: 40px; padding: 0px;" %></li>
           <% else %>

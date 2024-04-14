@@ -12,7 +12,10 @@ Rails.application.routes.draw do
 
   resources :users
   resources :groups do
-    get "join" => "groups#join"
+    member do
+      post 'generate_invite_link' => 'groups#generate_invite_link'
+    end
+    get 'join/:invite_token', to: 'groups#join_by_invite', as: :join_group_by_invite
     get 'chat' => "groups#chat"
     get 'groups/show' => 'groups#show'
     get 'video' => "groups#video"
