@@ -2,42 +2,23 @@
   <div class='row'>
     <div class='col-md-8 offset-md-1'>
       <h2 style='margin-top: 30px;'><%= @group.name %></h2>
-      <table class='table table-hover table-inverse'>
-        <thead>
-          <tr>
-            <th>グループ名</th>
-            <th>紹介文</th>
-            <th>メンバー</th>
-            <th colspan="4"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <%# <td><%= attachment_image_tag(@group, :image, :fill, 50, 50, fallback: "no-image-icon.png") %>
-            <td><%= @group.name %></td>
-            <td><%= @group.introduction %></td>
-            <td>
-              <% @group.users.each do |member| %>
-                <%= member.username %><br>
-              <% end %>
-            </td>
-            <td>
-              <% if @group.owner_id == current_user.id %>
-                <%= link_to 'Edit', edit_group_path(@group), class: "btn btn-success" %>
-                <%= button_to '招待リンクを発行', generate_invite_link_group_path(@group), method: :post, class: "btn btn-primary rounded btn-sm", style: "font-size: calc(0.53rem + 0.5vw); margin-top: 15px;" %>
-                <%= link_to 'ChatPage', group_chat_path(@group), "data-turbo": false, class: "btn btn-success", style: "margin-top: 15px;"%>
-                <%= link_to 'All Video', group_video_path(@group), class: "btn btn-success", style: "margin-top: 15px;" %>
-                <%= button_to 'Leave this group', group_path(@group), method: :delete, class: "btn btn-danger", style: "margin-top: 15px;"%>
-                <%= button_to 'Delete this group', group_all_destroy_path(@group), method: :delete, class: "btn btn-danger", style: "margin-top: 15px;"%>
-              <% elsif @group.users.include?(current_user) %>
-                <%= link_to 'ChatPage', group_chat_path(@group), "data-turbo": false, class: "btn btn-success" %>
-                <%= link_to 'All Video', group_video_path(@group), class: "btn btn-success" %>
-                <%= button_to 'Leave this group', group_path(@group), method: :delete, class: "btn btn-danger", style: "margin-top: 15px;"%>
-              <% end %>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+        <td>
+          <%= image_tag 'group.png', size: "23x23" %><%= @group.users.count %></br>
+        </td>
+        <td>
+          <% if @group.owner_id == current_user.id %>
+            <%= link_to 'Edit', edit_group_path(@group), class: "btn btn-success", style: "margin-top: 30px;"%>
+            <%= button_to '招待リンクを発行', generate_invite_link_group_path(@group), method: :post, class: "btn btn-primary rounded btn-sm", style: "font-size: calc(0.53rem + 0.5vw); margin-top: 15px;" %>
+            <%= link_to 'ChatPage', group_chat_path(@group), "data-turbo": false, class: "btn btn-success", style: "margin-top: 15px;"%>
+            <%= link_to 'All Video', group_video_path(@group), class: "btn btn-success", style: "margin-top: 15px;" %>
+            <%= button_to 'Leave this group', group_path(@group), method: :delete, class: "btn btn-danger", style: "margin-top: 15px;"%>
+            <%= button_to 'Delete this group', group_all_destroy_path(@group), method: :delete, class: "btn btn-danger", style: "margin-top: 10px;"%>
+          <% elsif @group.users.include?(current_user) %>
+            <%= link_to 'ChatPage', group_chat_path(@group), "data-turbo": false, class: "btn btn-success" %>
+            <%= link_to 'All Video', group_video_path(@group), class: "btn btn-success" %>
+            <%= button_to 'Leave this group', group_path(@group), method: :delete, class: "btn btn-danger", style: "margin-top: 15px;"%>
+          <% end %>
+        </td>
     </div>
   </div>
 </div>
