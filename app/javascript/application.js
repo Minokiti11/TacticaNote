@@ -12,3 +12,4 @@ import "channels";
 import "@rails/actioncable";
 import "popper"
 import "bootstrap"
+import "./video_upload_progress"
