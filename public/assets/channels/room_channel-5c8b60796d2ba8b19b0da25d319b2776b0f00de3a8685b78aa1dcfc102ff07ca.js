@@ -16,6 +16,7 @@ var onPageLoad = function(controller_and_actions, callback) {
     console.log("controller: ", controller);
     console.log("action: ", action);
     if (isOnPage(controller, action)) {
+      console.log("passed.");
       return callback();
     }
   });
@@ -141,6 +142,7 @@ window.onload = function() {
     // フォーム内でEnterキーが押された時の動作を記述
     $('#note_good').keypress(function (event) {
       if (event.key === 'Enter') {
+        console.log("passed.");
         // 一秒後に実行
         setTimeout(function(){
           $('#advice_for_good').text("ワンタッチでテンポよくショートカウンターに繋げられたのはなぜだと思いますか？考えられる理由を追加しましょう。");
@@ -151,6 +153,7 @@ window.onload = function() {
     // フォーム内でEnterキーが押された時の動作を記述
     $('#note_next').keypress(function (event) {
       if (event.key == 'Enter') {
+        // console.log("passed.");
         // 一秒後に実行
         setTimeout(function(){
           $('#advice_for_next').text("「中盤を経由したプレス回避」を実現するために必要なものは何だと思いますか？目標を細分化しましょう。");

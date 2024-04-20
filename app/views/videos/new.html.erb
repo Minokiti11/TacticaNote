@@ -1,6 +1,30 @@
-<%= form_with model: @video, local: true do |form| %>
-  <p>title</p><%= form.text_field :title %> <br>
-  <p>introduction</p><%= form.text_area :introduction %> <br>
-  <p>video</p><%= form.file_field :video, direct_upload: true, id: "video_upload"%> <br>
-  <%= form.submit %>
-<% end %>
+<div class="d-flex justify-content-center mt-5">
+  <div class="card shadow-lg" style="width: 50%; border: none;">
+    <div class="card-body">
+      <%= form_with model: @video, local: true, html: {class: "needs-validation", novalidate: ""} do |form| %>
+        <div class="mb-3">
+          <label for="title" class="form-label">タイトル</label>
+          <%= form.text_field :title, class: "form-control shadow-sm", id: "title", required: true %>
+          <div class="invalid-feedback">
+            タイトルを入力してください。
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="introduction" class="form-label">紹介文</label>
+          <%= form.text_area :introduction, class: "form-control shadow-sm", id: "introduction", rows: 3, required: true %>
+          <div class="invalid-feedback">
+            紹介文を入力してください。
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="video_upload" class="form-label">ビデオ</label>
+          <%= form.file_field :video, direct_upload: true, class: "form-control shadow-sm", id: "video_upload", required: true %>
+          <div class="invalid-feedback">
+            ビデオファイルをアップロードしてください。
+          </div>
+        </div>
+        <%= form.submit "送信", class: "btn btn-primary shadow" %>
+      <% end %>
+    </div>
+  </div>
+</div>

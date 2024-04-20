@@ -3,8 +3,13 @@ class GroupsController < ApplicationController
   before_action :ensure_correct_user, only: [:edit, :update]
   
   def index
-    @groups = Group.all
+    @groups = current_user.groups
     @group_joining = GroupUser.where(user_id: current_user.id)
+    p "@group_joining: ", @group_joining
+    if @group_joining.empty?
+      p "グループに参加していません。"
+      @not_joining_group = true
+    end
     @group_lists_none = "グループに参加していません。"
   end
 
@@ -89,7 +94,12 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:id])
     @group.generate_invite_token
     @group.save
-    @group_invite_link = "localhost:3000/groups/#{params[:id]}/join/#{@group.invite_token}"
+    if Rails.env.production?
+      @group_invite_link = "tactica-chat.com/groups/#{params[:id]}/join/#{@group.invite_token}"
+    elsif Rails.env.development?
+      @group_invite_link = "localhost:3000/groups/#{params[:id]}/join/#{@group.invite_token}"
+    end
+    
     flash[:notice] = "招待リンクを発行しました: #{@group_invite_link}"
     redirect_to group_path(@group)
   end

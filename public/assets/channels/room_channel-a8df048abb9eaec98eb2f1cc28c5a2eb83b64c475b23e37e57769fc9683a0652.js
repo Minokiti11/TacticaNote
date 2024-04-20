@@ -16,6 +16,7 @@ var onPageLoad = function(controller_and_actions, callback) {
     console.log("controller: ", controller);
     console.log("action: ", action);
     if (isOnPage(controller, action)) {
+      console.log("passed.");
       return callback();
     }
   });
@@ -141,6 +142,7 @@ window.onload = function() {
     // フォーム内でEnterキーが押された時の動作を記述
     $('#note_good').keypress(function (event) {
       if (event.key === 'Enter') {
+        console.log("passed.");
         // 一秒後に実行
         setTimeout(function(){
           $('#advice_for_good').text("ワンタッチでテンポよくショートカウンターに繋げられたのはなぜだと思いますか？考えられる理由を追加しましょう。");
@@ -151,6 +153,7 @@ window.onload = function() {
     // フォーム内でEnterキーが押された時の動作を記述
     $('#note_next').keypress(function (event) {
       if (event.key == 'Enter') {
+        // console.log("passed.");
         // 一秒後に実行
         setTimeout(function(){
           $('#advice_for_next').text("「中盤を経由したプレス回避」を実現するために必要なものは何だと思いますか？目標を細分化しましょう。");
@@ -160,6 +163,47 @@ window.onload = function() {
     });
   });
 
+  onPageLoad('videos#new', function() {
+    console.log("aiueo.");
+    addEventListener("direct-upload:initialize", event => {
+      console.log("Initialize Direct Upload...")
+      const { target, detail } = event
+      const { id, file } = detail
+      target.insertAdjacentHTML("beforebegin", `
+        <div id="direct-upload-${id}" class="direct-upload direct-upload--pending">
+          <div id="direct-upload-progress-${id}" class="direct-upload__progress" style="width: 0%"></div>
+          <span class="direct-upload__filename"></span>
+        </div>
+      `)
+      target.previousElementSibling.querySelector(`.direct-upload__filename`).textContent = file.name
+    })
+    
+    addEventListener("direct-upload:start", event => {
+      const { id } = event.detail
+      const element = document.getElementById(`direct-upload-${id}`)
+      element.classList.remove("direct-upload--pending")
+    })
+    
+    addEventListener("direct-upload:progress", event => {
+      const { id, progress } = event.detail
+      const progressElement = document.getElementById(`direct-upload-progress-${id}`)
+      progressElement.style.width = `${progress}%`
+    })
+    
+    addEventListener("direct-upload:error", event => {
+      event.preventDefault()
+      const { id, error } = event.detail
+      const element = document.getElementById(`direct-upload-${id}`)
+      element.classList.add("direct-upload--error")
+      element.setAttribute("title", error)
+    })
+    
+    addEventListener("direct-upload:end", event => {
+      const { id } = event.detail
+      const element = document.getElementById(`direct-upload-${id}`)
+      element.classList.add("direct-upload--complete")
+    })
+  })
 };
 
 
