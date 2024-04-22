@@ -11,4 +11,4 @@ window.onload = function() {
             document.getElementById("item-delete-btn").click();
         };
     };
-}
+};

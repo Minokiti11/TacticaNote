@@ -96,7 +96,6 @@ Rails.application.configure do
 
   # config.hosts.clear
   config.hosts << 'tactica-chat.com'
-  config.hosts << 'tactica-chat-onrender.com'
 
   config.action_cable.url = "ws://tactica-chat.com/cable"
   # config.session_store :redis_store, servers: 'redis://localhost:6379/0', expire_in: 1.day

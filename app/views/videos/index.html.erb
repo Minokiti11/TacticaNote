@@ -5,9 +5,9 @@
 <div class="row row-cols-2 row-cols-md2">
     <% @videos.each do |video| %>
         <div class="col">
-            <%= link_to video_path(video), class: "card mb-3 ", style: "text-decoration: none; color: black; margin: 20px;" do %>
+            <%= link_to video_path(video), "data-turbo": false, class: "card mb-3 ", style: "text-decoration: none; color: black; margin: 20px;" do %>
                 <% if video.video.attached? %>
-                    <video src="<%= rails_blob_path(video.video) %>" class = "card-img-top" alt="..." type="video/mp4" controls></video>
+                    <video src="<%= rails_blob_path(video.video) %>" class = "card-img-top" alt="..." type="video/mp4" controls="false"></video>
                 <% end %>
                 
                 <div class="card-body">

@@ -12,7 +12,4 @@ import "channels";
 import "@rails/actioncable";
 import "popper"
 import "bootstrap"
-
-document.getElementById("video_upload").addEventListener("direct-upload:initialize", function() {
-    console.log('direct-uploads:initialize');
-});
+import "./modal.js";
