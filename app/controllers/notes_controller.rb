@@ -5,12 +5,14 @@ class NotesController < ApplicationController
     
     def new
         @note = Note.new
+        @@video_id = params[:video_id]
     end
 
     def create
         @note = Note.new(note_params)
         @note.user_id = current_user.id
         @note.group_id = current_user.group_users[0].group_id
+        @note.video_id = @@video_id
         if @note.save
             redirect_to @note
         else
@@ -20,6 +22,7 @@ class NotesController < ApplicationController
 
     def show
         @note = Note.find(params[:id])
+
     end
 
     def destroy

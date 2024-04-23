@@ -8,7 +8,7 @@
     </video>
     <h3 style="margin-top: 15px;"><%= @video.title %></h3>
     <!-- <%= @video.introduction %><br> -->
-    <%= link_to 'Write Note for this video', new_note_path, class: "btn btn-success", style: "margin-top: 6px;" %>
+    <%= link_to 'Write Note for this video', new_note_path(video_id: @video.id), class: "btn btn-success", style: "margin-top: 6px;" %>
     <% if @video.user_id == current_user.id %>
       <%= button_to 'Delete this video', video_path(@video), method: :delete, class: "btn btn-danger", style: "margin-top: 6px;" %>
     <% end %>
