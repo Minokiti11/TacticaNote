@@ -39,7 +39,7 @@
               rewindButton.el(),
               player.getChild('ControlBar').getChild('pictureInPictureToggle').el()
           )
-          .innerHTML = `<img src='../assets/rewind.png' width=20 />`;
+          .innerHTML = `<img src=<%= asset_path 'rewind.png' %> width=20 />`;
 
       player.getChild('ControlBar')
           .el()
@@ -47,7 +47,7 @@
               forwardButton.el(),
               player.getChild('ControlBar').getChild('pictureInPictureToggle').el()
           )
-          .innerHTML = `<img src='../assets/forward.png' width=20 />`;
+          .innerHTML = `<img src=<%= asset_path 'forward.png' %> width=20 />`;
 
       // スキップ処理を追加
       rewindButton.el().addEventListener('click', () => {
