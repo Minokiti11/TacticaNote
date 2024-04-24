@@ -1,19 +1,18 @@
-<!-- <h1 style="margin: 20px;"><%=@group.name%></h1> -->
-<h2 style="margin: 20px;">試合 映像</h2>
+<h1 style="margin: 20px;">試合 映像</h1>
 
 <%=link_to "Upload Video",new_video_path, class: "btn btn-outline-dark", style: "border-width: 2px; border-radius: 0; margin: 20px; font-size: 17px;"%>
 
-<div class="row row-cols-2 row-cols-md2">
+<div class="row row-cols-1 row-cols-lg-2">
     <% @videos.each do |video| %>
         <div class="col">
-            <%= link_to video_path(video), class: "card mb-3 ", style: "text-decoration: none; color: black; margin: 20px;" do %>
+            <%= link_to video_path(video), "data-turbo": false, class: "card mb-3", style: "text-decoration: none; color: black; margin: 20px;" do %>
                 <% if video.video.attached? %>
-                    <video src="<%= rails_blob_path(video.video) %>" class = "card-img-top" alt="..." type="video/mp4" controls></video>
+                    <video src="<%= rails_blob_path(video.video) %>" preload="metadata" class = "card-img-top" alt="..." type="video/mp4" controls="false"></video>
                 <% end %>
                 
                 <div class="card-body">
                     <h5 class="card-title"><%= video.title %></h5>
-                    <p class="card-text"><%= video.introduction%></p>
+                    <!-- <p class="card-text"><%= video.introduction%></p> -->
                     <p class="card-text"><small class="text-body-secondary"><time><%= video.updated_at.strftime("%Y-%m-%d %H:%M") %></time>更新</small></p>
                 </div>
             <% end %>
