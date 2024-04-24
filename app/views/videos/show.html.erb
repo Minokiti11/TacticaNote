@@ -16,8 +16,8 @@
       <div class="col">
         <%= link_to note_path(note), class: "card mb-3 ", style: "text-decoration: none; color: black; margin: 20px;" do %>
           <div class="card-body">
-            <h5 class="card-title"><%= note.title %></h5>
-            <p class="card-text"><small class="text-body-secondary"><%= note.user.username %></p>
+            <!-- <h5 class="card-title"><%= note.title %></h5> -->
+            <!-- <p class="card-text"><small class="text-body-secondary"><%= note.user.username %></p>-->
             <p class="card-text"><small class="text-body-secondary"><time><%= note.updated_at.strftime("%Y-%m-%d %H:%M") %></time>更新</small></p>
           </div>
         <% end %>
