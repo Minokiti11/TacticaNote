@@ -33,6 +33,6 @@ class NotesController < ApplicationController
 
     private
     def note_params
-        params.require(:note).permit(:id, :title, :good, :bad, :next)
+        params.require(:note).permit(:id, :title, :good, :bad, :next, :video_id)
     end
 end
