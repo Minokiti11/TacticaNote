@@ -23,6 +23,8 @@ class VideosController < ApplicationController
 
   def show
     @video = Video.find(params[:id])
+    @group = Group.find(@video.group_id)
+    p "This note is for: ", @group
   end
 
   def destroy
