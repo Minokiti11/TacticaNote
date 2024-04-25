@@ -15,6 +15,8 @@ gem 'sqlite3'
 
 gem 'pg'
 
+gem "dotenv-rails"
+
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", "~> 5.0"
 
@@ -95,3 +97,5 @@ gem 'googleauth'
 gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-github'
 gem 'omniauth-google-oauth2'
+
+gem "dockerfile-rails", ">= 1.6", :group => :development
