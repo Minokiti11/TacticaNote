@@ -98,4 +98,3 @@ gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-github'
 gem 'omniauth-google-oauth2'
 
-gem "dockerfile-rails", ">= 1.6", :group => :development
