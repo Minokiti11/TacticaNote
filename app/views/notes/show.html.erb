@@ -11,17 +11,17 @@
   </div>
   <div class="card mb-3">
     <div class="card-header">良かった点</div>
-    <div class="card-body"><%= @note.good %></div>
+    <div class="card-body"><%= simple_format(h(@note.good), {}, sanitize: false, wrapper_tag: 'div') %></div>
   </div>
 
   <div class="card mb-3">
     <div class="card-header">悪かった点</div>
-    <div class="card-body"><%= @note.bad %></div>
+    <div class="card-body"><%=  simple_format(h(@note.bad), {}, sanitize: false, wrapper_tag: 'div') %></div>
   </div>
 
   <div class="card mb-3">
     <div class="card-header">次に意識すること・次に向けて取り組むこと</div>
-    <div class="card-body"><%= @note.next %></div>
+    <div class="card-body"><%= simple_format(h(@note.next), {}, sanitize: false, wrapper_tag: 'div') %></div>
   </div>
 </div>
 
