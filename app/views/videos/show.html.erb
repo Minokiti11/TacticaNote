@@ -8,14 +8,26 @@
     </video>
     <h3 style="margin-top: 15px;"><%= @video.title %></h3>
     <%= @video.introduction %><br>
-    <%= link_to 'Write Note for this video', new_note_path(video_id: @video.id), class: "btn btn-success", style: "margin-top: 6px;" %>
+    <%= link_to 'Write Note for this video', new_note_path(video_id: @video.id), class: "btn btn-success", style: "margin-top: 6px;" %> <br />
     <% if @video.user_id == current_user.id %>
-      <%= button_to 'Delete this video', video_path(@video), method: :delete, class: "btn btn-danger", style: "margin-top: 6px;" %>
+      <button id="modal-open-btn" class="btn btn-danger" style="margin-top: 6px;">Delete this video
+        <%= link_to '', video_path(@video), method: :delete, id: "delete_video_btn" %>
+      </button>
+      <div id="overlay">
+        <div id="modalWindow">
+          <div class="modal-message-box">
+            <div>確認</div>
+            <div>本当に削除しますか？</div>
+          </div>
+          <button id="modal-close-btn">キャンセル</button>
+          <button id="delete-comformation-btn">削除する</button>
+        </div>
+      </div>
     <% end %>
-    <div class="row row-cols-3 row-cols-md3">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
       <% @video.notes.each do |note| %>
         <div class="col">
-          <%= link_to note_path(note), "data-turbo": false, class: "card", style: "text-decoration: none; color: black; margin-top: 20px;" do %>
+          <%= link_to note_path(note), "data-turbo": false, class: "card mb-3", style: "text-decoration: none; color: black; margin-top: 20px;" do %>
             <% if @video.video.attached? %>
               <video src="<%= rails_blob_path(@video.video) %>" preload="metadata" class = "card-img-top" alt="..." type="video/mp4" controls="false"></video>
             <% end %>
