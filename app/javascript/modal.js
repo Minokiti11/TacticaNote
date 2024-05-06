@@ -8,7 +8,7 @@ window.onload = function() {
             $('#overlay').fadeOut();
         };
         document.getElementById("delete-comformation-btn").onclick = function () {
-            document.getElementById("item-delete-btn").click();
+            document.getElementById("delete_video_btn").click();
         };
     };
 }

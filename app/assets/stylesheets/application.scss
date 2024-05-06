@@ -38,7 +38,7 @@ a{
     height: 200px;
     position: absolute;
     //トップからの場所を指定（topをいじれば高さが調整できます）
-    top: 20%;
+    top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
@@ -68,6 +68,15 @@ a{
     width: 50%;
     height: 60px;
     }
+}
+
+#delete_video_btn {
+    //削除ボタンの非表示
+    width: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
 }
 
 
