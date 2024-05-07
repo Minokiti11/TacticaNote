@@ -12,6 +12,6 @@ import "channels";
 import "@rails/actioncable";
 import "popper"
 import "bootstrap"
-import "./modal.js"
+import "./modal"
 
 //= require activestorage
