@@ -160,6 +160,16 @@ window.onload = function() {
     });
   });
 
+  onPageLoad('notes#new', function() {
+    var $textarea = $('#note_good');
+    var lineHeight = parseInt($textarea.css('lineHeight'));
+    console.log(lineheight);
+    $textarea.on('input', function(e) {
+      var lines = ($(this).val() + '\n').match(/\n/g).length;
+      $(this).height(lineHeight * lines);
+    });
+  });
+
 };
 
 
