@@ -14,4 +14,5 @@ import "popper"
 import "bootstrap"
 // import "./javascript/modal.js"
 
-//= require activestorage
+import * as ActiveStorage from "@rails/activestorage"
+ActiveStorage.start()
