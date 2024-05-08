@@ -41,7 +41,7 @@ Rails.application.configure do
   config.active_storage.service = :amazon
 
   # ActiveStorageのS3へのアップロードURLの有効期限を設定する
-  config.active_storage.service_urls_expire_in = 30.minutes
+  config.active_storage.urls_expire_in = 30.minutes
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
