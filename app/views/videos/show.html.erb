@@ -8,20 +8,9 @@
     </video>
     <h3 style="margin-top: 15px;"><%= @video.title %></h3>
     <%= @video.introduction %><br>
-    <%= link_to 'Write Note for this video', new_note_path(video_id: @video.id), class: "btn btn-success", style: "margin-top: 6px;" %> <br/>
+    <%= link_to 'Write Note for this video', new_note_path(video_id: @video.id), class: "btn btn-success", style: "margin-top: 6px;" %>
     <% if @video.user_id == current_user.id %>
-      <%# <button id="modal-open-btn"></button> %>
-      <%= button_to 'Delete this video', video_path(@video), method: :delete, class: "btn btn-danger", style: "margin-top: 6px;", id: "delete_video_btn" %>
-      <div id="overlay">
-        <div id="modalWindow">
-          <div class="modal-message-box">
-            <div>確認</div>
-            <div>本当に削除しますか？</div>
-          </div>
-          <button id="modal-close-btn">キャンセル</button>
-          <button id="delete-comformation-btn">削除する</button>
-        </div>
-      </div>
+      <%= button_to 'Delete this video', video_path(@video), method: :delete, class: "btn btn-danger", style: "margin-top: 6px;"%>
     <% end %>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
       <% @video.notes.each do |note| %>
