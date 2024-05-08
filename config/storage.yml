@@ -14,6 +14,7 @@ amazon:
   bucket: tactica-chat-bucket
   upload:
     expires_in: 600 # 10分 (10 minutes * 60 seconds)
+    multipart_threshold: 524288000 # 500MB
   
 # Use bin/rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 # amazon:
