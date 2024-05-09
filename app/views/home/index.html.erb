@@ -26,7 +26,16 @@
 
     <body>
       <% if current_user %>
-        
+        <div class="hero vh-100 d-flex align-items-center" style="background-image: url(<%= asset_path 'background.jpg' %>); background-position: center; background-size: cover; background-attachment: fixed; position:relative; z-index: 2;">
+          <div class="container">
+              <div class="row">
+                  <div class="col-lg-12 mx-auto text-center">
+                    <h1 class="display-8" style = "color: white; font-size: calc(1.375rem + 4.5vw); font-weight: 750; ">Communicate quickly, effectively, and actively.</h1>
+                    <p style = "margin-top: 200px;"><%=link_to "Get Started",new_user_registration_path, class: "btn btn-outline-light", style: "font-size: 17px;"%></p>
+                  </div>
+              </div>
+          </div>
+        </div>
       <% else %>
         <div class="hero vh-100 d-flex align-items-center" style="background-image: url(<%= asset_path 'background.jpg' %>); background-position: center; background-size: cover; background-attachment: fixed; position:relative; z-index: 2;">
           <div class="container">
