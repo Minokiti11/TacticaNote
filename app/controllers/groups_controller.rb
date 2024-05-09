@@ -20,11 +20,16 @@ class GroupsController < ApplicationController
   def join_by_invite
     token = params[:invite_token]
     group = Group.find_by(invite_token: token, invite_token_expires_at: [nil, Time.current..])
+    group_joining = GroupUser.where(group_id: group.id, user_id: current_user.id)
+    p "group_joining: ", group_joining
     if group
-      # ユーザーをグループに追加する処理
-      group.users << current_user
-      p "あいうえお"
-      redirect_to group_path(group), notice: 'グループに参加しました。'
+      if group_joining.empty?
+        # ユーザーをグループに追加する処理
+        group.users << current_user
+        redirect_to group_path(group), notice: 'グループに参加しました。'
+      else
+        redirect_to group_path(group), notice: 'すでにこのグループに参加しています。'
+      end
     else
       redirect_to root_path, alert: '無効な招待リンクです。'
     end
