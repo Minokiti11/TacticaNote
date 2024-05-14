@@ -13,8 +13,6 @@ var onPageLoad = function(controller_and_actions, callback) {
   return conditions.forEach(function(a_controller_and_action) {
     var action, controller, ref;
     ref = a_controller_and_action.split('#'), controller = ref[0], action = ref[1];
-    console.log("controller: ", controller);
-    console.log("action: ", action);
     if (isOnPage(controller, action)) {
       return callback();
     }
@@ -37,7 +35,6 @@ isOnPage = function(controller, action) {
   if (action) {
     selector += "[data-action='" + action + "']";
   }
-  console.log($(selector).length > 0);
   return $(selector).length > 0;
 };
 
@@ -126,57 +123,79 @@ window.onload = function() {
   });
 
   onPageLoad('notes#new', function() {
-    $('<p>', {
-      id: 'advice_for_good',
-      style: 'color: green;',
-      text: ''
-    }).appendTo('#div_good');
-
-    $('<p>', {
-      id: 'advice_for_next',
-      style: 'color: green;',
-      text: ''
-    }).appendTo('#div_next');
-
-    // フォーム内でEnterキーが押された時の動作を記述
-    $('#note_good').keypress(function (event) {
-      if (event.key === 'Enter') {
-        // 一秒後に実行
-        setTimeout(function(){
-          $('#advice_for_good').text("ワンタッチでテンポよくショートカウンターに繋げられたのはなぜだと思いますか？考えられる理由を追加しましょう。");
-        },1000);
-      }
+    $(".form-control").each(function(){ 
+      var $textarea = $(this);
+      var lineHeight = parseInt($textarea.css('line-height'));
+      $textarea.on('input', function(e) {
+        var lines = ($(this).val() + '\n').match(/\n/g).length;
+        $(this).height(lineHeight * lines + 20);
+      });
     });
 
-    // フォーム内でEnterキーが押された時の動作を記述
-    $('#note_next').keypress(function (event) {
-      if (event.key == 'Enter') {
-        // 一秒後に実行
-        setTimeout(function(){
-          $('#advice_for_next').text("「中盤を経由したプレス回避」を実現するために必要なものは何だと思いますか？目標を細分化しましょう。");
-        },1000);
-        
-      }
+    var $input_good = $('#note_good');
+    // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
+    $input_good.on('change', function(event) {
+      console.log('Good Section has been entered. The value is: ', $input_good.val());
+      fetch('/notes/post_api_request_good', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // CSRFトークンをmetaタグから取得して設定
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({data: { value: $input_good.val() }}) // ここに必要なデータを設定
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+    });
+
+    var $input_bad = $('#note_bad');
+    // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
+    $input_bad.on('change', function(event) {
+      console.log('Bad Section has been entered. The value is: ', $input_bad.val());
+      fetch('/notes/post_api_request_bad', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // CSRFトークンをmetaタグから取得して設定
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({data: { value: $input_bad.val() }}) // ここに必要なデータを設定
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+    });
+
+    var $input_next = $('#note_next');
+    // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
+    $input_next.on('change', function(event) {
+      console.log('Next Section has been entered. The value is: ', $input_next.val());
+      fetch('/notes/post_api_request_next', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // CSRFトークンをmetaタグから取得して設定
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({data: { value: $input_next.val() }}) // ここに必要なデータを設定
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
     });
   });
-
-  onPageLoad('notes#new', function() {
-    var $textarea = $('#note_good');
-    var lineHeight = parseInt($textarea.css('lineHeight'));
-    console.log(lineheight);
-    $textarea.on('input', function(e) {
-      var lines = ($(this).val() + '\n').match(/\n/g).length;
-      $(this).height(lineHeight * lines);
-    });
-  });
-
 };
-
-
-
-
-// $(document).on('turbo:load', function () {
-// window.onload = function () {
-
-// };
-

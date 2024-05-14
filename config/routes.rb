@@ -21,6 +21,8 @@ Rails.application.routes.draw do
     get 'video' => "groups#video"
     delete "all_destroy" => 'groups#all_destroy'
   end
-
+  post '/notes/post_api_request_good', to: 'notes#post_api_request_good'
+  post '/notes/post_api_request_bad', to: 'notes#post_api_request_bad'
+  post '/notes/post_api_request_next', to: 'notes#post_api_request_next'
   mount ActionCable.server => '/cable'
 end

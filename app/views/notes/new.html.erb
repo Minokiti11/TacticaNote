@@ -11,21 +11,53 @@
     <!-- 上手くいった点の入力フォーム -->
     <div class="form-group" id="div_good">
       <label for="note_good" class="form-label">上手くいった点</label>
-      <%= form.text_area :good, class: 'form-control mb-3', id: 'note_good', placeholder: '上手くいった点を記述', style: "padding: 10px; max-height: 200px; line-height: 20px;" %>
+      <%= form.rich_text_area :good, class: 'mb-3', id: 'note_good', placeholder: '上手くいった点を記述'%>
+      <%# <%= form.text_area :good, class: 'form-control mb-3', id: 'note_good', placeholder: '上手くいった点を記述', style: "padding: 10px; max-height: 200px; line-height: 20px;" %>
     </div>
+    
+    <div id="notes_good">
+      <!-- ここにメッセージがリアルタイムで表示される -->
+    </div><br />
+    <%= turbo_stream_from "notes_good" %>
+    
     <!-- 上手くいかなかった点の入力フォーム -->
     <div class="form-group">
       <label for="note_bad" class="form-label">上手くいかなかった点</label>
-      <%= form.text_area :bad, class: 'form-control mb-3', id: 'note_bad', placeholder: '上手くいかなかった点を記述', style: "padding: 10px;" %>
+      <%= form.text_area :bad, class: 'form-control mb-3', id: 'note_bad', placeholder: '上手くいかなかった点を記述', style: "padding: 10px; max-height: 200px; line-height: 20px;" %>
     </div>
+    <div id="notes_bad">
+      <!-- ここにメッセージがリアルタイムで表示される -->
+    </div><br />
+    <%= turbo_stream_from "notes_bad" %>
+
     <!-- 次のステップの入力フォーム -->
     <div class="form-group" id="div_next">
       <label for="note_next" class="form-label">次に意識すること・次に向けて取り組むこと</label>
-      <%= form.text_area :next, class: 'form-control mb-3', id: 'note_next', placeholder: '次に向けて取り組むことを記述', style: "padding: 10px;" %>
+      <%= form.text_area :next, class: 'form-control mb-3', id: 'note_next', placeholder: '次に向けて取り組むことを記述', style: "padding: 10px; max-height: 200px; line-height: 20px;" %>
     </div>
+    <div id="notes_next">
+      <!-- ここにメッセージがリアルタイムで表示される -->
+    </div><br />
+    <%= turbo_stream_from "notes_next" %>
+
     <!-- 送信ボタン -->
     <div class="form-group">
       <%= form.button type: 'button', onclick: 'submit();', class: 'btn btn-primary' %>
     </div>
   </div>
 <% end %>
+
+<script>
+$(function(){
+    var loc=false;
+    $(window).bind("beforeunload", function(e) {
+        // 確認メッセージに表示させたい文字列
+        if (!loc) {
+            return "入力は完了していません｡";
+        }
+    });
+    // aリンクを遷移OKにする場合はこのコメントを外す
+    $('a').click( function() {loc=true;});
+    $("form").submit(function(){loc=true;});
+});
+</script>

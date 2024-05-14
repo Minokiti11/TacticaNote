@@ -8,6 +8,50 @@ class NotesController < ApplicationController
         @@video_id = params[:video_id]
     end
 
+    def post_api_request_good
+        # JSON リクエストからデータを取得
+        data = params.require(:data).permit(:value)
+
+        chat_gpt_service = ChatGptService.new
+        specific_or_not = chat_gpt_service.check_specific_good(data[:value])
+
+        if specific_or_not == "False"
+            # ジョブを定義する
+            # perform_syncはジョブを非同期で実行するためsidekiqのメソッド
+            GetAiResponse.perform_async(data[:value], "good")
+        else
+
+        end
+    end
+
+    def post_api_request_bad
+        # JSON リクエストからデータを取得
+        data = params.require(:data).permit(:value)
+
+        chat_gpt_service = ChatGptService.new
+        specific_or_not = chat_gpt_service.check_specific_bad(data[:value])
+
+        if specific_or_not == "False"
+            GetAiResponse.perform_async(data[:value], "bad")
+        else
+            
+        end
+    end
+
+    def post_api_request_next
+        # JSON リクエストからデータを取得
+        data = params.require(:data).permit(:value)
+
+        chat_gpt_service = ChatGptService.new
+        specific_or_not = chat_gpt_service.check_specific_next(data[:value])
+
+        if specific_or_not == "False"
+            GetAiResponse.perform_async(data[:value], "next")
+        else
+
+        end
+    end
+
     def create
         @note = Note.new(note_params)
         @note.user_id = current_user.id
@@ -27,12 +71,12 @@ class NotesController < ApplicationController
     def destroy
         @note = Note.find(params[:id])
         if @note.destroy
-            redirect_to notes_path
+            redirect_to group_video_path(@note.group_id)
         end
     end
 
     private
     def note_params
-        params.require(:note).permit(:id, :title, :good, :bad, :next, :video_id)
+        params.require(:note).permit(:id, :title, :content, :good, :bad, :next, :video_id)
     end
 end
