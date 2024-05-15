@@ -1,5 +1,3 @@
-<h1>Chat room: <%= @group.id %></h1>
-<h3>Current_user: <%= current_user.username %></h3>
 <div id='messages' data-room_id=<%= @group.id %> data-user_id=<%= current_user.id %>>
   <%= render @messages %>
 </div>

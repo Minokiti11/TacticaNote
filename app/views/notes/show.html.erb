@@ -11,18 +11,22 @@
   </div>
   <div class="card mb-3">
     <div class="card-header">良かった点</div>
-    <div class="card-body"><%= simple_format(h(@note.good), {}, sanitize: false, wrapper_tag: 'div') %></div>
+    <div class="card-body"><%= simple_format(@note.good, {}, sanitize: false, wrapper_tag: 'div') %></div>
   </div>
 
   <div class="card mb-3">
     <div class="card-header">悪かった点</div>
-    <div class="card-body"><%=  simple_format(h(@note.bad), {}, sanitize: false, wrapper_tag: 'div') %></div>
+    <div class="card-body"><%=  simple_format(@note.bad, {}, sanitize: false, wrapper_tag: 'div') %></div>
   </div>
 
   <div class="card mb-3">
     <div class="card-header">次に意識すること・次に向けて取り組むこと</div>
-    <div class="card-body"><%= simple_format(h(@note.next), {}, sanitize: false, wrapper_tag: 'div') %></div>
+    <div class="card-body"><%= simple_format(@note.next, {}, sanitize: false, wrapper_tag: 'div') %></div>
   </div>
+
+  <% if @note.user_id == current_user.id %>
+    <%= button_to 'このノートを削除', note_path(@note), method: :delete, class: "btn btn-danger", style: "margin-top: 6px;"%>
+  <% end %>
 </div>
 
 <script>
