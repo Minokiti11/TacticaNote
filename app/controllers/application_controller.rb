@@ -1,4 +1,4 @@
-class ApplicationController < ActionController::Base
+class ApplicationController < ActionController
     before_action :configurepermitted_parameters, if: :devise_controller?
     
     def self.render_with_signed_in_user(user, *args)
