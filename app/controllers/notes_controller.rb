@@ -6,6 +6,7 @@ class NotesController < ApplicationController
     def new
         @note = Note.new
         @@video_id = params[:video_id]
+        @video_id = params[:video_id]
     end
 
     def post_api_request_good
@@ -18,9 +19,9 @@ class NotesController < ApplicationController
         if specific_or_not == "False"
             # ジョブを定義する
             # perform_syncはジョブを非同期で実行するためsidekiqのメソッド
-            GetAiResponse.perform_async(data[:value], "good")
+            GetAiResponse.perform_async(data[:value], "good", false)
         else
-
+            GetAiResponse.perform_async(data[:value], "good", true)
         end
     end
 
@@ -32,9 +33,9 @@ class NotesController < ApplicationController
         specific_or_not = chat_gpt_service.check_specific_bad(data[:value])
 
         if specific_or_not == "False"
-            GetAiResponse.perform_async(data[:value], "bad")
+            GetAiResponse.perform_async(data[:value], "bad", false)
         else
-            
+            GetAiResponse.perform_async(data[:value], "bad", true)
         end
     end
 
@@ -44,11 +45,13 @@ class NotesController < ApplicationController
 
         chat_gpt_service = ChatGptService.new
         specific_or_not = chat_gpt_service.check_specific_next(data[:value])
-
+        p "specific_or_not: ", specific_or_not
         if specific_or_not == "False"
-            GetAiResponse.perform_async(data[:value], "next")
+            GetAiResponse.perform_async(data[:value], "next", false)
+            return
         else
-
+            GetAiResponse.perform_async(data[:value], "next", true)
+            return
         end
     end
 

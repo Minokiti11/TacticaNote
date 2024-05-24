@@ -40,8 +40,6 @@ isOnPage = function(controller, action) {
 
 window.onload = function() {
   onPageLoad('groups#chat', function() {
-    console.log("loaded.");
-  
     const subscriptions = consumer.subscriptions.subscriptions;
     const userId = $('#messages').data('user_id');
     const userIdentifier = `"user_id":"${userId}"`;
@@ -54,7 +52,6 @@ window.onload = function() {
       });
     };
   
-    // ここから追加
     let already_connected = false
     for (let subscription of consumer.subscriptions.subscriptions) {
       let already_connected_room_id = JSON.parse(subscription.identifier).room_id;
@@ -63,7 +60,6 @@ window.onload = function() {
         break
       }
     }
-    // ここまで追加
   
     if (already_connected){
       return
@@ -116,7 +112,6 @@ window.onload = function() {
     // フォーム内でEnterキーが押された時の動作を記述
     window.document.onkeydown = function (event) {
       if (event.key == 'Enter') {
-        console.log("push login button by press return key.");
         document.querySelector("#login-btn").click();
       }
     };
@@ -128,7 +123,7 @@ window.onload = function() {
       var lineHeight = parseInt($textarea.css('line-height'));
       $textarea.on('input', function(e) {
         var lines = ($(this).val() + '\n').match(/\n/g).length;
-        $(this).height(lineHeight * lines + 20);
+        $(this).height(lineHeight * lines + 15);
       });
     });
 

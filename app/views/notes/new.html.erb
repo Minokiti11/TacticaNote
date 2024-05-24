@@ -1,50 +1,63 @@
+<script src="https://vjs.zencdn.net/7.20.2/video.min.js"></script>
+<link href="https://vjs.zencdn.net/7.20.2/video-js.css" rel="stylesheet" />
 <%= form_with model: @note, local: true, html: {class: "needs-validation", novalidate: true} do |form| %>
-  <div class="container mt-3">
-    <div class="h1" style="margin-top: 40px; margin-bottom: 50px; font-weight: 700;">
-      ノートの作成
-    </div>
-    <!-- タイトル入力フォーム -->
-    <div class="form-group">
-      <label for="note_title" class="form-label">タイトル</label>
-      <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', placeholder: 'タイトルを入力', style: "padding: 10px;" %>
-    </div>
-    <!-- 上手くいった点の入力フォーム -->
-    <div class="form-group" id="div_good">
-      <label for="note_good" class="form-label">上手くいった点</label>
-      <%= form.rich_text_area :good, class: 'mb-3', id: 'note_good', placeholder: '上手くいった点を記述'%>
-      <%# <%= form.text_area :good, class: 'form-control mb-3', id: 'note_good', placeholder: '上手くいった点を記述', style: "padding: 10px; max-height: 200px; line-height: 20px;" %>
-    </div>
-    
-    <div id="notes_good">
-      <!-- ここにメッセージがリアルタイムで表示される -->
-    </div><br />
-    <%= turbo_stream_from "notes_good" %>
-    
-    <!-- 上手くいかなかった点の入力フォーム -->
-    <div class="form-group">
-      <label for="note_bad" class="form-label">上手くいかなかった点</label>
-      <%= form.text_area :bad, class: 'form-control mb-3', id: 'note_bad', placeholder: '上手くいかなかった点を記述', style: "padding: 10px; max-height: 200px; line-height: 20px;" %>
-    </div>
-    <div id="notes_bad">
-      <!-- ここにメッセージがリアルタイムで表示される -->
-    </div><br />
-    <%= turbo_stream_from "notes_bad" %>
+    <div class="container mt-3">
+        <% video = Video.find_by(id: @video_id)%>
+        <video class="video-js vjs-big-play-centered" preload="metadata" controls playsinline id="video" style="width: 499px; height: 281px;">
+            <source src="<%= rails_blob_path(video.video) %>" type="video/mp4">
+        </video>
+        <div class="h1" style="margin-top: 40px; margin-bottom: 50px; font-weight: 700;">
+            ノートの作成
+        </div>
+        <!-- タイトル入力フォーム -->
+        <div class="form-group">
+            <label for="note_title" class="form-label">タイトル</label>
+            <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', placeholder: 'タイトルを入力', style: "padding: 10px;" %>
+        </div>
+        <!-- 動画のトリミング範囲を指定するフォーム -->
+        <%# <div class="form-group">
+            <label for="note_trim" class="form-label">トリミング範囲</label>
+            <%= form.text_field :trim_range, class: 'form-control mb-3', id:'note_trim_range', placeholder: '動画から切り抜く範囲を指定する（例：1分40秒〜3分50秒 => 1:40~3:50）※何も入力しない場合、切り抜く範囲は指定されず、元の動画全体が読み込まれます。'%>
+        <%# </div> %>
 
-    <!-- 次のステップの入力フォーム -->
-    <div class="form-group" id="div_next">
-      <label for="note_next" class="form-label">次に意識すること・次に向けて取り組むこと</label>
-      <%= form.text_area :next, class: 'form-control mb-3', id: 'note_next', placeholder: '次に向けて取り組むことを記述', style: "padding: 10px; max-height: 200px; line-height: 20px;" %>
-    </div>
-    <div id="notes_next">
-      <!-- ここにメッセージがリアルタイムで表示される -->
-    </div><br />
-    <%= turbo_stream_from "notes_next" %>
+        <!-- 上手くいった点の入力フォーム -->
+        <div class="form-group" id="div_good">
+            <label for="note_good" class="form-label">上手くいった点</label>
+            <%# <%= form.rich_text_area :good, class: 'mb-3', id: 'note_good', placeholder: '上手くいった点を記述'%>
+            <%= form.text_area :good, class: 'form-control mb-3', id: 'note_good', placeholder: '上手くいった点を記述', style: "padding: 10px; max-height: 200px; line-height: 20px;" %>
+        </div>
+        
+        <div id="notes_good">
+            <!-- ここにメッセージがリアルタイムで表示される -->
+        </div><br />
+        <%= turbo_stream_from "notes_good" %>
+        
+        <!-- 上手くいかなかった点の入力フォーム -->
+        <div class="form-group">
+            <label for="note_bad" class="form-label">上手くいかなかった点</label>
+            <%= form.text_area :bad, class: 'form-control mb-3', id: 'note_bad', placeholder: '上手くいかなかった点を記述', style: "padding: 10px; max-height: 200px; line-height: 20px;" %>
+        </div>
+        <div id="notes_bad">
+            <!-- ここにメッセージがリアルタイムで表示される -->
+        </div><br />
+        <%= turbo_stream_from "notes_bad" %>
 
-    <!-- 送信ボタン -->
-    <div class="form-group">
-      <%= form.button type: 'button', onclick: 'submit();', class: 'btn btn-primary' %>
+        <!-- 次のステップの入力フォーム -->
+        <div class="form-group" id="div_next">
+            <label for="note_next" class="form-label">次に意識すること・次に向けて取り組むこと</label>
+            <%= form.text_area :next, class: 'form-control mb-3', id: 'note_next', placeholder: '次に向けて取り組むことを記述', style: "padding: 10px; max-height: 200px; line-height: 20px;" %>
+        </div>
+        <div id="notes_next">
+            <!-- ここにメッセージがリアルタイムで表示される -->
+        </div><br />
+        <%= turbo_stream_from "notes_next" %>
+
+        <!-- 送信ボタン -->
+        <div class="form-group">
+            <%= form.button "作成する", type: 'button', onclick: 'submit();', class: 'btn btn-outline-primary', style: "border-radius: 1;" %>
+        </div>
+        <br />
     </div>
-  </div>
 <% end %>
 
 <script>
@@ -59,5 +72,56 @@ $(function(){
     // aリンクを遷移OKにする場合はこのコメントを外す
     $('a').click( function() {loc=true;});
     $("form").submit(function(){loc=true;});
+});
+
+const player = videojs('video', {
+    autoplay: false, // 自動再生を無効
+    fluid: false, // 動画コンテンツを親要素いっぱいに広げる
+    loop: false, // 繰り返し再生無効
+    controls: true, // コントローラ表示
+    playbackRates: [0.5, 1, 1.3, 1.5], // 再生速度の倍率
+});
+var video_el = document.getElementById("video");
+
+// videojsのreadyイベントを使用して、メタデータがロードされたときの処理を設定
+player.ready(function() {
+    this.on('loadedmetadata', function() {
+        // コントローラに10秒戻しボタンと10秒送りボタンを追加
+        const rewindButton = player.getChild('ControlBar').addChild('button');
+        const forwardButton = player.getChild('ControlBar').addChild('button');
+        rewindButton.controlText('10秒戻し');
+        forwardButton.controlText('10秒送り');
+
+        // アイコンを設定
+        player.getChild('ControlBar')
+            .el()
+            .insertBefore(
+                rewindButton.el(),
+                player.getChild('ControlBar').getChild('pictureInPictureToggle').el()
+            )
+            .innerHTML = `<img src=<%= asset_path 'rewind.png' %> width=20 />`;
+
+        player.getChild('ControlBar')
+            .el()
+            .insertBefore(
+                forwardButton.el(),
+                player.getChild('ControlBar').getChild('pictureInPictureToggle').el()
+            )
+            .innerHTML = `<img src=<%= asset_path 'forward.png' %> width=20 />`;
+
+        // スキップ処理を追加
+        rewindButton.el().addEventListener('click', () => {
+            var newTime = this.currentTime() - 10;
+            if (newTime < 0) newTime = 0; //現在時刻が0未満にならないように調整
+            this.currentTime(newTime);
+        });
+        
+        forwardButton.el().addEventListener('click', () => {
+            var newTime = this.currentTime() + 10;
+            var maxTime = this.duration(); // ビデオの長さを取得
+            if (newTime > maxTime) newTime = maxTime; //現在時刻がビデオの長さ以上にならないように調整
+            this.currentTime(newTime);
+        });
+    });
 });
 </script>
