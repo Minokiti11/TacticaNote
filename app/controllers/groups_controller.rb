@@ -20,8 +20,8 @@ class GroupsController < ApplicationController
   def join_by_invite
     token = params[:invite_token]
     group = Group.find_by(invite_token: token)
-    p "group_id: ", group.id
-    group_joining = GroupUser.where(group_id: group.id, user_id: current_user.id)
+    p "group_id: ", params[:group_id]
+    group_joining = GroupUser.where(group_id: params[:group_id], user_id: current_user.id)
     p "group_joining: ", group_joining
     if group
       if group_joining.empty?
