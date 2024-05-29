@@ -10,7 +10,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     @user = info[:user]
     @user.id = info[:sns][:user_id]
     p "info[:sns][:user_id]", info[:sns][:user_id]
-    if @user.persisted?    # persisted?は保存が完了しているかを評価するメソッド
+    if @user.persisted?  # persisted?は保存が完了しているかを評価するメソッド
       p "persisted."
       sign_in_and_redirect @user, event: :authentication
       # is_navigational_formatはフラッシュメッセージを発行する必要があるかどうかを確認する
