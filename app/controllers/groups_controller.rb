@@ -19,7 +19,8 @@ class GroupsController < ApplicationController
 
   def join_by_invite
     token = params[:invite_token]
-    group = Group.find_by(invite_token: token, invite_token_expires_at: [nil, Time.current..])
+    group = Group.find_by(invite_token: token)
+    p "group: ", group
     group_joining = GroupUser.where(group_id: group.id, user_id: current_user.id)
     p "group_joining: ", group_joining
     if group
