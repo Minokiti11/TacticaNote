@@ -36,47 +36,49 @@
 </div>
 
 <script>
-const progressBar = function(id){
-  const frame = $(id);
-  const bar = $('div.progress-bar', frame);
-  let current = 0;
-  return {
-    current: function(){
-      return current;
-    },
-    set: function(n) {
-      current = (n > 100) ? 100 : n;
-      bar
-        .css('width', current + '%')
-        .prop('aria-valuenow', current)
-        .text(current + '%');
-      return this;
-    },
-    show: function() {
-      this.set(0);
-      frame.addClass('show');
-      bar.addClass('progress-bar-striped progress-bar-animated');
-      return this;
-    },
-    complete: function(){
-      bar.removeClass('progress-bar-striped progress-bar-animated');
-      return this;
-    }
+  const progressBar = function(id){
+    const frame = $(id);
+    const bar = $('div.progress-bar', frame);
+    let current = 0;
+    return {
+      current: function(){
+        return current;
+      },
+      set: function(n) {
+        current = (n > 100) ? 100 : n;
+        bar
+          .css('width', current + '%')
+          .prop('aria-valuenow', current)
+          .text(current + '%');
+        return this;
+      },
+      show: function() {
+        this.set(0);
+        frame.addClass('show');
+        bar.addClass('progress-bar-striped progress-bar-animated');
+        return this;
+      },
+      complete: function(){
+        bar.removeClass('progress-bar-striped progress-bar-animated');
+        return this;
+      }
+    };
   };
-};
-</script>
 
-<script>
-$(function() {
-  const progress_bar = new progressBar('#progress');
+  $(function() {
+    const progress_bar = new progressBar('#progress');
 
-  addEventListener("direct-upload:start", event => {
-    progress_bar.show();
-  })
+    addEventListener("direct-upload:start", event => {
+      progress_bar.show();
+    })
 
-  addEventListener("direct-upload:progress", event => {
-    const { id, progress } = event.detail;
-    progress_bar.set(Math.round(progress));
-  })
-});
+    addEventListener("direct-upload:progress", event => {
+      const { id, progress } = event.detail;
+      progress_bar.set(Math.round(progress));
+    })
+
+    addEventListener("direct-upload:end", event => {
+      progress.complete();
+    })
+  });
 </script>
