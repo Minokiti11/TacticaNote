@@ -42,8 +42,8 @@
   var video_el = document.getElementById("video");
 
   // videojsのreadyイベントを使用して、メタデータがロードされたときの処理を設定
-  player.ready(function() {
-    this.on('loadedmetadata', function() {
+  player.ready(() => {
+    this.on('loadedmetadata', () => {
       console.log('loaded meta data.');
       // コントローラに10秒戻しボタンと10秒送りボタンを追加
       const rewindButton = player.getChild('ControlBar').addChild('button');
@@ -95,7 +95,6 @@
           if (newTime > maxTime) newTime = maxTime; //現在時刻がビデオの長さ以上にならないように調整
           this.currentTime(newTime);
         }
-
       })
     });
   });
