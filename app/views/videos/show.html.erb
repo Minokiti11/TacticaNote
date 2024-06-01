@@ -32,53 +32,72 @@
 </div>
 
 <script>
-  const player = videojs('video', {
-      autoplay: false, // 自動再生を無効
-      fluid: true, // 動画コンテンツを親要素いっぱいに広げる
-      loop: false, // 繰り返し再生無効
-      controls: true, // コントローラ表示
-      playbackRates: [0.5, 1, 1.3, 1.5], // 再生速度の倍率
-  });
-  var video_el = document.getElementById("video");
+  $(document).on('turbolinks:load', function() {
+    const player = videojs('video', {
+        autoplay: false, // 自動再生を無効
+        fluid: true, // 動画コンテンツを親要素いっぱいに広げる
+        loop: false, // 繰り返し再生無効
+        controls: true, // コントローラ表示
+        playbackRates: [0.5, 1, 1.3, 1.5], // 再生速度の倍率
+    });
+    var video_el = document.getElementById("video");
 
-  // videojsのreadyイベントを使用して、メタデータがロードされたときの処理を設定
-  player.ready(function() {
-    this.on('loadedmetadata', function() {
-      // コントローラに10秒戻しボタンと10秒送りボタンを追加
-      const rewindButton = player.getChild('ControlBar').addChild('button');
-      const forwardButton = player.getChild('ControlBar').addChild('button');
-      rewindButton.controlText('10秒戻し');
-      forwardButton.controlText('10秒送り');
+    // videojsのreadyイベントを使用して、メタデータがロードされたときの処理を設定
+    player.ready(function() {
+      this.on('loadedmetadata', function() {
+        console.log('loaded meta data.');
+        // コントローラに10秒戻しボタンと10秒送りボタンを追加
+        const rewindButton = player.getChild('ControlBar').addChild('button');
+        const forwardButton = player.getChild('ControlBar').addChild('button');
+        rewindButton.controlText('10秒戻し');
+        forwardButton.controlText('10秒送り');
 
-      // アイコンを設定
-      player.getChild('ControlBar')
-          .el()
-          .insertBefore(
-              rewindButton.el(),
-              player.getChild('ControlBar').getChild('pictureInPictureToggle').el()
-          )
-          .innerHTML = `<img src=<%= asset_path 'rewind.png' %> width=20 />`;
+        // アイコンを設定
+        player.getChild('ControlBar')
+            .el()
+            .insertBefore(
+                rewindButton.el(),
+                player.getChild('ControlBar').getChild('pictureInPictureToggle').el()
+            )
+            .innerHTML = `<img src=<%= asset_path 'rewind.png' %> width=20 />`;
 
-      player.getChild('ControlBar')
-          .el()
-          .insertBefore(
-              forwardButton.el(),
-              player.getChild('ControlBar').getChild('pictureInPictureToggle').el()
-          )
-          .innerHTML = `<img src=<%= asset_path 'forward.png' %> width=20 />`;
+        player.getChild('ControlBar')
+            .el()
+            .insertBefore(
+                forwardButton.el(),
+                player.getChild('ControlBar').getChild('pictureInPictureToggle').el()
+            )
+            .innerHTML = `<img src=<%= asset_path 'forward.png' %> width=20 />`;
 
-      // スキップ処理を追加
-      rewindButton.el().addEventListener('click', () => {
+        // スキップ処理を追加
+        rewindButton.el().addEventListener('click', () => {
           var newTime = this.currentTime() - 10;
           if (newTime < 0) newTime = 0; //現在時刻が0未満にならないように調整
           this.currentTime(newTime);
-      });
-      
-      forwardButton.el().addEventListener('click', () => {
+        });
+        
+        forwardButton.el().addEventListener('click', () => {
           var newTime = this.currentTime() + 10;
           var maxTime = this.duration(); // ビデオの長さを取得
           if (newTime > maxTime) newTime = maxTime; //現在時刻がビデオの長さ以上にならないように調整
           this.currentTime(newTime);
+        });
+
+        document.addEventListener('keydown', function (e) {
+          if (e.code == 'ArrowLeft') {
+            console.log('rewind...');
+            var newTime = this.currentTime() - 10;
+            if (newTime < 0) newTime = 0; //現在時刻が0未満にならないように調整
+            this.currentTime(newTime);
+          } else if (e.code == 'ArrowRight') {
+            console.log('forward...');
+            var newTime = this.currentTime() + 10;
+            var maxTime = this.duration(); // ビデオの長さを取得
+            if (newTime > maxTime) newTime = maxTime; //現在時刻がビデオの長さ以上にならないように調整
+            this.currentTime(newTime);
+          }
+
+        })
       });
     });
   });
