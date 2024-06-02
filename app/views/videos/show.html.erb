@@ -42,7 +42,7 @@
   var video_el = document.getElementById("video");
 
   // videojsのreadyイベントを使用して、メタデータがロードされたときの処理を設定
-  player.ready(() => {
+  player.ready(function() {
     var self = this;
     self.on('loadedmetadata', () => {
       console.log('loaded meta data.');
