@@ -43,7 +43,8 @@
 
   // videojsのreadyイベントを使用して、メタデータがロードされたときの処理を設定
   player.ready(() => {
-    this.on('loadedmetadata', () => {
+    var self = this;
+    self.on('loadedmetadata', () => {
       console.log('loaded meta data.');
       // コントローラに10秒戻しボタンと10秒送りボタンを追加
       const rewindButton = player.getChild('ControlBar').addChild('button');
@@ -70,30 +71,30 @@
 
       // スキップ処理を追加
       rewindButton.el().addEventListener('click', () => {
-        var newTime = this.currentTime() - 10;
+        var newTime = self.currentTime() - 10;
         if (newTime < 0) newTime = 0; //現在時刻が0未満にならないように調整
-        this.currentTime(newTime);
+        self.currentTime(newTime);
       });
       
       forwardButton.el().addEventListener('click', () => {
-        var newTime = this.currentTime() + 10;
-        var maxTime = this.duration(); // ビデオの長さを取得
+        var newTime = self.currentTime() + 10;
+        var maxTime = self.duration(); // ビデオの長さを取得
         if (newTime > maxTime) newTime = maxTime; //現在時刻がビデオの長さ以上にならないように調整
-        this.currentTime(newTime);
+        self.currentTime(newTime);
       });
 
       document.addEventListener('keydown', function (e) {
         if (e.code == 'ArrowLeft') {
           console.log('rewind...');
-          var newTime = this.currentTime() - 10;
+          var newTime = self.currentTime() - 10;
           if (newTime < 0) newTime = 0; //現在時刻が0未満にならないように調整
-          this.currentTime(newTime);
+          self.currentTime(newTime);
         } else if (e.code == 'ArrowRight') {
           console.log('forward...');
-          var newTime = this.currentTime() + 10;
-          var maxTime = this.duration(); // ビデオの長さを取得
+          var newTime = self.currentTime() + 10;
+          var maxTime = self.duration(); // ビデオの長さを取得
           if (newTime > maxTime) newTime = maxTime; //現在時刻がビデオの長さ以上にならないように調整
-          this.currentTime(newTime);
+          self.currentTime(newTime);
         }
       })
     });
