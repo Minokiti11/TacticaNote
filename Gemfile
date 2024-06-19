@@ -100,3 +100,6 @@ gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-github'
 gem 'omniauth-google-oauth2'
 
+# gem 'serviceworker-rails'
+
+gem 'rack-cors', require: 'rack/cors'

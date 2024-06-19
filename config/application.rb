@@ -18,5 +18,15 @@ module TacticaChat
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # CORS設定
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins '*'  # すべてのオリジンからのアクセスを許可
+        resource '*', 
+          headers: :any, 
+          methods: [:get, :post, :patch, :put, :delete, :options, :head]
+      end
+    end
   end
 end
