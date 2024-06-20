@@ -18,7 +18,6 @@ class VideosController < ApplicationController
     else
       render 'new'
     end
-    
   end
 
   def show
@@ -36,7 +35,7 @@ class VideosController < ApplicationController
 
   private
   def video_params
-    params.require(:video).permit(:title, :introduction, :video)
+    params.require(:video).permit(:id, :title, :introduction, :video)
   end
 end
   
