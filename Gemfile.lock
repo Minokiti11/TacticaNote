@@ -212,6 +212,8 @@ GEM
       net-smtp
     marcel (1.0.2)
     matrix (0.4.2)
+    meta-tags (2.21.0)
+      actionpack (>= 6.0.0, < 7.2)
     method_source (1.0.0)
     mime-types (3.5.0)
       mime-types-data (~> 3.2015)
@@ -369,6 +371,8 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
+    serviceworker-rails (0.6.0)
+      railties (>= 3.1)
     sidekiq (7.2.4)
       concurrent-ruby (< 2)
       connection_pool (>= 2.3.0)
@@ -456,6 +460,7 @@ DEPENDENCIES
   image_processing
   importmap-rails
   jbuilder
+  meta-tags
   net-http
   omniauth-github
   omniauth-google-oauth2
@@ -470,6 +475,7 @@ DEPENDENCIES
   refile-mini_magick
   ruby-openai
   selenium-webdriver
+  serviceworker-rails
   sidekiq
   sprockets-rails
   sqlite3
