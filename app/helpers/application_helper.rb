@@ -18,13 +18,13 @@ module ApplicationHelper
                 description: :description,
                 type: 'website',
                 url: request.original_url,
-                image: url('image/tacticanote-logo.png'),# 配置するパスやファイル名によって変更する
+                image: 'https://tactica-chat.com/images/tacticanote-logo.png',
                 local: 'ja-JP',
             },
             twitter: {
                 card: 'summary_large_image', # Twitterで表示する場合は大きいカードに変更
                 site: '@minorex14', # アプリの公式Twitterアカウントがあれば、アカウント名を記載
-                image: url('image/tacticanote-logo.png'),# 配置するパスやファイル名によって変更
+                image: 'https://tactica-chat.com/images/tacticanote-logo.png',
             }
         }
     end
