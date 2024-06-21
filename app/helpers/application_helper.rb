@@ -5,7 +5,7 @@ module ApplicationHelper
             title: 'TacticaNote',
             reverse: true,
             charset: 'utf-8',
-            description: 'TacticaNoteは従来のサッカーノートとは異なる、選手主体のチームのための共有型でインタラクティブなデジタルサッカーノートです。',
+            description: '従来のサッカーノートとは異なる、共有型でインタラクティブなデジタルサッカーノート。',
             keywords: 'サッカーノート, 育成年代, ユース年代, LLM, AI, Webアプリ, Webサービス',
             canonical: request.original_url,
             separator: '|',
