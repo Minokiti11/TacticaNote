@@ -106,4 +106,9 @@ Rails.application.configure do
   ActionCable.server.config.disable_request_forgery_protection = true
   config.action_cable.url = "ws://tactica-chat.com/cable" 
   config.action_cable.allowed_request_origins = ['https://tactica-chat.com']
+
+  config.active_job.queue_adapter = :sidekiq
+  # この設定により、ActiveJobがジョブをキューに入れる際にSidekiqを使用するようになる
+  config.cache_store = :redis_cache_store, { url: ENV['REDIS_URL'] }
+  # RailsのキャッシュストアとしてRedisを使用する設定を追加
 end

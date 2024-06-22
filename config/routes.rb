@@ -1,3 +1,5 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
   resources :videos
   resources :notes
@@ -25,4 +27,6 @@ Rails.application.routes.draw do
   post '/notes/post_api_request_bad', to: 'notes#post_api_request_bad'
   post '/notes/post_api_request_next', to: 'notes#post_api_request_next'
   mount ActionCable.server => '/cable'
+  
+  mount Sidekiq::Web => '/sidekiq'
 end
