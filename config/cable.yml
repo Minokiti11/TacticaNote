@@ -6,6 +6,5 @@ test:
   adapter: test
 
 production:
-  adapter: async
-  url: <%= ENV.fetch("REDIS_URL") %>
-  channel_prefix: TacticaChat_production
+  adapter: redis
+  url: <%= ENV.fetch("REDIS_URL") { "redis://red-cp9tqqf109ks73aejveg:6379" } %>
