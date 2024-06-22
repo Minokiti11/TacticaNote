@@ -5,18 +5,6 @@ class ChatGptService
         @openai = OpenAI::Client.new()
     end
 
-    # def chat(prompt)
-    #     response = @openai.chat(
-    #     parameters: {
-    #         model: "gpt-4-turbo", # Required. # 使用するGPT-3のエンジンを指定
-    #         messages: [{ role: "user", content: prompt }],
-    #         temperature: 0.5, # 応答のランダム性を指定
-    #         max_tokens: 2000,  # 応答の長さを指定
-    #     },
-    #     )
-    #     response['choices'].first['message']['content']
-    # end
-
     def extract_what_happend_good(prompt)
         response = @openai.chat(
         parameters: {
