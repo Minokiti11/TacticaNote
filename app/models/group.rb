@@ -12,6 +12,6 @@ class Group < ApplicationRecord
     # 招待リンク用のトークンを生成するメソッド
     def generate_invite_token
         self.invite_token = SecureRandom.hex(10)
-        self.invite_token_expires_at = 2.days.from_now # 有効期限を設定（2日間など）
+        self.invite_token_expires_at = 7.days.from_now # 有効期限を設定（2日間など）
     end
 end
