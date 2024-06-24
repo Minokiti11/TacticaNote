@@ -36,7 +36,7 @@ class GetAiResponse
                 OpenAI::Client.new.chat(
                     parameters: {
                         model: MODEL_NAME,
-                        messages: [{ role: "system", content: "今から入力する文章は育成年代の選手のサッカーノートの「上手くいかなかったこと」の欄に書かれている文章です。現象が起こった理由や具体的なシチュエーションを、追加して書くように促してください。3文以内で簡潔に回答し、考えられる原因や解決策は提示しないでください。チームの戦術的な原因も書くように促すこと。ビルドアップについて書かれていたら、相手のフォーメーションと自分たちのフォーメーションを追加して書くように促してください。output only answer with 「。」." }, { role: "user", content: prompt}],
+                        messages: [{ role: "system", content: "今から入力する文章は育成年代の選手のサッカーノートの「上手くいかなかったこと」の欄に書かれている文章です。現象が起こった理由や具体的なシチュエーションを、追加して書くように促してください。3文以内で簡潔に回答し、考えられる原因や解決策は提示しないでください。チームの戦術的な原因も書くように促すこと。ビルドアップについて書かれていたら、相手のフォーメーションと自分たちのフォーメーションを追加して書くように促してください。output only answer." }, { role: "user", content: prompt}],
                         temperature: TEMPERATURE,
                         stream: stream_proc(type),
                         max_tokens: 200,

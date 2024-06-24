@@ -1,4 +1,7 @@
 class NotesController < ApplicationController
+    ## LLMを使わないデバッグモードに
+    @@debug = true
+
     def index
         @notes = Note.all
     end
@@ -10,48 +13,54 @@ class NotesController < ApplicationController
     end
 
     def post_api_request_good
-        # JSON リクエストからデータを取得
-        data = params.require(:data).permit(:value)
+        if !@@debug && Rails.env.development?
+            # JSON リクエストからデータを取得
+            data = params.require(:data).permit(:value)
 
-        chat_gpt_service = ChatGptService.new
-        specific_or_not = chat_gpt_service.check_specific_good(data[:value])
+            chat_gpt_service = ChatGptService.new
+            specific_or_not = chat_gpt_service.check_specific_good(data[:value])
 
-        if specific_or_not == "False"
-            # ジョブを定義する
-            # perform_syncはジョブを非同期で実行するためsidekiqのメソッド
-            GetAiResponse.perform_async(data[:value], "good", false)
-        else
-            GetAiResponse.perform_async(data[:value], "good", true)
+            if specific_or_not == "False"
+                # ジョブを定義する
+                # perform_syncはジョブを非同期で実行するためsidekiqのメソッド
+                GetAiResponse.perform_async(data[:value], "good", false)
+            else
+                GetAiResponse.perform_async(data[:value], "good", true)
+            end
         end
+
     end
 
     def post_api_request_bad
-        # JSON リクエストからデータを取得
-        data = params.require(:data).permit(:value)
+        if !@@debug && Rails.env.development?
+            # JSON リクエストからデータを取得
+            data = params.require(:data).permit(:value)
 
-        chat_gpt_service = ChatGptService.new
-        specific_or_not = chat_gpt_service.check_specific_bad(data[:value])
+            chat_gpt_service = ChatGptService.new
+            specific_or_not = chat_gpt_service.check_specific_bad(data[:value])
 
-        if specific_or_not == "False"
-            GetAiResponse.perform_async(data[:value], "bad", false)
-        else
-            GetAiResponse.perform_async(data[:value], "bad", true)
+            if specific_or_not == "False"
+                GetAiResponse.perform_async(data[:value], "bad", false)
+            else
+                GetAiResponse.perform_async(data[:value], "bad", true)
+            end
         end
     end
 
     def post_api_request_next
-        # JSON リクエストからデータを取得
-        data = params.require(:data).permit(:value)
+        if !@@debug && Rails.env.development?
+            # JSON リクエストからデータを取得
+            data = params.require(:data).permit(:value)
 
-        chat_gpt_service = ChatGptService.new
-        specific_or_not = chat_gpt_service.check_specific_next(data[:value])
-        p "specific_or_not: ", specific_or_not
-        if specific_or_not == "False"
-            GetAiResponse.perform_async(data[:value], "next", false)
-            return
-        else
-            GetAiResponse.perform_async(data[:value], "next", true)
-            return
+            chat_gpt_service = ChatGptService.new
+            specific_or_not = chat_gpt_service.check_specific_next(data[:value])
+            if specific_or_not == "False"
+                GetAiResponse.perform_async(data[:value], "next", false)
+                return
+            else
+                GetAiResponse.perform_async(data[:value], "next", true)
+                return
+            end
         end
     end
 
