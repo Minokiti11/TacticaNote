@@ -16,9 +16,6 @@
       <% @video.notes.each do |note| %>
         <div class="col">
           <%= link_to note_path(note), "data-turbo": false, class: "card mb-3", style: "text-decoration: none; color: black; margin-top: 20px;" do %>
-            <% if @video.video.attached? %>
-              <video src="<%= rails_blob_path(@video.video) %>" preload="metadata" class = "card-img-top" alt="..." type="video/mp4" controls="false"></video>
-            <% end %>
             <div class="card-body">
               <h5 class="card-title"><%= note.title %></h5>
               <p class="card-text"><small class="text-body-secondary"><%= note.user.username %></p>
