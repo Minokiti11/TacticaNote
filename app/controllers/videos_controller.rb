@@ -22,6 +22,7 @@ class VideosController < ApplicationController
 
   def show
     @video = Video.find(params[:id])
+    @video_id = params[:id]
     @group = Group.find(@video.group_id)
   end
 
