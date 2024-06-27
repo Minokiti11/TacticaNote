@@ -14,7 +14,7 @@
         <%= button_to 'このビデオを削除', video_path(@video), "data-turbo": false, method: :delete, class: "btn btn-danger", style: "margin-top: 6px;"%>
       <% end %>
     <% end %>
-
+    
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
       <% @video.notes.each do |note| %>
         <div class="col">

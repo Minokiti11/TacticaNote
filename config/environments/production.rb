@@ -110,5 +110,6 @@ Rails.application.configure do
   config.active_job.queue_adapter = :sidekiq
   # この設定により、ActiveJobがジョブをキューに入れる際にSidekiqを使用するようになる
   config.cache_store = :redis_cache_store, { url: ENV['REDIS_URL'] }
+  config.session_store :cache_store, expire_after: 7.days
   # RailsのキャッシュストアとしてRedisを使用する設定を追加
 end
