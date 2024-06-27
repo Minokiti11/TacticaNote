@@ -5,7 +5,6 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def callback_for(provider)
     @omniauth = request.env["omniauth.auth"]
-    # p @omniauth
     info = User.find_oauth(@omniauth)
     @user = info[:user]
     @user.id = info[:sns][:user_id]
