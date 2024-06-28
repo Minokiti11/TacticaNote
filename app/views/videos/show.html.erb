@@ -1,7 +1,7 @@
 <script src="https://vjs.zencdn.net/7.20.2/video.min.js"></script>
 <link href="https://vjs.zencdn.net/7.20.2/video-js.css" rel="stylesheet" />
 
-<div class="mb-3" style="margin: 50px;">
+<div class="container mt-5">
   <% if @video.video.attached? %>
     <video class="video-js vjs-big-play-centered" preload="metadata" controls playsinline id="video">
       <source src="<%= rails_blob_path(@video.video) %>" type="video/mp4">
