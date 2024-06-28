@@ -15,6 +15,7 @@ class GroupsController < ApplicationController
 
   def show
     @group = Group.find(params[:id])
+    @videos = @group.videos
   end
 
   def join_by_invite
