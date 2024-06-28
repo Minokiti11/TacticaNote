@@ -61,7 +61,7 @@ class GetAiResponse
                 OpenAI::Client.new.chat(
                     parameters: {
                         model: MODEL_NAME,
-                        messages: [{ role: "system", content: "今から入力する文章は育成年代のサッカー選手が、試合を振り返って「次に意識すること・次までに取り組むこと」の欄に書かれている文章です。具体的な解決策を追加して書くように促してください。（e.g. 「崩し方を練習する」=> 「具体的にどのような崩し方を想定していますか？」）解決策や具体例は提示しないでください。3文以内で出力してください。output only answer." }, { role: "user", content: prompt}],
+                        messages: [{ role: "system", content: "今から入力する文章は育成年代のサッカー選手が、試合を振り返って「次に意識すること・次までに取り組むこと」の欄に書かれている文章です。具体的な解決策を追加して書くように促してください。（e.g. 「崩し方を練習する」=> 「具体的にどのような崩し方を想定していますか？」）具体的な練習方法については質問しないでください。解決策や具体例は提示しないでください。3文以内で出力してください。output only answer." }, { role: "user", content: prompt}],
                         temperature: TEMPERATURE,
                         stream: stream_proc(type),
                         max_tokens: 200,
