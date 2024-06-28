@@ -172,9 +172,16 @@ window.onload = function() {
     });
 
     var $input_next = $('#note_next');
-    // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
-    $input_next.on('change', function(event) {
-      console.log('Next Section has been entered. The value is: ', $input_next.val());
+
+    let id;
+    $input_next.on('input', function(event) {
+      clearTimeout(id);// タイマーストップ
+      id = setTimeout(fire,7000);// タイマーリセット（7秒）
+    });
+
+    // 実際にnotes_controllerのメソッドを呼ぶ部分
+    var fire = function() {
+      console.log('API for Next Section will be sent. The value is: ', $input_next.val());
       fetch('/notes/post_api_request_next', {
         method: 'POST',
         headers: {
@@ -191,6 +198,6 @@ window.onload = function() {
       .catch((error) => {
         console.error('Error:', error);
       });
-    });
+    };
   });
 };
