@@ -52,7 +52,7 @@
         </td>
         <td>
           <div class="row" style="margin-top: 30px;">
-            <h3>直近の動画</h3>
+            <h4>直近の動画</h4>
             <% @videos.last(3).each do |video| %>
               <div class="col-md-4">
                 <%= link_to video_path(video), "data-turbo": false, class: "card mb-4", style: "text-decoration: none; color: black;" do %>
