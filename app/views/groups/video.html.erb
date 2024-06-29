@@ -7,7 +7,16 @@
         <div class="col">
             <%= link_to video_path(video), "data-turbo": false, class: "card mb-3", style: "text-decoration: none; color: black; margin: 20px;" do %>
                 <% if video.video.attached? %>
-                    <video src="<%= rails_blob_path(video.video) %>" preload="metadata" class = "card-img-top" alt="..." type="video/mp4" controls="false"></video>
+                    <% s3 = Aws::S3::Resource.new(
+                            region: "ap-northeast-1",
+                            credentials: Aws::Credentials.new(
+                            Rails.application.credentials.dig(:aws, :access_key_id),
+                            Rails.application.credentials.dig(:aws, :secret_access_key)
+                            )
+                        )
+                    signer = Aws::S3::Presigner.new(client: s3.client)
+                    presigned_url = signer.presigned_url(:get_object, bucket: Rails.application.credentials.dig(:aws, :bucket), key: "output/thumbnail/#{video.video.filename.base}/#{video.video.filename.base}_thumbnail.0000000.jpg", expires_in: 60) %>
+                    <%= image_tag presigned_url, class: "card-img-top" %>
                 <% end %>
                 
                 <div class="card-body">

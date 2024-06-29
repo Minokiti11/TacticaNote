@@ -65,7 +65,6 @@
                           )
                       signer = Aws::S3::Presigner.new(client: s3.client)
                       presigned_url = signer.presigned_url(:get_object, bucket: Rails.application.credentials.dig(:aws, :bucket), key: "output/thumbnail/#{video.video.filename.base}/#{video.video.filename.base}_thumbnail.0000000.jpg", expires_in: 60) %>
-                    <%= puts presigned_url %>
                     <%= image_tag presigned_url, class: "card-img-top" %>
                   <% end %>
                   <div class="card-body">
