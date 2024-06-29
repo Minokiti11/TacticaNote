@@ -71,9 +71,6 @@
                     <h5 class="card-title"><%= video.title %></h5>
                     <p class="card-text"><%= truncate(video.introduction, length: 100) %></p>
                     <div class="d-flex justify-content-between align-items-center">
-                      <div class="btn-group">
-                        <%= link_to 'View', video_path(video), class: "btn btn-sm btn-outline-secondary" %>
-                      </div>
                       <small class="text-muted"><%= time_ago_in_words(video.created_at) %> ago</small>
                     </div>
                   </div>
