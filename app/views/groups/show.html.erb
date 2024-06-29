@@ -54,30 +54,28 @@
           <div class="row" style="margin-top: 30px;">
             <h3>直近の動画</h3>
             <% @videos.last(3).each do |video| %>
-              <div class="col-md-4">
-                <div class="card mb-4 shadow-sm">
-                  <%= link_to video_path(video), "data-turbo": false, style: "text-decoration: none; color: black; margin: 20px;" do %>
-                    <% s3 = Aws::S3::Resource.new(
-                            region: "ap-northeast-1",
-                            credentials: Aws::Credentials.new(
-                              Rails.application.credentials.dig(:aws, :access_key_id),
-                              Rails.application.credentials.dig(:aws, :secret_access_key)
-                            )
+              <div class="col">
+                <%= link_to video_path(video), "data-turbo": false, class: "card mb-3", style: "text-decoration: none; color: black; margin: 20px;" do %>
+                  <% s3 = Aws::S3::Resource.new(
+                          region: "ap-northeast-1",
+                          credentials: Aws::Credentials.new(
+                            Rails.application.credentials.dig(:aws, :access_key_id),
+                            Rails.application.credentials.dig(:aws, :secret_access_key)
                           )
-                      signer = Aws::S3::Presigner.new(client: s3.client)
-                      presigned_url = signer.presigned_url(:get_object, bucket: Rails.application.credentials.dig(:aws, :bucket), key: "output/thumbnail/#{video.video.filename.base}/#{video.video.filename.base}_thumbnail.0000000.jpg", expires_in: 60) %>
-                    <%= image_tag presigned_url, class: "card-img-top" %>
+                        )
+                    signer = Aws::S3::Presigner.new(client: s3.client)
+                    presigned_url = signer.presigned_url(:get_object, bucket: Rails.application.credentials.dig(:aws, :bucket), key: "output/thumbnail/#{video.video.filename.base}/#{video.video.filename.base}_thumbnail.0000000.jpg", expires_in: 60) %>
+                  <%= image_tag presigned_url, class: "card-img-top" %>
 
-                    <div class="card-body">
-                      <h5 class="card-title"><%= video.title %></h5>
-                      <p class="card-text"><%= truncate(video.introduction, length: 100) %></p>
-                      <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted"><%= time_ago_in_words(video.created_at) %> ago</small>
-                      </div>
+                  <div class="card-body">
+                    <h5 class="card-title"><%= video.title %></h5>
+                    <p class="card-text"><%= truncate(video.introduction, length: 100) %></p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <small class="text-muted"><%= time_ago_in_words(video.created_at) %> ago</small>
                     </div>
-                  <% end %>
+                  </div>
+                <% end %>
 
-                </div>
               </div>
             <% end %>
           </div> 
