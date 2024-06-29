@@ -55,7 +55,7 @@
             <% @videos.last(3).each do |video| %>
               <div class="col-md-4">
                 <div class="card mb-4 shadow-sm">
-                  <%= link_to video_path(video) "data-turbo": false do %>
+                  <%= link_to video_path(video), "data-turbo": false do %>
                     <% s3 = Aws::S3::Resource.new(
                             region: "ap-northeast-1",
                             credentials: Aws::Credentials.new(
