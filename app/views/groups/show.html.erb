@@ -56,7 +56,17 @@
               <div class="col-md-4">
                 <div class="card mb-4 shadow-sm">
                   <%= link_to video_path(video) do %>
-                    <%# <%= image_tag video.thumbnail_url, class: "card-img-top" %>
+                    <% s3 = Aws::S3::Resource.new(
+                            region: "ap-northeast-1",
+                            credentials: Aws::Credentials.new(
+                              Rails.application.credentials.dig(:aws, :access_key_id),
+                              Rails.application.credentials.dig(:aws, :secret_access_key)
+                            )
+                          )
+                      signer = Aws::S3::Presigner.new(client: s3.client)
+                      presigned_url = signer.presigned_url(:get_object, bucket: Rails.application.credentials.dig(:aws, :bucket), key: "output/thumbnail/#{video.video.filename.base}/#{video.video.filename.base}_thumbnail.0000000.jpg", expires_in: 60) %>
+                    <%= puts presigned_url %>
+                    <%= image_tag presigned_url, class: "card-img-top" %>
                   <% end %>
                   <div class="card-body">
                     <h5 class="card-title"><%= video.title %></h5>
