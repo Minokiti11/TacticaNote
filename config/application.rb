@@ -25,7 +25,8 @@ module TacticaChat
         origins '*'  # すべてのオリジンからのアクセスを許可
         resource '*', 
           headers: :any, 
-          methods: [:get, :post, :patch, :put, :delete, :options, :head]
+          methods: [:get, :post, :patch, :put, :delete, :options, :head],
+          credentials: false
       end
     end
   end
