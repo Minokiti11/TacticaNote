@@ -1,4 +1,5 @@
 $(function(){
+	console.log("hey, it's a modal.js");
 	// 変数に要素を入れる
 	var open = $('.modal-open'),
 		close = $('.modal-close'),
