@@ -40,8 +40,6 @@ isOnPage = function(controller, action) {
 
 window.onload = function() {
   onPageLoad('groups#chat', function() {
-    console.log("loaded.");
-  
     const subscriptions = consumer.subscriptions.subscriptions;
     const userId = $('#messages').data('user_id');
     const userIdentifier = `"user_id":"${userId}"`;
@@ -54,7 +52,6 @@ window.onload = function() {
       });
     };
   
-    // ここから追加
     let already_connected = false
     for (let subscription of consumer.subscriptions.subscriptions) {
       let already_connected_room_id = JSON.parse(subscription.identifier).room_id;
@@ -63,7 +60,6 @@ window.onload = function() {
         break
       }
     }
-    // ここまで追加
   
     if (already_connected){
       return
@@ -116,46 +112,22 @@ window.onload = function() {
     // フォーム内でEnterキーが押された時の動作を記述
     window.document.onkeydown = function (event) {
       if (event.key == 'Enter') {
-        console.log("push login button by press return key.");
         document.querySelector("#login-btn").click();
       }
     };
   });
 
   onPageLoad('notes#new', function() {
-    console.log("passed.");
     $(".form-control").each(function(){ 
       var $textarea = $(this);
       var lineHeight = parseInt($textarea.css('line-height'));
       $textarea.on('input', function(e) {
         var lines = ($(this).val() + '\n').match(/\n/g).length;
-        $(this).height(lineHeight * lines + 20);
+        $(this).height(lineHeight * lines + 15);
       });
     });
 
-    var input_good = document.getElementById('note_good_trix_input_note');
-    console.log(input_good);
     var $input_good = $('#note_good');
-    addEventListener('trix-blur', function(event) {
-      console.log('Good Section has been entered. The value is: ', $input_good.val());
-      fetch('/notes/post_api_request_good', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          // CSRFトークンをmetaタグから取得して設定
-          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({data: { value: $input_good.val() }}) // ここに必要なデータを設定
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Success:', data);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-    })
-
     // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
     $input_good.on('change', function(event) {
       console.log('Good Section has been entered. The value is: ', $input_good.val());
@@ -200,9 +172,16 @@ window.onload = function() {
     });
 
     var $input_next = $('#note_next');
-    // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
-    $input_next.on('change', function(event) {
-      console.log('Next Section has been entered. The value is: ', $input_next.val());
+
+    let id;
+    $input_next.on('input', function(event) {
+      clearTimeout(id);// タイマーストップ
+      id = setTimeout(fire,7000);// タイマーリセット（7秒）
+    });
+
+    // 実際にnotes_controllerのメソッドを呼ぶ部分
+    var fire = function() {
+      console.log('API for Next Section will be sent. The value is: ', $input_next.val());
       fetch('/notes/post_api_request_next', {
         method: 'POST',
         headers: {
@@ -219,6 +198,6 @@ window.onload = function() {
       .catch((error) => {
         console.error('Error:', error);
       });
-    });
+    };
   });
 };

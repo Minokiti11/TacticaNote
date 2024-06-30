@@ -421,43 +421,6 @@ trix-editor .attachment__metadata {
 .trix-button--icon-quote {
   display: none !important;
 }
-.direct-upload {
-    display: inline-block;
-    position: relative;
-    padding: 2px 4px;
-    margin: 0 3px 3px 0;
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    border-radius: 3px;
-    font-size: 11px;
-    line-height: 13px;
-}
-
-.direct-upload--pending {
-  opacity: 0.6;
-}
-
-.direct-upload__progress {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  opacity: 0.2;
-  background: #0076ff;
-  transition: width 120ms ease-out, opacity 60ms 60ms ease-in;
-  transform: translate3d(0, 0, 0);
-}
-
-.direct-upload--complete .direct-upload__progress {
-  opacity: 0.4;
-}
-
-.direct-upload--error {
-  border-color: red;
-}
-
-input[type=file][data-direct-upload-url][disabled] {
-  display: none;
-}
 @charset "UTF-8";
 /*
  * This is a manifest file that'll be compiled into application.css, which will include all the files
@@ -14023,114 +13986,81 @@ textarea.form-control-lg {
   display: none !important;
 }
 
-/* line 1, app/assets/stylesheets/direct_uploads.css */
-.direct-upload {
-  display: inline-block;
-  position: relative;
-  padding: 2px 4px;
-  margin: 0 3px 3px 0;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  border-radius: 3px;
-  font-size: 11px;
-  line-height: 13px;
-}
-
-/* line 12, app/assets/stylesheets/direct_uploads.css */
-.direct-upload--pending {
-  opacity: 0.6;
-}
-
-/* line 16, app/assets/stylesheets/direct_uploads.css */
-.direct-upload__progress {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  opacity: 0.2;
-  background: #0076ff;
-  transition: width 120ms ease-out, opacity 60ms 60ms ease-in;
-  transform: translate3d(0, 0, 0);
-}
-
-/* line 27, app/assets/stylesheets/direct_uploads.css */
-.direct-upload--complete .direct-upload__progress {
-  opacity: 0.4;
-}
-
-/* line 31, app/assets/stylesheets/direct_uploads.css */
-.direct-upload--error {
-  border-color: red;
-}
-
-/* line 35, app/assets/stylesheets/direct_uploads.css */
-input[type=file][data-direct-upload-url][disabled] {
-  display: none;
-}
-
-/* line 20, app/assets/stylesheets/application.scss */
+/* line 19, app/assets/stylesheets/application.scss */
 a {
   text-decoration: none;
 }
 
-/* line 24, app/assets/stylesheets/application.scss */
-#overlay {
-  width: 100%;
-  height: 100%;
+/*モーダルを開くボタン*/
+/*モーダル本体の指定 + モーダル外側の背景の指定*/
+/* line 41, app/assets/stylesheets/application.scss */
+.modal-container {
   position: fixed;
   top: 0;
   left: 0;
-  background: rgba(0, 0, 0, 0.3);
-  display: none;
-  z-index: 1;
-}
-
-/* line 37, app/assets/stylesheets/application.scss */
-#modalWindow {
-  width: 500px;
-  height: 200px;
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  z-index: 2;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
-/* line 53, app/assets/stylesheets/application.scss */
-#modalWindow .modal-message-box {
   width: 100%;
-  height: calc(100% - 60px);
+  height: 100%;
   text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+  background: black;
+  padding: 40px 20px;
+  overflow: auto;
+  opacity: 0;
+  visibility: hidden;
+  transition: .3s;
+  box-sizing: border-box;
 }
 
+/*モーダル本体の擬似要素の指定*/
+/* line 57, app/assets/stylesheets/application.scss */
+.modal-container:before {
+  content: "";
+  display: inline-block;
+  vertical-align: middle;
+  height: 100%;
+}
+
+/*モーダル本体に「active」クラス付与した時のスタイル*/
 /* line 64, app/assets/stylesheets/application.scss */
-#modalWindow #modal-close-btn {
-  width: 50%;
-  height: 60px;
+.modal-container.active {
+  opacity: 1;
+  visibility: visible;
 }
 
+/*モーダル枠の指定*/
 /* line 69, app/assets/stylesheets/application.scss */
-#modalWindow #delete-comformation-btn {
-  width: 50%;
-  height: 60px;
+.modal-body {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 500px;
+  width: 90%;
 }
 
-/* line 75, app/assets/stylesheets/application.scss */
-#delete_video_btn {
-  width: 0;
-  height: 0;
-  margin: 0;
-  padding: 0;
-  border: 0;
+/*モーダルを閉じるボタンの指定*/
+/* line 77, app/assets/stylesheets/application.scss */
+.modal-close {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: -40px;
+  right: -40px;
+  width: 40px;
+  height: 40px;
+  font-size: 40px;
+  color: #fff;
+  cursor: pointer;
 }
 
-/* line 85, app/assets/stylesheets/application.scss */
+/*モーダル内のコンテンツの指定*/
+/* line 91, app/assets/stylesheets/application.scss */
+.modal-content {
+  background: #fff;
+  text-align: left;
+  padding: 30px;
+}
+
+/* line 98, app/assets/stylesheets/application.scss */
 .gsi-material-button {
   -moz-user-select: none;
   -webkit-user-select: none;
@@ -14161,7 +14091,7 @@ a {
   min-width: min-content;
 }
 
-/* line 117, app/assets/stylesheets/application.scss */
+/* line 130, app/assets/stylesheets/application.scss */
 .gsi-material-button .gsi-material-button-icon {
   height: 20px;
   margin-right: 12px;
@@ -14169,7 +14099,7 @@ a {
   width: 20px;
 }
 
-/* line 124, app/assets/stylesheets/application.scss */
+/* line 137, app/assets/stylesheets/application.scss */
 .gsi-material-button .gsi-material-button-content-wrapper {
   align-items: center;
   display: flex;
@@ -14181,7 +14111,7 @@ a {
   width: 100%;
 }
 
-/* line 138, app/assets/stylesheets/application.scss */
+/* line 151, app/assets/stylesheets/application.scss */
 .gsi-material-button .gsi-material-button-contents {
   flex-grow: 1;
   font-family: 'Roboto', arial, sans-serif;
@@ -14191,7 +14121,7 @@ a {
   vertical-align: top;
 }
 
-/* line 148, app/assets/stylesheets/application.scss */
+/* line 161, app/assets/stylesheets/application.scss */
 .gsi-material-button .gsi-material-button-state {
   transition: opacity .218s;
   bottom: 0;
@@ -14202,36 +14132,36 @@ a {
   top: 0;
 }
 
-/* line 159, app/assets/stylesheets/application.scss */
+/* line 172, app/assets/stylesheets/application.scss */
 .gsi-material-button:disabled {
   cursor: default;
   background-color: #ffffff61;
   border-color: #1f1f1f1f;
 }
 
-/* line 165, app/assets/stylesheets/application.scss */
+/* line 178, app/assets/stylesheets/application.scss */
 .gsi-material-button:disabled .gsi-material-button-contents {
   opacity: 38%;
 }
 
-/* line 169, app/assets/stylesheets/application.scss */
+/* line 182, app/assets/stylesheets/application.scss */
 .gsi-material-button:disabled .gsi-material-button-icon {
   opacity: 38%;
 }
 
-/* line 173, app/assets/stylesheets/application.scss */
+/* line 186, app/assets/stylesheets/application.scss */
 .gsi-material-button:not(:disabled):active .gsi-material-button-state,
 .gsi-material-button:not(:disabled):focus .gsi-material-button-state {
   background-color: #303030;
   opacity: 12%;
 }
 
-/* line 179, app/assets/stylesheets/application.scss */
+/* line 192, app/assets/stylesheets/application.scss */
 .gsi-material-button:not(:disabled):hover {
   box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
 }
 
-/* line 184, app/assets/stylesheets/application.scss */
+/* line 197, app/assets/stylesheets/application.scss */
 .gsi-material-button:not(:disabled):hover .gsi-material-button-state {
   background-color: #444444;
   opacity: 8%;

@@ -12,7 +12,9 @@ import "channels";
 import "@rails/actioncable";
 import "popper"
 import "bootstrap"
-// import "./javascript/modal.js"
+import "./modal.js"
 
 import * as ActiveStorage from "@rails/activestorage"
-ActiveStorage.start();
+ActiveStorage.start()
+import "trix"
+import "@rails/actiontext";
