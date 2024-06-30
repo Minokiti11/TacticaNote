@@ -17,10 +17,13 @@
 </style>
 <%= form_with model: @note, local: true, html: {class: "needs-validation", novalidate: true} do |form| %>
     <div class="container mt-3">
-        <% video = Video.find_by(id: @video_id)%>
-        <video class="video-js vjs-big-play-centered" preload="metadata" controls playsinline id="video">
-            <source src="<%= rails_blob_path(video.video) %>" type="video/mp4">
-        </video>
+        <% if @with_video %>
+            <% video = Video.find_by(id: @video_id)%>
+            <video class="video-js vjs-big-play-centered" preload="metadata" controls playsinline id="video">
+                <source src="<%= rails_blob_path(video.video) %>" type="video/mp4">
+            </video>
+        <% end %>
+
         <div class="h1" style="margin-top: 40px; margin-bottom: 50px; font-weight: 700;">
             ノートの作成
         </div>
@@ -39,7 +42,7 @@
         <div class="form-group" id="div_good">
             <label for="note_good" class="form-label">上手くいった点</label>
             <%# <%= form.rich_text_area :good, class: 'mb-3', id: 'note_good', placeholder: '上手くいった点を記述'%>
-            <%= form.text_area :good, class: 'form-control mb-3', id: 'note_good', placeholder: '上手くいった点を記述', style: "padding: 10px; max-height: 200px; line-height: 20px;" %>
+            <%= form.text_area :good, class: 'form-control mb-3', id: 'note_good', placeholder: '上手くいった点を記入', style: "padding: 10px; max-height: 200px; line-height: 20px;" %>
         </div>
         
         <div id="notes_good">
@@ -50,7 +53,7 @@
         <!-- 上手くいかなかった点の入力フォーム -->
         <div class="form-group">
             <label for="note_bad" class="form-label">上手くいかなかった点</label>
-            <%= form.text_area :bad, class: 'form-control mb-3', id: 'note_bad', placeholder: '上手くいかなかった点を記述', style: "padding: 10px; max-height: 200px; line-height: 20px;" %>
+            <%= form.text_area :bad, class: 'form-control mb-3', id: 'note_bad', placeholder: '上手くいかなかった点を記入', style: "padding: 10px; max-height: 200px; line-height: 20px;" %>
         </div>
         <div id="notes_bad">
             <!-- ここにメッセージがリアルタイムで表示される -->
@@ -60,7 +63,7 @@
         <!-- 次のステップの入力フォーム -->
         <div class="form-group" id="div_next">
             <label for="note_next" class="form-label">次に意識すること・次に向けて取り組むこと</label>
-            <%= form.text_area :next, class: 'form-control mb-3', id: 'note_next', placeholder: '次に向けて取り組むことを記述', style: "padding: 10px; max-height: 200px; line-height: 20px;" %>
+            <%= form.text_area :next, class: 'form-control mb-3', id: 'note_next', placeholder: '次に向けて取り組むことを記入', style: "padding: 10px; max-height: 200px; line-height: 20px;" %>
         </div>
         <div id="notes_next">
             <!-- ここにメッセージがリアルタイムで表示される -->

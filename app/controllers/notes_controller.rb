@@ -8,27 +8,23 @@ class NotesController < ApplicationController
     
     def new
         @note = Note.new
-        @@video_id = params[:video_id]
-        @video_id = params[:video_id]
+        @@with_video = params[:with_video]
+        @with_video = params[:with_video]
+        puts "@@with_video: ", @@with_video
+        if @@with_video
+            @@video_id = params[:video_id]
+            @video_id = params[:video_id]
+        end
     end
 
     def post_api_request_good
         if !@@debug && Rails.env.development?
             # JSON リクエストからデータを取得
             data = params.require(:data).permit(:value)
-
-            chat_gpt_service = ChatGptService.new
-            specific_or_not = chat_gpt_service.check_specific_good(data[:value])
-
-            if specific_or_not == "False"
-                # ジョブを定義する
-                # perform_syncはジョブを非同期で実行するためsidekiqのメソッド
-                GetAiResponse.perform_async(data[:value], "good", false)
-            else
-                GetAiResponse.perform_async(data[:value], "good", true)
-            end
+            # perform_syncはジョブを非同期で実行するためsidekiqのメソッド
+            GetAiResponse.perform_async(data[:value], "good", true)
         end
-
+        head :no_content
     end
 
     def post_api_request_bad
@@ -45,6 +41,7 @@ class NotesController < ApplicationController
                 GetAiResponse.perform_async(data[:value], "bad", true)
             end
         end
+        head :no_content
     end
 
     def post_api_request_next
@@ -62,13 +59,16 @@ class NotesController < ApplicationController
                 return
             end
         end
+        head :no_content
     end
 
     def create
         @note = Note.new(note_params)
         @note.user_id = current_user.id
         @note.group_id = current_user.group_users[0].group_id
-        @note.video_id = @@video_id
+        if @@with_video
+            @note.video_id = @@video_id
+        end
         if @note.save
             redirect_to @note
         else
