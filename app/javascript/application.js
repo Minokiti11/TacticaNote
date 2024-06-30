@@ -12,7 +12,7 @@ import "channels";
 import "@rails/actioncable";
 import "popper"
 import "bootstrap"
-import "modal"
+import "./modal"
 
 import * as ActiveStorage from "@rails/activestorage"
 ActiveStorage.start()
