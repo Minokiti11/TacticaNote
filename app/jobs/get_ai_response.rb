@@ -8,29 +8,16 @@ class GetAiResponse
     def perform(prompt, type, specific)
         p "perform is called..."
         if type == "good"
-            if !specific
-                OpenAI::Client.new.chat(
-                    parameters: {
-                        model: MODEL_NAME,
-                        messages: [{ role: "system", content: "今から入力する文章はサッカーノートの「上手くいったこと」の欄に書かれている文章です。現象が起こった理由を、追加して書くように促してください。書かれていない事実を含めるのを避けること。具体例を提示することは避けてください。ビルドアップについて書かれていたら、相手のフォーメーションと自分たちのフォーメーションを追加して書くように促してください。output only answer." }, { role: "user", content: prompt}],
-                        temperature: TEMPERATURE,
-                        stream: stream_proc(type),
-                        max_tokens: 200,
-                        n: RESPONSES_PER_MESSAGE
-                    }
-                )
-            else
-                OpenAI::Client.new.chat(
-                    parameters: {
-                        model: MODEL_NAME,
-                        messages: [{ role: "system", content: "今から入力する文章は育成年代のサッカー選手のサッカーノートの「上手くいったこと」の欄に書かれている文章です。現象が起こった理由が明確になっていることを褒めてください。（必ず丁寧語で回答してください。）また、追加すべき情報を提示してください。（e.g. ビルドアップのことについて言及されていたら=>自チームと相手チームのフォーメーションが何だったか聞く）（具体的でありながら簡潔であること。）output only answer less than 3 sentences." }, { role: "user", content: prompt}],
-                        temperature: TEMPERATURE,
-                        stream: stream_proc(type),
-                        max_tokens: 200,
-                        n: RESPONSES_PER_MESSAGE
-                    }
-                )
-            end
+            OpenAI::Client.new.chat(
+                parameters: {
+                    model: MODEL_NAME,
+                    messages: [{ role: "system", content: "今から入力する文章はサッカーノートの「上手くいったこと」の欄に書かれている文章です。起こった現象の理由が書かれていなかったら、現象が起こった理由を書くように促してください。書かれていたら、現象が起こった理由が明確になっていることを丁寧語で褒め、追加すべき情報を提示してください。(e.g. ビルドアップのことについて言及されていたら=>自チームと相手チームのフォーメーションが何だったか聞く)。書かれていない事実を含めるのを避けること。具体例を提示することは避けてください。ビルドアップについて書かれていたら、相手のフォーメーションと自分たちのフォーメーションを追加して書くように促してください。output only answer less than 3 sentences." }, { role: "user", content: prompt}],
+                    temperature: TEMPERATURE,
+                    stream: stream_proc(type),
+                    max_tokens: 200,
+                    n: RESPONSES_PER_MESSAGE
+                }
+            )
         elsif type == "bad"
             if !specific
                 OpenAI::Client.new.chat(
