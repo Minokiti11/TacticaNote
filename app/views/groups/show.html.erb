@@ -176,9 +176,9 @@ details[open] .details-content {
           <div class="row" style="margin-top: 30px;">
             <details>
               <summary class="h4">直近の動画</summary>
-              <div class="details-content">
+              <div class="details-content row">
                 <% @videos.last(3).each do |video| %>
-                  <div class="col-md-4">
+                  <div class="col-sm-6 col-md-4 col-lg-4">
                     <%= link_to video_path(video), "data-turbo": false, class: "card mb-4", style: "text-decoration: none; color: black;" do %>
                       <% s3 = Aws::S3::Resource.new(
                               region: "ap-northeast-1",
