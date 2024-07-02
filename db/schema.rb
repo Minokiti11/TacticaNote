@@ -90,7 +90,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_14_023233) do
     t.integer "group_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "video_id", null: false
+    t.integer "video_id"
     t.index ["group_id"], name: "index_notes_on_group_id"
     t.index ["user_id"], name: "index_notes_on_user_id"
     t.index ["video_id"], name: "index_notes_on_video_id"

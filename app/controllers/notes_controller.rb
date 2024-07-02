@@ -2,6 +2,9 @@ class NotesController < ApplicationController
     ## LLMを使わないデバッグモードに
     @@debug = true
 
+    @@with_video = false
+    @@video_id = nil
+
     def index
         @notes = Note.all
     end
@@ -89,6 +92,6 @@ class NotesController < ApplicationController
 
     private
     def note_params
-        params.require(:note).permit(:id, :title, :content, :good, :bad, :next, :video_id)
+        params.require(:note).permit(:id, :title, :content, :good, :bad, :next)
     end
 end
