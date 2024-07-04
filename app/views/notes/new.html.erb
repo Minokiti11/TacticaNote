@@ -29,7 +29,7 @@
         </div>
         <!-- タイトル入力フォーム -->
         <div class="form-group">
-            <label for="note_title" class="form-label">タイトル</label>
+            <label id="title" for="note_title" class="form-label">タイトル</label>
             <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', placeholder: 'タイトルを入力(例：「vs_〇〇の振り返り」「ビルドアップについて」「守備軽いねんボケ！」)', style: "padding: 10px;" %>
         </div>
         <!-- 動画のトリミング範囲を指定するフォーム -->
@@ -79,6 +79,7 @@
 <% end %>
 
 <script>
+
 $(function(){
     var loc=false;
     $(window).bind("beforeunload", function(e) {
@@ -89,7 +90,7 @@ $(function(){
     });
     // aリンクを遷移OKにする場合はこのコメントを外す
     $('a').click( function() {loc=true;});
-    $("form").submit(function(){loc=true;});
+    $("button").submit(function(){loc=true;});
 });
 
 const player = videojs('video', {
