@@ -22,11 +22,16 @@
             <video class="video-js vjs-big-play-centered" preload="metadata" controls playsinline id="video">
                 <source src="<%= rails_blob_path(video.video) %>" type="video/mp4">
             </video>
+
+            <div class="h3" style="margin-top: 40px; margin-bottom: 50px; font-weight: 700;">
+                <%= video.title %> - ノートの作成
+            </div>
+        <% else %>
+            <div class="h3" style="margin-top: 40px; margin-bottom: 50px; font-weight: 700;">
+                ノートの作成
+            </div>
         <% end %>
 
-        <div class="h1" style="margin-top: 40px; margin-bottom: 50px; font-weight: 700;">
-            ノートの作成
-        </div>
         <!-- タイトル入力フォーム -->
         <div class="form-group">
             <label id="title" for="note_title" class="form-label">タイトル</label>
