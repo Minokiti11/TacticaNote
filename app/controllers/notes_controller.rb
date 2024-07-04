@@ -1,6 +1,6 @@
 class NotesController < ApplicationController
     ## LLMを使わないデバッグモードに
-    @@debug = true
+    @@debug = false
 
     @@with_video = false
     @@video_id = nil
@@ -13,7 +13,6 @@ class NotesController < ApplicationController
         @note = Note.new
         @@with_video = params[:with_video]
         @with_video = params[:with_video]
-        puts "@@with_video: ", @@with_video
         if @@with_video
             @@video_id = params[:video_id]
             @video_id = params[:video_id]
@@ -21,7 +20,7 @@ class NotesController < ApplicationController
     end
 
     def post_api_request_good
-        if !@@debug && Rails.env.development?
+        if !@@debug
             # JSON リクエストからデータを取得
             data = params.require(:data).permit(:value)
             # perform_syncはジョブを非同期で実行するためsidekiqのメソッド
@@ -31,24 +30,17 @@ class NotesController < ApplicationController
     end
 
     def post_api_request_bad
-        if !@@debug && Rails.env.development?
+        if !@@debug
             # JSON リクエストからデータを取得
             data = params.require(:data).permit(:value)
 
-            chat_gpt_service = ChatGptService.new
-            specific_or_not = chat_gpt_service.check_specific_bad(data[:value])
-
-            if specific_or_not == "False"
-                GetAiResponse.perform_async(data[:value], "bad", false)
-            else
-                GetAiResponse.perform_async(data[:value], "bad", true)
-            end
+            GetAiResponse.perform_async(data[:value], "bad", true)
         end
         head :no_content
     end
 
     def post_api_request_next
-        if !@@debug && Rails.env.development?
+        if !@@debug
             # JSON リクエストからデータを取得
             data = params.require(:data).permit(:value)
 
