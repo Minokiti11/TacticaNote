@@ -17,7 +17,7 @@
 </style>
 <%= form_with model: @note, local: true, html: {class: "needs-validation", novalidate: true} do |form| %>
     <div class="container mt-3">
-        <% if @with_video %>
+        <% if @with_video && @video_id %>
             <% video = Video.find_by(id: @video_id)%>
             <video class="video-js vjs-big-play-centered" preload="metadata" controls playsinline id="video">
                 <source src="<%= rails_blob_path(video.video) %>" type="video/mp4">
@@ -35,7 +35,7 @@
         <!-- タイトル入力フォーム -->
         <div class="form-group">
             <label id="title" for="note_title" class="form-label">タイトル</label>
-            <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', placeholder: 'タイトルを入力(例：「vs_〇〇の振り返り」「ビルドアップについて」「杉村、お前守備軽いねんボケ！」)', style: "padding: 10px;" %>
+            <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', placeholder: '例：「vs_〇〇の振り返り」「ビルドアップについて」「杉村、お前守備軽いねんボケ！」)', style: "padding: 10px;" %>
         </div>
         <!-- 動画のトリミング範囲を指定するフォーム -->
         <%# <div class="form-group">

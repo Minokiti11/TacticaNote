@@ -141,11 +141,11 @@ details[open] .details-content {
                     item.style.zIndex = '';
                   });
                   // クリックされたアイテムのoutlineと文字色を設定
-                  element.style.outline = '2px solid #1E90FF'; // 少し落ち着いた青色のoutline
+                  element.style.outline = '2px solid #1E90FF'; // 青色のoutline
                   element.style.color = 'black';
-                  element.style.boxShadow = '0 4px 8px 0 rgba(0, 0, 0, 0.2)'; // おしゃれな影
+                  element.style.boxShadow = '0 4px 8px 0 rgba(0, 0, 0, 0.2)';
                   element.style.zIndex = '2'; // 最前面に表示
-                  selectedVideoId = element.getAttribute('data-video-id'); // 選択されたビデオのIDを保存
+                  selectedVideoId = element.getAttribute('data-video-id'); // 選択されたビデオのID
                   console.log("selectedVideoId: ", selectedVideoId);
                 }
 
@@ -157,11 +157,8 @@ details[open] .details-content {
                 function createNotePath() {
                   const toggle = document.getElementById('toggle');
                   let path = '<%= new_note_path(with_video: false) %>';
-                  if (toggle.checked) {
-                    path = '<%= new_note_path(with_video: true) %>';
-                    if (selectedVideoId) {
-                      path += `&video_id=${selectedVideoId}`;
-                    }
+                  if (toggle.checked && selectedVideoId) {
+                    path = '<%= new_note_path(with_video: true) %>' + `&video_id=${selectedVideoId}`;
                   }
                   return path;
                 }
