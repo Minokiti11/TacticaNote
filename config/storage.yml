@@ -15,6 +15,7 @@ amazon:
   upload:
     expires_in: 7200 # 120分 (120 minutes * 60 seconds)
     multipart_threshold: 524288000 # 500MB
+    multipart_min_part_size: 5242880000 # 5GB
   
 # Use bin/rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 # amazon:
