@@ -16,6 +16,9 @@ class GroupsController < ApplicationController
   def show
     @group = Group.find(params[:id])
     @videos = @group.videos
+    @feeds = @group.notes.order('created_at DESC').first(7)
+    @recent_videos = @videos.where("created_at > ?", Time.now - 14.days)
+    @timeline = (@feeds + @recent_videos).sort_by(&:created_at).reverse
   end
 
   def join_by_invite
