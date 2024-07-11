@@ -120,10 +120,11 @@ window.onload = function() {
   onPageLoad('notes#new', function() {
     $(".form-control").each(function(){
       $(document).on("input", $(this), function(evt){
-        var min_height = 20; //テキストエリアの最小の高さをお好みで設定
+        var min_height = 35; //テキストエリアの最小の高さをお好みで設定
         $(evt.target).height(min_height); //一旦最小サイズにする
         $(evt.target).height(evt.target.scrollHeight - 10); //スクロールなしでテキストが収まる最小の高さに上書き
-    });
+        console.log(evt.target.scrollHeight);
+      });
     });
 
     var $input_good = $('#note_good');

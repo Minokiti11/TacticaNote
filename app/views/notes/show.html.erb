@@ -27,12 +27,12 @@
     <%= @note.title %>
   </div>
   <div class="card mb-3">
-    <div class="card-header">良かった点</div>
+    <div class="card-header">上手くいった点</div>
     <div class="card-body note-content"><%= simple_format(@note.good, {}, sanitize: false, wrapper_tag: 'div') %></div>
   </div>
 
   <div class="card mb-3">
-    <div class="card-header">悪かった点</div>
+    <div class="card-header">上手くいかなかった点</div>
     <div class="card-body note-content"><%=  simple_format(@note.bad, {}, sanitize: false, wrapper_tag: 'div') %></div>
   </div>
 
