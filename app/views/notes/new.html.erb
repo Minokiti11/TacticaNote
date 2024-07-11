@@ -35,7 +35,7 @@
         <!-- タイトル入力フォーム -->
         <div class="form-group">
             <label id="title" for="note_title" class="form-label">タイトル</label>
-            <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', placeholder: '例：「vs_〇〇の振り返り」「ビルドアップについて」「杉村、お前守備軽いねんボケ！」)', style: "padding: 10px;" %>
+            <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', placeholder: '例：「vs_〇〇の振り返り」「ビルドアップについて」)', style: "padding: 10px;" %>
         </div>
         <!-- 動画のトリミング範囲を指定するフォーム -->
         <%# <div class="form-group">
@@ -47,7 +47,7 @@
         <div class="form-group" id="div_good">
             <label for="note_good" class="form-label">上手くいった点</label>
             <%# <%= form.rich_text_area :good, class: 'mb-3', id: 'note_good', placeholder: '上手くいった点を記述'%>
-            <%= form.text_area :good, class: 'form-control mb-3', id: 'note_good', placeholder: '上手くいった点を記入', style: "padding: 10px; max-height: 200px; line-height: 20px;" %>
+            <%= form.text_area :good, class: 'form-control mb-3', id: 'note_good', placeholder: '上手くいった点を記入(〇〇:〇〇のように入力すると動画の指定された秒数を再生できます　例：4:35, 07:56)', style: "padding: 10px; max-height: 400px;" %>
         </div>
         
         <div id="notes_good">
@@ -58,7 +58,7 @@
         <!-- 上手くいかなかった点の入力フォーム -->
         <div class="form-group">
             <label for="note_bad" class="form-label">上手くいかなかった点</label>
-            <%= form.text_area :bad, class: 'form-control mb-3', id: 'note_bad', placeholder: '上手くいかなかった点を記入', style: "padding: 10px; max-height: 200px; line-height: 20px;" %>
+            <%= form.text_area :bad, class: 'form-control mb-3', id: 'note_bad', placeholder: '上手くいかなかった点を記入', style: "padding: 10px; max-height: 400px;" %>
         </div>
         <div id="notes_bad">
             <!-- ここにメッセージがリアルタイムで表示される -->
@@ -68,7 +68,10 @@
         <!-- 次のステップの入力フォーム -->
         <div class="form-group" id="div_next">
             <label for="note_next" class="form-label">次に意識すること・次に向けて取り組むこと</label>
-            <%= form.text_area :next, class: 'form-control mb-3', id: 'note_next', placeholder: '次に向けて取り組むことを記入', style: "padding: 10px; max-height: 200px; line-height: 20px;" %>
+            <%= form.text_area :next, class: 'form-control mb-3', id: 'note_next', placeholder: '次に向けて取り組むことを記入', style: "padding: 10px; max-height: 400px;" %>
+            <div id="links">
+
+            </div>
         </div>
         <div id="notes_next">
             <!-- ここにメッセージがリアルタイムで表示される -->

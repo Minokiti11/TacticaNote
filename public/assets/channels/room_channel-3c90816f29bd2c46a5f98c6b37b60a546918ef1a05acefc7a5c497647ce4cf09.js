@@ -118,12 +118,11 @@ window.onload = function() {
   });
 
   onPageLoad('notes#new', function() {
-    $(".form-control").each(function(){ 
-      var $textarea = $(this);
-      var lineHeight = parseInt($textarea.css('line-height'));
-      $textarea.on('input', function(e) {
-        var lines = ($(this).val() + '\n').match(/\n/g).length;
-        $(this).height(lineHeight * lines + 15);
+    $(".form-control").each(function(){
+      $(document).on("input", $(this), function(evt){
+        var min_height = 25; //テキストエリアの最小の高さをお好みで設定
+        $(evt.target).height(min_height); //一旦最小サイズにする
+        $(evt.target).height(evt.target.scrollHeight - 10); //スクロールなしでテキストが収まる最小の高さに上書き
       });
     });
 

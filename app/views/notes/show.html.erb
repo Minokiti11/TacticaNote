@@ -28,21 +28,21 @@
   </div>
   <div class="card mb-3">
     <div class="card-header">良かった点</div>
-    <div class="card-body"><%= simple_format(@note.good, {}, sanitize: false, wrapper_tag: 'div') %></div>
+    <div class="card-body note-content"><%= simple_format(@note.good, {}, sanitize: false, wrapper_tag: 'div') %></div>
   </div>
 
   <div class="card mb-3">
     <div class="card-header">悪かった点</div>
-    <div class="card-body"><%=  simple_format(@note.bad, {}, sanitize: false, wrapper_tag: 'div') %></div>
+    <div class="card-body note-content"><%=  simple_format(@note.bad, {}, sanitize: false, wrapper_tag: 'div') %></div>
   </div>
 
   <div class="card mb-3">
     <div class="card-header">次に意識すること・次に向けて取り組むこと</div>
-    <div class="card-body"><%= simple_format(@note.next, {}, sanitize: false, wrapper_tag: 'div') %></div>
+    <div class="card-body note-content"><%= simple_format(@note.next, {}, sanitize: false, wrapper_tag: 'div') %></div>
   </div>
 
   <% if @note.user_id == current_user.id %>
-    <%= button_to 'このノートを削除', note_path(@note), method: :delete, class: "btn btn-danger", style: "margin-top: 6px;"%>
+    <%= button_to 'このノートを削除', note_path(@note), method: :delete, class: "btn btn-danger", style: "margin-top: 6px; margin-bottom"%>
   <% end %>
 </div>
 
@@ -55,6 +55,31 @@
       playbackRates: [0.5, 1, 1.3, 1.5], // 再生速度の倍率
   });
   var video_el = document.getElementById("video");
+
+  $(".note-content").each(function(){
+    // テキストエリアの内容を取得
+    let content = $(this).html();
+    // 時間形式（00:00）にマッチする正規表現
+    const regex = /\b(\d{1,2}):(\d{1,2})\b/g;
+    
+    // マッチした時間形式をリンクに置換
+    content = content.replace(regex, function(match) {
+      const [minutes, seconds] = match.split(':').map(Number);
+      const totalSeconds = minutes * 60 + seconds;
+      return `<a href="#" class="time-link" data-time="${totalSeconds}">${match}</a>`;
+    });
+
+    // 変更した内容を要素に反映
+    $(this).html(content);
+  });
+
+  // リンクのクリックイベントを設定
+  $(document).on('click', '.time-link', function(event) {
+    event.preventDefault();
+    const time = $(this).data('time');
+    player.currentTime(time);
+    player.play();
+  });
 
   // videojsのreadyイベントを使用して、メタデータがロードされたときの処理を設定
   player.ready(function() {

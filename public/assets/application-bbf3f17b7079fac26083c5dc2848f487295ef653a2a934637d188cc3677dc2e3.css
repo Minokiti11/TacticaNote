@@ -13991,8 +13991,14 @@ a {
   text-decoration: none;
 }
 
+/* line 23, app/assets/stylesheets/application.scss */
+textarea {
+  resize: none;
+  /*ユーザによるリサイズを不可にし、右下に///が出ないようにする*/
+}
+
 /*モーダル本体の指定 + モーダル外側の背景の指定*/
-/* line 24, app/assets/stylesheets/application.scss */
+/* line 28, app/assets/stylesheets/application.scss */
 .modal-container {
   position: fixed;
   top: 0;
@@ -14008,11 +14014,10 @@ a {
   transition: .3s;
   box-sizing: border-box;
   z-index: 1;
-  border-radius: 5px;
 }
 
 /*モーダル本体の擬似要素の指定*/
-/* line 42, app/assets/stylesheets/application.scss */
+/* line 45, app/assets/stylesheets/application.scss */
 .modal-container:before {
   content: "";
   display: inline-block;
@@ -14021,14 +14026,14 @@ a {
 }
 
 /*モーダル本体に「active」クラス付与した時のスタイル*/
-/* line 49, app/assets/stylesheets/application.scss */
+/* line 52, app/assets/stylesheets/application.scss */
 .modal-container.active {
   opacity: 1;
   visibility: visible;
 }
 
 /*モーダル枠の指定*/
-/* line 54, app/assets/stylesheets/application.scss */
+/* line 57, app/assets/stylesheets/application.scss */
 .modal-body {
   position: relative;
   display: inline-block;
@@ -14038,7 +14043,7 @@ a {
 }
 
 /*モーダルを閉じるボタンの指定*/
-/* line 63, app/assets/stylesheets/application.scss */
+/* line 66, app/assets/stylesheets/application.scss */
 .modal-close {
   position: absolute;
   display: flex;
@@ -14054,14 +14059,15 @@ a {
 }
 
 /*モーダル内のコンテンツの指定*/
-/* line 77, app/assets/stylesheets/application.scss */
+/* line 80, app/assets/stylesheets/application.scss */
 .modal-content {
   background: #fff;
   text-align: left;
   padding: 30px;
+  border-radius: 10px;
 }
 
-/* line 84, app/assets/stylesheets/application.scss */
+/* line 88, app/assets/stylesheets/application.scss */
 .gsi-material-button {
   -moz-user-select: none;
   -webkit-user-select: none;
@@ -14092,7 +14098,7 @@ a {
   min-width: min-content;
 }
 
-/* line 116, app/assets/stylesheets/application.scss */
+/* line 120, app/assets/stylesheets/application.scss */
 .gsi-material-button .gsi-material-button-icon {
   height: 20px;
   margin-right: 12px;
@@ -14100,7 +14106,7 @@ a {
   width: 20px;
 }
 
-/* line 123, app/assets/stylesheets/application.scss */
+/* line 127, app/assets/stylesheets/application.scss */
 .gsi-material-button .gsi-material-button-content-wrapper {
   align-items: center;
   display: flex;
@@ -14112,7 +14118,7 @@ a {
   width: 100%;
 }
 
-/* line 137, app/assets/stylesheets/application.scss */
+/* line 141, app/assets/stylesheets/application.scss */
 .gsi-material-button .gsi-material-button-contents {
   flex-grow: 1;
   font-family: 'Roboto', arial, sans-serif;
@@ -14122,7 +14128,7 @@ a {
   vertical-align: top;
 }
 
-/* line 147, app/assets/stylesheets/application.scss */
+/* line 151, app/assets/stylesheets/application.scss */
 .gsi-material-button .gsi-material-button-state {
   transition: opacity .218s;
   bottom: 0;
@@ -14133,36 +14139,36 @@ a {
   top: 0;
 }
 
-/* line 158, app/assets/stylesheets/application.scss */
+/* line 162, app/assets/stylesheets/application.scss */
 .gsi-material-button:disabled {
   cursor: default;
   background-color: #ffffff61;
   border-color: #1f1f1f1f;
 }
 
-/* line 164, app/assets/stylesheets/application.scss */
+/* line 168, app/assets/stylesheets/application.scss */
 .gsi-material-button:disabled .gsi-material-button-contents {
   opacity: 38%;
 }
 
-/* line 168, app/assets/stylesheets/application.scss */
+/* line 172, app/assets/stylesheets/application.scss */
 .gsi-material-button:disabled .gsi-material-button-icon {
   opacity: 38%;
 }
 
-/* line 172, app/assets/stylesheets/application.scss */
+/* line 176, app/assets/stylesheets/application.scss */
 .gsi-material-button:not(:disabled):active .gsi-material-button-state,
 .gsi-material-button:not(:disabled):focus .gsi-material-button-state {
   background-color: #303030;
   opacity: 12%;
 }
 
-/* line 178, app/assets/stylesheets/application.scss */
+/* line 182, app/assets/stylesheets/application.scss */
 .gsi-material-button:not(:disabled):hover {
   box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
 }
 
-/* line 183, app/assets/stylesheets/application.scss */
+/* line 187, app/assets/stylesheets/application.scss */
 .gsi-material-button:not(:disabled):hover .gsi-material-button-state {
   background-color: #444444;
   opacity: 8%;
