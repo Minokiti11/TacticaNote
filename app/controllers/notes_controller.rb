@@ -24,7 +24,7 @@ class NotesController < ApplicationController
             # JSON リクエストからデータを取得
             data = params.require(:data).permit(:value)
             # perform_syncはジョブを非同期で実行するためsidekiqのメソッド
-            GetAiResponse.perform_async(data[:value], "good", true)
+            GetAiResponse.perform_async(data[:value], "good")
         end
         head :no_content
     end
@@ -34,7 +34,7 @@ class NotesController < ApplicationController
             # JSON リクエストからデータを取得
             data = params.require(:data).permit(:value)
 
-            GetAiResponse.perform_async(data[:value], "bad", true)
+            GetAiResponse.perform_async(data[:value], "bad")
         end
         head :no_content
     end
@@ -44,15 +44,7 @@ class NotesController < ApplicationController
             # JSON リクエストからデータを取得
             data = params.require(:data).permit(:value)
 
-            chat_gpt_service = ChatGptService.new
-            specific_or_not = chat_gpt_service.check_specific_next(data[:value])
-            if specific_or_not == "False"
-                GetAiResponse.perform_async(data[:value], "next", false)
-                return
-            else
-                GetAiResponse.perform_async(data[:value], "next", true)
-                return
-            end
+            GetAiResponse.perform_async(data[:value], "next")
         end
         head :no_content
     end

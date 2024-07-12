@@ -130,7 +130,7 @@ window.onload = function() {
     var $input_good = $('#note_good');
     // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
     $input_good.on('change', function(event) {
-      console.log('Good Section has been entered. The value is: ', $input_good.val());
+      console.log('API for Good Section will be sent. The value is: ', $input_good.val());
       fetch('/notes/post_api_request_good', {
         method: 'POST',
         headers: {
@@ -152,7 +152,7 @@ window.onload = function() {
     var $input_bad = $('#note_bad');
     // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
     $input_bad.on('change', function(event) {
-      console.log('Bad Section has been entered. The value is: ', $input_bad.val());
+      console.log('API for Bad Section will be sent. The value is: ', $input_bad.val());
       fetch('/notes/post_api_request_bad', {
         method: 'POST',
         headers: {
