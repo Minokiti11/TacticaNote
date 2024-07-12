@@ -21,6 +21,7 @@ Rails.application.routes.draw do
     get 'chat' => "groups#chat"
     get 'groups/show' => 'groups#show'
     get 'video' => "groups#video"
+    get 'note' => "groups#note"
     delete "all_destroy" => 'groups#all_destroy'
   end
   post '/notes/post_api_request_good', to: 'notes#post_api_request_good'

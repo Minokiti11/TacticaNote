@@ -1,5 +1,7 @@
-<div id="<%= target %>">
-    <div style="color: green;">
-        <%= message %>
+<% if current_user.id == user_id %>
+    <div id="<%= target %>">
+        <div style="color: green;">
+            <%= message %>
+        </div>
     </div>
-</div>
+<% end %>

@@ -53,14 +53,15 @@ class GetAiResponse
         message = ""
         target = "notes_#{type}"
         proc do |chunk, _bytesize|
+            p :chunk, chunk
             new_content = chunk.dig("choices", 0, "delta", "content")
             if new_content
                 message += new_content # メッセージを更新
-            end
-            Turbo::StreamsChannel.broadcast_replace_later_to target,
+                Turbo::StreamsChannel.broadcast_replace_later_to target,
                 target: target,
                 partial: "notes/message",
-                locals: { message: message, target: target}
+                locals: { message: message, target: target, user_id: current_user.id}
+            end
         end
 
     end

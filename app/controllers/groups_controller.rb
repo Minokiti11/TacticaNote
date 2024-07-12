@@ -95,6 +95,11 @@ class GroupsController < ApplicationController
     @videos = @group.videos
   end
 
+  def note
+    @group = Group.find(params[:group_id])
+    @notes = @group.notes
+  end
+
   def generate_invite_link
     @group = Group.find(params[:id])
     @group.generate_invite_token
