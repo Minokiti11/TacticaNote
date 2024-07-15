@@ -23,30 +23,33 @@ class NotesController < ApplicationController
         if !@@debug
             # JSON リクエストからデータを取得
             data = params.require(:data).permit(:value)
-            # perform_syncはジョブを非同期で実行するためsidekiqのメソッド
-            GetAiResponse.perform_async(data[:value], "good")
+            response = Response.create(section_type: "good", input: data["value"])
+            # ジョブを非同期で実行するためsidekiqのメソッド
+            GetAiResponse.perform_async("user_#{session.id}", data[:value], "good", response.id)
         end
-        head :no_content
+        render json: { response_id: response.id }
     end
 
     def post_api_request_bad
         if !@@debug
             # JSON リクエストからデータを取得
             data = params.require(:data).permit(:value)
+            response = Response.create(section_type: "bad", input: data["value"])
 
-            GetAiResponse.perform_async(data[:value], "bad")
+            GetAiResponse.perform_async("user_#{session.id}", data[:value], "bad", response.id)
         end
-        head :no_content
+        render json: { response_id: response.id }
     end
 
     def post_api_request_next
         if !@@debug
             # JSON リクエストからデータを取得
             data = params.require(:data).permit(:value)
-
-            GetAiResponse.perform_async(data[:value], "next")
+            response = Response.create(section_type: "good", input: data["value"])
+            
+            GetAiResponse.perform_async("user_#{session.id}", data[:value], "next", response.id)
         end
-        head :no_content
+        render json: { response_id: response.id }
     end
 
     def create

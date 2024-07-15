@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_14_023233) do
+ActiveRecord::Schema[7.0].define(version: 2024_07_14_043113) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -96,6 +96,20 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_14_023233) do
     t.index ["video_id"], name: "index_notes_on_video_id"
   end
 
+  create_table "responses", force: :cascade do |t|
+    t.string "section_type"
+    t.text "input"
+    t.text "response"
+    t.integer "user_id"
+    t.integer "group_id"
+    t.integer "video_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_responses_on_group_id"
+    t.index ["user_id"], name: "index_responses_on_user_id"
+    t.index ["video_id"], name: "index_responses_on_video_id"
+  end
+
   create_table "sns_credentials", force: :cascade do |t|
     t.string "provider"
     t.string "uid"
@@ -138,6 +152,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_14_023233) do
   add_foreign_key "notes", "groups"
   add_foreign_key "notes", "users"
   add_foreign_key "notes", "videos"
+  add_foreign_key "responses", "groups"
+  add_foreign_key "responses", "users"
+  add_foreign_key "responses", "videos"
   add_foreign_key "sns_credentials", "users"
   add_foreign_key "videos", "groups"
   add_foreign_key "videos", "users"

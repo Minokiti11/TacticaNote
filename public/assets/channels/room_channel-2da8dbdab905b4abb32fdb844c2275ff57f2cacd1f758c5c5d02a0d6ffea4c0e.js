@@ -120,83 +120,11 @@ window.onload = function() {
   onPageLoad('notes#new', function() {
     $(".form-control").each(function(){
       $(document).on("input", $(this), function(evt){
-        var min_height = 25; //テキストエリアの最小の高さをお好みで設定
+        var min_height = 35; //テキストエリアの最小の高さをお好みで設定
         $(evt.target).height(min_height); //一旦最小サイズにする
         $(evt.target).height(evt.target.scrollHeight - 10); //スクロールなしでテキストが収まる最小の高さに上書き
+        console.log(evt.target.scrollHeight);
       });
     });
-
-    var $input_good = $('#note_good');
-    // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
-    $input_good.on('change', function(event) {
-      console.log('Good Section has been entered. The value is: ', $input_good.val());
-      fetch('/notes/post_api_request_good', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          // CSRFトークンをmetaタグから取得して設定
-          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({data: { value: $input_good.val() }}) // ここに必要なデータを設定
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Success:', data);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-    });
-
-    var $input_bad = $('#note_bad');
-    // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
-    $input_bad.on('change', function(event) {
-      console.log('Bad Section has been entered. The value is: ', $input_bad.val());
-      fetch('/notes/post_api_request_bad', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          // CSRFトークンをmetaタグから取得して設定
-          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({data: { value: $input_bad.val() }}) // ここに必要なデータを設定
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Success:', data);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-    });
-
-    var $input_next = $('#note_next');
-
-    let id;
-    $input_next.on('input', function(event) {
-      clearTimeout(id);// タイマーストップ
-      id = setTimeout(fire,7000);// タイマーリセット（7秒）
-    });
-
-    // 実際にnotes_controllerのメソッドを呼ぶ部分
-    var fire = function() {
-      console.log('API for Next Section will be sent. The value is: ', $input_next.val());
-      fetch('/notes/post_api_request_next', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          // CSRFトークンをmetaタグから取得して設定
-          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({data: { value: $input_next.val() }}) // ここに必要なデータを設定
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Success:', data);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-    };
   });
 };

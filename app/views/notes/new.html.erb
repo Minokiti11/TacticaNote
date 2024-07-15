@@ -50,11 +50,12 @@
             <%= form.text_area :good, class: 'form-control mb-3', id: 'note_good', placeholder: '上手くいった点を記入
 (〇〇:〇〇のようにして、動画の指定された秒数を再生できます。　例：4:35, 07:56)', style: "padding: 10px; max-height: 400px; height: 100px;" %>
         </div>
-        
+
         <div id="notes_good">
             <!-- ここにメッセージがリアルタイムで表示される -->
         </div><br />
-        <%= turbo_stream_from "notes_good" %>
+        <%= turbo_stream_from "user_#{session.id}" %>
+        
         
         <!-- 上手くいかなかった点の入力フォーム -->
         <div class="form-group">
@@ -65,7 +66,7 @@
         <div id="notes_bad">
             <!-- ここにメッセージがリアルタイムで表示される -->
         </div><br />
-        <%= turbo_stream_from "notes_bad" %>
+        <%= turbo_stream_from "user_#{session.id}" %>
 
         <!-- 次のステップの入力フォーム -->
         <div class="form-group" id="div_next">
@@ -79,7 +80,7 @@
         <div id="notes_next">
             <!-- ここにメッセージがリアルタイムで表示される -->
         </div><br />
-        <%= turbo_stream_from "notes_next" %>
+        <%= turbo_stream_from "user_#{session.id}" %>
 
         <!-- 送信ボタン -->
         <div class="form-group">
@@ -103,6 +104,87 @@ $(function(){
     $('a').click( function() {loc=true;});
     $("button").submit(function(){loc=true;});
 });
+
+var $input_good = $('#note_good');
+// フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
+$input_good.on('change', function(event) {
+    console.log('API for Good Section will be sent. The value is: ', $input_good.val());
+    fetch('/notes/post_api_request_good', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            // CSRFトークンをmetaタグから取得して設定
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({data: { value: $input_good.val() }})
+    })
+    .then(response => {
+        return response.json();
+    })
+    .then(data => {
+        var responseId = data.response_id;
+        console.log('Response ID:', responseId);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+});
+
+var $input_bad = $('#note_bad');
+// フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
+$input_bad.on('change', function(event) {
+    console.log('API for Bad Section will be sent. The value is: ', $input_bad.val());
+    fetch('/notes/post_api_request_bad', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            // CSRFトークンをmetaタグから取得して設定
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({data: { value: $input_bad.val() }})
+    })
+    .then(response => {
+        return response.json();
+    })
+    .then(data => {
+        var responseId = data.response_id;
+        console.log('Response ID:', responseId);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+});
+
+var $input_next = $('#note_next');
+
+let id;
+$input_next.on('input', function(event) {
+    clearTimeout(id);// タイマーストップ
+    id = setTimeout(fire,7000);// タイマーリセット（7秒）
+});
+
+// 実際にnotes_controllerのメソッドを呼ぶ部分
+var fire = function() {
+    console.log('API for Next Section will be sent. The value is: ', $input_next.val());
+    fetch('/notes/post_api_request_next', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            // CSRFトークンをmetaタグから取得して設定
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({data: { value: $input_next.val() }}) // ここに必要なデータを設定
+    })
+    .then(response => response.json())
+    .then(data => {
+        var responseId = data.response_id;
+        console.log('Response ID:', responseId);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+};
+
 
 const player = videojs('video', {
     autoplay: false, // 自動再生を無効
