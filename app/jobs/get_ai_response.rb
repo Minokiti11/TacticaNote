@@ -52,18 +52,38 @@ class GetAiResponse include ActionView::RecordIdentifier
     def stream_proc(channel, type, prompt, response)
         message = ""
         target = "notes_#{type}"
+        max_retries = 3
+        retry_delay = 0.5
         proc do |chunk, _bytesize|
-            p :chunk, chunk
-            new_content = chunk.dig("choices", 0, "delta", "content")
-            if new_content
-                message += new_content # メッセージを更新
-                response.update(response: message)
+            begin
+                Rails.logger.debug("Received chunk: #{chunk.inspect}")
+                new_content = chunk.dig("choices", 0, "delta", "content")
+                puts "Raw chunk content: #{new_content.inspect}"
+                retries = 0
+                while new_content.nil? && retries < max_retries
+                    Rails.logger.warn("Received nil content in chunk. Retrying...")
+                    sleep(retry_delay)
+                    new_content = chunk.dig("choices", 0, "delta", "content")
+                    retries += 1
+                end
+                if new_content
+                    Rails.logger.debug("New content: #{new_content}")
+                    puts "Before concatenation - message: #{message.inspect}, new_content: #{new_content.inspect}"
+                    message += new_content
+                    puts "After concatenation - message: #{message.inspect}"
+                    response.update(response: message)
 
-                Turbo::StreamsChannel.broadcast_replace_later_to channel,
-                target: "notes_#{type}",
-                partial: "notes/message", locals: { message: message, target: target}
+                    Turbo::StreamsChannel.broadcast_replace_later_to channel,
+                    target: "notes_#{type}",
+                    partial: "notes/message", locals: { message: message, target: target}
+                else
+                    Rails.logger.warn("Failed to retrieve content after #{max_retries} retries")
+                end
+                sleep(0.05) # Small delay between chunk processing
+            rescue => e
+                Rails.logger.error("Error processing chunk: #{e.message}")
+                Rails.logger.error(e.backtrace.join("\n"))
             end
         end
-
     end
 end

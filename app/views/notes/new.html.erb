@@ -66,7 +66,6 @@
         <div id="notes_bad">
             <!-- ここにメッセージがリアルタイムで表示される -->
         </div><br />
-        <% p :session_id_from_front_end, session.id%>
         <%= turbo_stream_from "user_#{session.id}" %>
 
         <!-- 次のステップの入力フォーム -->
