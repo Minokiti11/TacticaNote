@@ -1,6 +1,6 @@
-class GetAiResponse include ActionView::RecordIdentifier
-    include Sidekiq::Worker
-    sidekiq_options retry: false
+require 'ostruct'
+
+class GetAiResponse
     RESPONSES_PER_MESSAGE = 1
     MODEL_NAME = "gpt-4"
     TEMPERATURE = 0.3
@@ -9,7 +9,6 @@ class GetAiResponse include ActionView::RecordIdentifier
                 next: "今から入力する文章は育成年代のサッカー選手が試合を振り返って、サッカーノートの「次に意識すること・次までに取り組むこと」の欄に書いた文章です。実現させるために必要なものや今ある課題に対しての解決策が書かれていたら、解決策が明確になっていることを褒めてください。書かれていなかったら具体的な解決策を書くように促してください。（e.g. 「崩し方を練習する」=> 「具体的にどのような崩し方を想定していますか？」）具体的な練習方法については質問しないでください。解決策や具体例は提示しないでください。3文以内で出力してください。output only answer." }
 
     def perform(channel, prompt, type, response_id)
-        p "perform is called..."
         response = Response.find(response_id)
         if type == "good"
             OpenAI::Client.new.chat(
@@ -45,9 +44,7 @@ class GetAiResponse include ActionView::RecordIdentifier
                 }
             )
         end
-
     end
-
 
     def stream_proc(channel, type, prompt, response)
         message = ""
@@ -56,33 +53,27 @@ class GetAiResponse include ActionView::RecordIdentifier
         retry_delay = 0.5
         proc do |chunk, _bytesize|
             begin
-                Rails.logger.debug("Received chunk: #{chunk.inspect}")
                 new_content = chunk.dig("choices", 0, "delta", "content")
-                puts "Raw chunk content: #{new_content.inspect}"
                 retries = 0
                 while new_content.nil? && retries < max_retries
-                    Rails.logger.warn("Received nil content in chunk. Retrying...")
                     sleep(retry_delay)
                     new_content = chunk.dig("choices", 0, "delta", "content")
                     retries += 1
                 end
                 if new_content
-                    Rails.logger.debug("New content: #{new_content}")
-                    puts "Before concatenation - message: #{message.inspect}, new_content: #{new_content.inspect}"
                     message += new_content
-                    puts "After concatenation - message: #{message.inspect}"
-                    response.update(response: message)
+                    response.response = message
 
-                    Turbo::StreamsChannel.broadcast_replace_later_to channel,
-                    target: "notes_#{type}",
-                    partial: "notes/message", locals: { message: message, target: target}
-                else
-                    Rails.logger.warn("Failed to retrieve content after #{max_retries} retries")
+                    Turbo::StreamsChannel.broadcast_replace_later_to(
+                        channel,
+                        target: "notes_#{type}",
+                        partial: "notes/message",
+                        locals: { message: message, target: target }
+                    )
                 end
                 sleep(0.05) # Small delay between chunk processing
             rescue => e
-                Rails.logger.error("Error processing chunk: #{e.message}")
-                Rails.logger.error(e.backtrace.join("\n"))
+                # Error handling can be added here if needed
             end
         end
     end
