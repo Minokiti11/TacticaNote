@@ -20,9 +20,9 @@ class NotesController < ApplicationController
     end
 
     def post_api_request_good
-        if !@@debug
             # JSON リクエストからデータを取得
             data = params.require(:data).permit(:value)
+        if !@@debug && !(data == nil) && !(data == "")
             response = Response.create(section_type: "good", input: data["value"])
             p :session_id, session.id
             

@@ -158,13 +158,18 @@ details[open] .details-content {
                 function createNotePath() {
                   const toggle = document.getElementById('toggle');
                   let path = '<%= new_note_path(with_video: false) %>';
-                  if (toggle.checked && selectedVideoId) {
-                    path = '<%= new_note_path(with_video: true) %>' + `&video_id=${selectedVideoId}`;
+                  if (toggle.checked) {
+                    if (selectedVideoId) {
+                      $("create-note-btn").attr(aria-disabled, "false");
+                      path = '<%= new_note_path(with_video: true) %>' + `&video_id=${selectedVideoId}`;
+                    } else {
+                      $("create-note-btn").attr(aria-disabled, "true");
+                    }
                   }
                   return path;
                 }
               </script>
-              <%= link_to 'ノートを作成', '#', "data-turbo": false, class: "btn btn btn-outline-dark", style: "margin-top: 10px; border-width: 2px; border-radius: 0;", onclick: "window.location.href = createNotePath();" %>
+              <%= link_to 'ノートを作成', '#', "data-turbo": false, id: "create-note-btn",class: "btn btn btn-outline-dark", style: "margin-top: 10px; border-width: 2px; border-radius: 0;", onclick: "window.location.href = createNotePath();", "aria-disabled": false %>
             </div>
 
           </div>
