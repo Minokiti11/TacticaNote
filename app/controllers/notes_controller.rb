@@ -20,40 +20,50 @@ class NotesController < ApplicationController
     end
 
     def post_api_request_good
-            # JSON リクエストからデータを取得
-            data = params.require(:data).permit(:value)
-        if !@@debug && !(data == nil) && !(data == "")
+        # JSON リクエストからデータを取得
+        data = params.require(:data).permit(:value)
+        if !@@debug && !(data == nil) && !(data[:value] == "")
             response = Response.create(section_type: "good", input: data["value"])
             p :session_id, session.id
             
             # ジョブを非同期で実行するためsidekiqのメソッド
             GetAiResponse.perform_async("user_#{session.id}", data[:value], "good", response.id)
+
+            render json: { response_id: response.id }
+        else
+            render json: { response_id: nil }
         end
-        render json: { response_id: response.id }
     end
 
     def post_api_request_bad
-        if !@@debug
-            # JSON リクエストからデータを取得
-            data = params.require(:data).permit(:value)
+        # JSON リクエストからデータを取得
+        data = params.require(:data).permit(:value)
+        p "data_bad", data 
+        if !@@debug && !(data == nil) && !(data[:value] == "")
             response = Response.create(section_type: "bad", input: data["value"])
             p :session_id, session.id
 
             GetAiResponse.perform_async("user_#{session.id}", data[:value], "bad", response.id)
+
+            render json: { response_id: response.id }
+        else
+            render json: { response_id: nil }
         end
-        render json: { response_id: response.id }
     end
 
     def post_api_request_next
-        if !@@debug
-            # JSON リクエストからデータを取得
-            data = params.require(:data).permit(:value)
-            response = Response.create(section_type: "good", input: data["value"])
+        # JSON リクエストからデータを取得
+        data = params.require(:data).permit(:value)
+        if !@@debug && !(data == nil) && !(data[:value] == "")
+            response = Response.create(section_type: "next", input: data["value"])
             p :session_id, session.id
 
             GetAiResponse.perform_async("user_#{session.id}", data[:value], "next", response.id)
+
+            render json: { response_id: response.id }
+        else
+            render json: { response_id: nil }
         end
-        render json: { response_id: response.id }
     end
 
     def create
