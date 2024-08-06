@@ -24,7 +24,6 @@ class NotesController < ApplicationController
         data = params.require(:data).permit(:value)
         if !@@debug && !(data == nil) && !(data[:value] == "")
             response = Response.create(section_type: "good", input: data["value"])
-            p :session_id, session.id
             
             # ジョブを非同期で実行するためsidekiqのメソッド
             GetAiResponse.perform_async("user_#{session.id}", data[:value], "good", response.id)
@@ -38,10 +37,8 @@ class NotesController < ApplicationController
     def post_api_request_bad
         # JSON リクエストからデータを取得
         data = params.require(:data).permit(:value)
-        p "data_bad", data 
         if !@@debug && !(data == nil) && !(data[:value] == "")
             response = Response.create(section_type: "bad", input: data["value"])
-            p :session_id, session.id
 
             GetAiResponse.perform_async("user_#{session.id}", data[:value], "bad", response.id)
 
@@ -56,7 +53,6 @@ class NotesController < ApplicationController
         data = params.require(:data).permit(:value)
         if !@@debug && !(data == nil) && !(data[:value] == "")
             response = Response.create(section_type: "next", input: data["value"])
-            p :session_id, session.id
 
             GetAiResponse.perform_async("user_#{session.id}", data[:value], "next", response.id)
 
