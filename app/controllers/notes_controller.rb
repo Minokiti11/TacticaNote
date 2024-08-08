@@ -20,7 +20,6 @@ class NotesController < ApplicationController
     end
 
     def post_api_request_good
-        # JSON リクエストからデータを取得
         data = params.require(:data).permit(:value)
         if !@@debug && !(data == nil) && !(data[:value] == "")
             response = Response.create(section_type: "good", input: data["value"])
@@ -35,7 +34,6 @@ class NotesController < ApplicationController
     end
 
     def post_api_request_bad
-        # JSON リクエストからデータを取得
         data = params.require(:data).permit(:value)
         if !@@debug && !(data == nil) && !(data[:value] == "")
             response = Response.create(section_type: "bad", input: data["value"])
@@ -49,7 +47,6 @@ class NotesController < ApplicationController
     end
 
     def post_api_request_next
-        # JSON リクエストからデータを取得
         data = params.require(:data).permit(:value)
         if !@@debug && !(data == nil) && !(data[:value] == "")
             response = Response.create(section_type: "next", input: data["value"])
