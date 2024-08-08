@@ -142,34 +142,69 @@ details[open] .details-content {
                     item.style.zIndex = '';
                   });
                   // クリックされたアイテムのoutlineと文字色を設定
-                  element.style.outline = '2px solid #1E90FF'; // 青色のoutline
-                  element.style.color = 'black';
-                  element.style.boxShadow = '0 4px 8px 0 rgba(0, 0, 0, 0.2)';
-                  element.style.zIndex = '2'; // 最前面に表示
-                  selectedVideoId = element.getAttribute('data-video-id'); // 選択されたビデオのID
+
+                  if (element.getAttribute('data-video-id') == selectedVideoId) {
+                    selectedVideoId = null;
+                    element.style.outline = '';
+                    element.style.color = 'black';
+                    element.style.boxShadow = '';
+                    element.style.zIndex = '';
+                    $('#create-note-btn').addClass("disabled");
+                  } else {
+                    selectedVideoId = element.getAttribute('data-video-id');
+                    element.style.outline = '2px solid #1E90FF'; // 青色のoutline
+                    element.style.color = 'black';
+                    element.style.boxShadow = '0 4px 8px 0 rgba(0, 0, 0, 0.2)';
+                    element.style.zIndex = '2'; // 最前面に表示
+                    $("#create-note-btn").removeClass("disabled");
+                  }
+                   // 選択されたビデオのID
                   console.log("selectedVideoId: ", selectedVideoId);
                 }
 
                 // セレクトボックス全体の四角を丸くする
                 document.addEventListener('DOMContentLoaded', function() {
                   document.querySelector('.list-group').style.borderRadius = '5px';
+                  const toggle = document.getElementById('toggle');
+                  if (toggle.checked) {
+                    if (selectedVideoId) {
+                      $("#create-note-btn").removeClass("disabled");
+                    } else {
+                      $("#create-note-btn").addClass("disabled");
+                    }
+                  }
+                });
+
+                document.getElementById('toggle').addEventListener('change', function() {
+                  if (this.checked) {
+                    if (selectedVideoId) {
+                      $("#create-note-btn").removeClass("disabled");
+                    } else {
+                      $("#create-note-btn").addClass("disabled");
+                    }
+                  }
                 });
 
                 function createNotePath() {
                   const toggle = document.getElementById('toggle');
                   let path = '<%= new_note_path(with_video: false) %>';
                   if (toggle.checked) {
+                    console.log("toggle is now checked.");
                     if (selectedVideoId) {
-                      $("create-note-btn").attr(aria-disabled, "false");
+                      console.log("selectedVideoId is now true.");
+                      $("#create-note-btn").removeClass("disabled");
                       path = '<%= new_note_path(with_video: true) %>' + `&video_id=${selectedVideoId}`;
                     } else {
-                      $("create-note-btn").attr(aria-disabled, "true");
+                      console.log("selectedVideoId is now false.");
+                      $("#create-note-btn").addClass("disabled");
                     }
+                  } else {
+                    console.log("toggle is not checked.");
                   }
                   return path;
                 }
               </script>
-              <%= link_to 'ノートを作成', '#', "data-turbo": false, id: "create-note-btn",class: "btn btn btn-outline-dark", style: "margin-top: 10px; border-width: 2px; border-radius: 0;", onclick: "window.location.href = createNotePath();", "aria-disabled": false %>
+              <%= link_to 'ノートを作成', '#', "data-turbo": false, id: "create-note-btn",class: "btn btn btn-outline-dark", style: "margin-top: 10px; border-width: 2px; border-radius: 0;", onclick: "window.location.href = createNotePath();" %>
             </div>
 
           </div>
