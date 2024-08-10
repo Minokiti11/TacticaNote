@@ -14,6 +14,12 @@
             padding-top:56.25%;/*比率調整※16:9の画面幅*/
         }
     }
+/* 
+    .spinner {
+        display: block;
+        text-align: center;
+        margin: 20px auto;
+    } */
 </style>
 <%= form_with model: @note, local: true, html: {class: "needs-validation", novalidate: true} do |form| %>
     <div class="container mt-3">
@@ -55,6 +61,8 @@
             <!-- ここにメッセージがリアルタイムで表示される -->
         </div><br />
         <%= turbo_stream_from "user_#{session.id}" %>
+        <%= turbo_stream_from "spinner" %>
+        <div id="spinner_good"></div>
         
         
         <!-- 上手くいかなかった点の入力フォーム -->
@@ -67,6 +75,7 @@
             <!-- ここにメッセージがリアルタイムで表示される -->
         </div><br />
         <%= turbo_stream_from "user_#{session.id}" %>
+        <div id="spinner_bad"></div>
 
         <!-- 次のステップの入力フォーム -->
         <div class="form-group" id="div_next">
@@ -81,6 +90,7 @@
             <!-- ここにメッセージがリアルタイムで表示される -->
         </div><br />
         <%= turbo_stream_from "user_#{session.id}" %>
+        <div id="spinner_next"></div>
 
         <!-- 送信ボタン -->
         <div class="form-group">
@@ -108,8 +118,7 @@ $(function(){
 var $input_good = $('#note_good');
 // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
 $input_good.on('change', function(event) {
-    console.log('API for Good Section will be sent. The value is: ', $input_good.val());
-    fetch('/notes/post_api_request_good', {
+    fetch('/notes/gpt_api_request_good', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -117,24 +126,13 @@ $input_good.on('change', function(event) {
             'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: JSON.stringify({data: { value: $input_good.val() }})
-    })
-    .then(response => {
-        return response.json();
-    })
-    .then(data => {
-        var responseId = data.response_id;
-        console.log('Response ID:', responseId);
-    })
-    .catch((error) => {
-        console.error('Error:', error);
     });
 });
 
 var $input_bad = $('#note_bad');
 // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
 $input_bad.on('change', function(event) {
-    console.log('API for Bad Section will be sent. The value is: ', $input_bad.val());
-    fetch('/notes/post_api_request_bad', {
+    fetch('/notes/gpt_api_request_bad', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -142,16 +140,6 @@ $input_bad.on('change', function(event) {
             'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: JSON.stringify({data: { value: $input_bad.val() }})
-    })
-    .then(response => {
-        return response.json();
-    })
-    .then(data => {
-        var responseId = data.response_id;
-        console.log('Response ID:', responseId);
-    })
-    .catch((error) => {
-        console.error('Error:', error);
     });
 });
 
@@ -160,28 +148,19 @@ var $input_next = $('#note_next');
 let id;
 $input_next.on('input', function(event) {
     clearTimeout(id);// タイマーストップ
-    id = setTimeout(fire,7000);// タイマーリセット（7秒）
+    id = setTimeout(fire,8000);// タイマーリセット（8秒）
 });
 
 // 実際にnotes_controllerのメソッドを呼ぶ部分
 var fire = function() {
-    console.log('API for Next Section will be sent. The value is: ', $input_next.val());
-    fetch('/notes/post_api_request_next', {
+    fetch('/notes/gpt_api_request_next', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             // CSRFトークンをmetaタグから取得して設定
             'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
-        body: JSON.stringify({data: { value: $input_next.val() }}) // ここに必要なデータを設定
-    })
-    .then(response => response.json())
-    .then(data => {
-        var responseId = data.response_id;
-        console.log('Response ID:', responseId);
-    })
-    .catch((error) => {
-        console.error('Error:', error);
+        body: JSON.stringify({data: { value: $input_next.val() }})
     });
 };
 
