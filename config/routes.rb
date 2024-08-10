@@ -24,9 +24,9 @@ Rails.application.routes.draw do
     get 'note' => "groups#note"
     delete "all_destroy" => 'groups#all_destroy'
   end
-  post '/notes/post_api_request_good', to: 'notes#post_api_request_good'
-  post '/notes/post_api_request_bad', to: 'notes#post_api_request_bad'
-  post '/notes/post_api_request_next', to: 'notes#post_api_request_next'
+  post '/notes/gpt_api_request_good', to: 'notes#gpt_api_request_good'
+  post '/notes/gpt_api_request_bad', to: 'notes#gpt_api_request_bad'
+  post '/notes/gpt_api_request_next', to: 'notes#gpt_api_request_next'
   mount ActionCable.server => '/cable'
   
   mount Sidekiq::Web => '/sidekiq'

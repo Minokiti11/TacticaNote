@@ -19,43 +19,74 @@ class NotesController < ApplicationController
         end
     end
 
-    def post_api_request_good
+    def gpt_api_request_good
         data = params.require(:data).permit(:value)
         if !@@debug && !(data == nil) && !(data[:value] == "")
             response = Response.create(section_type: "good", input: data["value"])
-            
-            # ジョブを非同期で実行するためsidekiqのメソッド
-            GetAiResponse.perform_async("user_#{session.id}", data[:value], "good", response.id)
 
-            render json: { response_id: response.id }
-        else
-            render json: { response_id: nil }
+            Turbo::StreamsChannel.broadcast_replace_later_to(
+                "user_#{session.id}",
+                target: "notes_good",
+                partial: "notes/message",
+                locals: { message: "", target: "notes_good" }
+            )
+            
+            GetAiResponse.perform_async("user_#{session.id}", data[:value], "good", response.id)
+            # スピナーを開始
+            Turbo::StreamsChannel.broadcast_replace_later_to(
+                "spinner",
+                target: "spinner_good",
+                partial: "spinner/show",
+                locals: {target: "spinner_good"}
+            )
         end
     end
 
-    def post_api_request_bad
+    def gpt_api_request_bad
         data = params.require(:data).permit(:value)
         if !@@debug && !(data == nil) && !(data[:value] == "")
             response = Response.create(section_type: "bad", input: data["value"])
 
+            Turbo::StreamsChannel.broadcast_replace_later_to(
+                "user_#{session.id}",
+                target: "notes_bad",
+                partial: "notes/message",
+                locals: { message: "", target: "notes_bad" }
+            )
+
             GetAiResponse.perform_async("user_#{session.id}", data[:value], "bad", response.id)
 
-            render json: { response_id: response.id }
-        else
-            render json: { response_id: nil }
+
+            # スピナーを開始
+            Turbo::StreamsChannel.broadcast_replace_later_to(
+                "spinner",
+                target: "spinner_bad",
+                partial: "spinner/show",
+                locals: {target: "spinner_bad"}
+            )
         end
     end
 
-    def post_api_request_next
+    def gpt_api_request_next
         data = params.require(:data).permit(:value)
         if !@@debug && !(data == nil) && !(data[:value] == "")
             response = Response.create(section_type: "next", input: data["value"])
 
-            GetAiResponse.perform_async("user_#{session.id}", data[:value], "next", response.id)
+            Turbo::StreamsChannel.broadcast_replace_later_to(
+                "user_#{session.id}",
+                target: "notes_next",
+                partial: "notes/message",
+                locals: { message: "", target: "notes_next" }
+            )
 
-            render json: { response_id: response.id }
-        else
-            render json: { response_id: nil }
+            GetAiResponse.perform_async("user_#{session.id}", data[:value], "next", response.id)
+            # スピナーを開始
+            Turbo::StreamsChannel.broadcast_replace_later_to(
+                "spinner",
+                target: "spinner_good",
+                partial: "spinner/show",
+                locals: {target: "spinner_next"}
+            )
         end
     end
 
