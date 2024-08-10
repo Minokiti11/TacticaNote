@@ -118,8 +118,8 @@ details[open] .details-content {
               </p>
               <div class="toggle_button">
                 動画の有無
-                <input id="toggle" class="toggle_input" type='checkbox' checked/>
-                <label for="toggle" class="toggle_label"/>
+                <input id="toggle" class="toggle_input" type='checkbox'/>
+                <label for="toggle" class="toggle_label" />
               </div>
 
               <div class="video-index" id="video-index" style="margin-bottom: 10px;">
@@ -172,6 +172,8 @@ details[open] .details-content {
                     } else {
                       $("#create-note-btn").addClass("disabled");
                     }
+                  } else {
+                    $("#create-note-btn").removeClass("disabled");
                   }
                 });
 
@@ -182,6 +184,8 @@ details[open] .details-content {
                     } else {
                       $("#create-note-btn").addClass("disabled");
                     }
+                  } else {
+                    $("#create-note-btn").removeClass("disabled");
                   }
                 });
 
@@ -324,7 +328,7 @@ details[open] .details-content {
     });
 
       const videoIndex = $('#video-index');
-      videoIndex.show();
+      videoIndex.hide();
     // トグルボタンの状態を監視
     $('#toggle').on('change', function() {
       if (this.checked) {
