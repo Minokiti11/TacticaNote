@@ -7,7 +7,7 @@ class Group < ApplicationRecord
 
     validates :name, presence: true, uniqueness: true
     validates :introduction, presence: true
-    attachment :image, destroy: false
+    # attachment :image, destroy: false
 
     # 招待リンク用のトークンを生成するメソッド
     def generate_invite_token
