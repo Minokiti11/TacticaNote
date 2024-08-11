@@ -83,7 +83,7 @@ class NotesController < ApplicationController
             # スピナーを開始
             Turbo::StreamsChannel.broadcast_replace_later_to(
                 "spinner",
-                target: "spinner_good",
+                target: "spinner_next",
                 partial: "spinner/show",
                 locals: {target: "spinner_next"}
             )
@@ -94,6 +94,7 @@ class NotesController < ApplicationController
         @note = Note.new(note_params)
         @note.user_id = current_user.id
         @note.group_id = current_user.group_users[0].group_id
+        @note.note_type = "good_bad_next_discuss"
         if @@with_video
             @note.video_id = @@video_id
         end
@@ -111,12 +112,12 @@ class NotesController < ApplicationController
     def destroy
         @note = Note.find(params[:id])
         if @note.destroy
-            redirect_to group_video_path(@note.group_id)
+            redirect_to group_path(@note.group)
         end
     end
 
     private
     def note_params
-        params.require(:note).permit(:id, :title, :content, :good, :bad, :next)
+        params.require(:note).permit(:id, :title, :note_type, :content, :good, :bad, :next, :discuss)
     end
 end
