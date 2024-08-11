@@ -33,7 +33,6 @@ export default class extends Controller {
 
     replaced(e) {
         let mention = e.detail.item.original
-        console.log(mention);
         let attachment = new Trix.Attachment({
             content: `<span class="mention" style="color: #1f7790;">@${mention.username}&nbsp;</span>`
         })
