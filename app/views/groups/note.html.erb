@@ -1,22 +1,17 @@
 <div class='container-fluid px-3 px-sm-5 py-4'>
   <div class='row'>
     <div class='col-12 col-md-8 col-lg-6'>
-      <div class="card shadow-sm mb-4">
-        <div class="card-body">
-          <h2 class='card-title mb-4'>ノート一覧</h2>
-          <div class="list-group">
-            <% @notes.each do |note| %>
-              <%= link_to note_path(note), class: "list-group-item list-group-item-action p-3 border-0 mb-3 rounded shadow-sm" do %>
-                <div class="d-flex w-100 justify-content-between align-items-center">
-                  <h5 class="mb-1 text-dark"><%= note.title %></h5>
-                  <small class="text-muted"><%= note.updated_at.strftime("%Y-%m-%d %H:%M") %>更新</small>
-                </div>
-                <p class="mb-1 text-truncate text-secondary">ノートの内容プレビュー...</p>
-              <% end %>
+        <div class="list-group">
+          <% @notes.each do |note| %>
+            <%= link_to note_path(note), class: "list-group-item list-group-item-action p-3 border-0 mb-3 rounded shadow-sm" do %>
+              <div class="d-flex w-100 justify-content-between align-items-center">
+                <h5 class="mb-1 text-dark"><%= note.title %></h5>
+                <small class="text-muted"><%= note.updated_at.strftime("%Y-%m-%d %H:%M") %>更新</small>
+              </div>
+              <p class="mb-1 text-truncate text-secondary">ノートの内容プレビュー...</p>
             <% end %>
-          </div>
+          <% end %>
         </div>
-      </div>
     </div>
   </div>
 </div>
