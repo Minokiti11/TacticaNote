@@ -41,6 +41,11 @@
     <div class="card-body note-content"><%= simple_format(@note.next, {}, sanitize: false, wrapper_tag: 'div') %></div>
   </div>
 
+  <div class="card mb-3">
+    <div class="card-header">チームで話し合いたいこと・確認したいこと</div>
+    <div class="card-body note-content"><%= simple_format(@note.discuss, {}, sanitize: false, wrapper_tag: 'div') %></div>
+  </div>
+
   <% if @note.user_id == current_user.id %>
     <%= button_to 'このノートを削除', note_path(@note), method: :delete, class: "btn btn-danger", style: "margin-top: 6px; margin-bottom"%>
   <% end %>

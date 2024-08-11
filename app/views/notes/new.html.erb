@@ -74,7 +74,6 @@
         <div id="notes_bad">
             <!-- ここにメッセージがリアルタイムで表示される -->
         </div><br />
-        <%= turbo_stream_from "user_#{session.id}" %>
         <div id="spinner_bad"></div>
 
         <!-- 次のステップの入力フォーム -->
@@ -89,8 +88,21 @@
         <div id="notes_next">
             <!-- ここにメッセージがリアルタイムで表示される -->
         </div><br />
-        <%= turbo_stream_from "user_#{session.id}" %>
         <div id="spinner_next"></div>
+
+        <!-- 話し合いたいこと・確認したいことの入力フォーム -->
+        <div class="form-group" id="div_discuss">
+            <label for="note_discuss" class="form-label">チームで話し合いたいこと・確認したいこと</label>
+            <%= form.rich_text_area :discuss, id: 'note_discuss', placeholder: 'ミーティングなどでチームで話し合いたいこと・確認したいこと
+@someoneのようにしてチームのメンバーをメンションできます。', style: "max-height: 400px; height: 100px;", data: { controller: "mentions", mentions_target: "field" } %>
+            <div id="links">
+
+            </div>
+        </div>
+        <div id="notes_discuss">
+            <!-- ここにメッセージがリアルタイムで表示される -->
+        </div><br />
+        <div id="spinner_discuss"></div>
 
         <!-- 送信ボタン -->
         <div class="form-group">
