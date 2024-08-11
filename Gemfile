@@ -83,13 +83,12 @@ gem 'devise'
 gem 'actioncable'
 gem "bootstrap", "~> 5.2"
 
-gem "refile", require: "refile/rails", github: 'manfe/refile'
-gem "refile-mini_magick"
+# gem "refile", require: "refile/rails", github: 'manfe/refile'
+# gem "refile-mini_magick"
 
 gem 'net-http'
 
 gem "ruby-openai"
-
 
 gem 'aws-sdk-rails'
 gem 'aws-sdk-s3', '~> 1'
@@ -100,8 +99,10 @@ gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-github'
 gem 'omniauth-google-oauth2'
 
-gem 'serviceworker-rails'
+# gem 'serviceworker-rails'
 
 gem 'rack-cors', require: 'rack/cors'
 
 gem 'meta-tags'
+
+gem 'pry-rails'
