@@ -19,21 +19,6 @@ class GetAiResponse include ActionView::RecordIdentifier
                 model: MODEL_NAME,
                 messages: [{ role: "system", content: PROMPTS[type.to_sym] }, { role: "user", content: prompt}],
                 temperature: TEMPERATURE,
-                # デバッグに時間かかるのでとりあえずspinner使う方針に変更
-                # stream: proc do |chunk, _bytesize|
-                #             p :chunk, chunk
-                #             new_content = chunk.dig("choices", 0, "delta", "content")
-                #             if new_content
-                #                 message += new_content
-
-                #                 Turbo::StreamsChannel.broadcast_replace_later_to(
-                #                     channel,
-                #                     target: "notes_#{type}",
-                #                     partial: "notes/message",
-                #                     locals: { message: message, target: target }
-                #                 )
-                #             end
-                #         end,
                 max_tokens: 200,
                 n: RESPONSES_PER_MESSAGE
             }
@@ -61,7 +46,7 @@ class GetAiResponse include ActionView::RecordIdentifier
         )
     end
 
-
+    # デバッグに時間かかるのでとりあえずspinner使う方針に変更
     # def stream_proc(channel, type, prompt, response)
     #     message = ""
     #     target = "notes_#{type}"
