@@ -83,8 +83,8 @@ gem 'devise'
 gem 'actioncable'
 gem "bootstrap", "~> 5.2"
 
-# gem "refile", require: "refile/rails", github: 'manfe/refile'
-# gem "refile-mini_magick"
+gem "refile", require: "refile/rails", github: 'manfe/refile'
+gem "refile-mini_magick"
 
 gem 'net-http'
 
