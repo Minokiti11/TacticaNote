@@ -17,3 +17,4 @@ pin "@rails/activestorage", to: "https://ga.jspm.io/npm:@rails/activestorage@7.1
 pin "@rails/request.js", to: "https://ga.jspm.io/npm:@rails/request.js@0.0.9/src/index.js"
 pin "trix"
 pin "@rails/actiontext", to: "actiontext.js"
+pin "tribute", to: "https://ga.jspm.io/npm:tributejs@5.1.3/dist/tribute.min.js"

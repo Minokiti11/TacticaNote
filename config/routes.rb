@@ -24,6 +24,9 @@ Rails.application.routes.draw do
     get 'note' => "groups#note"
     delete "all_destroy" => 'groups#all_destroy'
   end
+  
+  resources :mentions, only: [:index]
+
   post '/notes/gpt_api_request_good', to: 'notes#gpt_api_request_good'
   post '/notes/gpt_api_request_bad', to: 'notes#gpt_api_request_bad'
   post '/notes/gpt_api_request_next', to: 'notes#gpt_api_request_next'
