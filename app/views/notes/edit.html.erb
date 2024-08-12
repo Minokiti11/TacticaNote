@@ -1,0 +1,154 @@
+<%= form_with model: @note, local: true, html: {class: "needs-validation", novalidate: true} do |form| %>
+    <div class="container mt-3">
+        <% if @note.video_id %>
+            <% video = Video.find_by(id: @note.video_id)%>
+            <video class="video-js vjs-big-play-centered" preload="metadata" controls playsinline id="video">
+                <source src="<%= rails_blob_path(video.video) %>" type="video/mp4">
+            </video>
+
+            <div class="h3" style="margin-top: 40px; margin-bottom: 50px; font-weight: 700;">
+                <%= video.title %>  : ノートを編集
+            </div>
+        <% else %>
+            <div class="h3" style="margin-top: 40px; margin-bottom: 50px; font-weight: 700;">
+                ノートを編集
+            </div>
+        <% end %>
+
+        <!-- タイトル入力フォーム -->
+        <div class="form-group">
+            <label id="title" for="note_title" class="form-label">タイトル</label>
+            <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', placeholder: '例：「vs_〇〇の振り返り」「ビルドアップについて」)', style: "padding: 10px;" %>
+        </div>
+        <!-- 動画のトリミング範囲を指定するフォーム -->
+        <%# <div class="form-group">
+            <label for="note_trim" class="form-label">トリミング範囲</label>
+            <%= form.text_field :trim_range, class: 'form-control mb-3', id:'note_trim_range', placeholder: '動画から切り抜く範囲を指定する（例：1分40秒〜3分50秒 => 1:40~3:50）※何も入力しない場合、切り抜く範囲は指定されず、元の動画全体が読み込まれます。'%>
+        <%# </div> %>
+
+        <!-- 上手くいった点の入力フォーム -->
+        <div class="form-group" id="div_good">
+            <label for="note_good" class="form-label">上手くいった点</label>
+            <%# <%= form.rich_text_area :good, class: 'mb-3', id: 'note_good', placeholder: '上手くいった点を記入'%>
+            <%= form.text_area :good, class: 'form-control mb-3', id: 'note_good', placeholder: '上手くいった点を記入
+(〇〇:〇〇のようにして、動画の指定された秒数を再生できます。　例：4:35, 07:56)', style: "padding: 10px; max-height: 400px; height: 100px;" %>
+        </div>
+
+        <div id="notes_good">
+            <!-- ここにメッセージがリアルタイムで表示される -->
+        </div><br />
+        <%= turbo_stream_from "user_#{session.id}" %>
+        <%= turbo_stream_from "spinner" %>
+        <div id="spinner_good"></div>
+        
+        
+        <!-- 上手くいかなかった点の入力フォーム -->
+        <div class="form-group">
+            <label for="note_bad" class="form-label">上手くいかなかった点</label>
+            <%= form.text_area :bad, class: 'form-control mb-3', id: 'note_bad', placeholder: '上手くいかなかった点を記入
+(〇〇:〇〇のようにして、動画の指定された秒数を再生できます。　例：4:35, 07:56)', style: "padding: 10px; max-height: 400px; height: 100px;" %>
+        </div>
+        <div id="notes_bad">
+            <!-- ここにメッセージがリアルタイムで表示される -->
+        </div><br />
+        <div id="spinner_bad"></div>
+
+        <!-- 次のステップの入力フォーム -->
+        <div class="form-group" id="div_next">
+            <label for="note_next" class="form-label">次に意識すること・次に向けて取り組むこと</label>
+            <%= form.text_area :next, class: 'form-control mb-3', id: 'note_next', placeholder: '次に向けて取り組むことを記入
+(〇〇:〇〇のようにして、動画の指定された秒数を再生できます。　例：4:35, 07:56)', style: "padding: 10px; max-height: 400px; height: 100px;" %>
+            <div id="links">
+
+            </div>
+        </div>
+        <div id="notes_next">
+            <!-- ここにメッセージがリアルタイムで表示される -->
+        </div><br />
+        <div id="spinner_next"></div>
+
+        <!-- 話し合いたいこと・確認したいことの入力フォーム -->
+        <div class="form-group" id="div_discuss">
+            <label for="note_discuss" class="form-label">チームで話し合いたいこと・確認したいこと</label>
+            <%= form.rich_text_area :discuss, id: 'note_discuss', placeholder: 'ミーティングなどでチームで話し合いたいこと・確認したいこと
+@someoneのようにしてチームのメンバーをメンションできます。', style: "max-height: 400px; height: 100px;", data: { controller: "mentions", mentions_target: "field" } %>
+            <div id="links">
+
+            </div>
+        </div>
+        <div id="notes_discuss">
+            <!-- ここにメッセージがリアルタイムで表示される -->
+        </div><br />
+        <div id="spinner_discuss"></div>
+
+        <!-- 送信ボタン -->
+        <div class="form-group">
+            <%= form.button "作成", type: 'button', onclick: 'submit();', class: 'btn btn-outline-primary', style: "border-radius: 1;" %>
+        </div>
+        <br />
+    </div>
+<% end %>
+
+<script>
+    $(function(){
+        var loc=false;
+        $(window).bind("beforeunload", function(e) {
+            // 確認メッセージに表示させたい文字列
+            if (!loc) {
+                return "入力は完了していません｡";
+            }
+        });
+        // aリンクを遷移OKにする場合はこのコメントを外す
+        $('a').click( function() {loc=true;});
+        $("button").submit(function(){loc=true;});
+    });
+
+    var $input_good = $('#note_good');
+    // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
+    $input_good.on('change', function(event) {
+        fetch('/notes/gpt_api_request_good', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // CSRFトークンをmetaタグから取得して設定
+                'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({data: { value: $input_good.val() }})
+        });
+    });
+
+    var $input_bad = $('#note_bad');
+    // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
+    $input_bad.on('change', function(event) {
+        fetch('/notes/gpt_api_request_bad', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // CSRFトークンをmetaタグから取得して設定
+                'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({data: { value: $input_bad.val() }})
+        });
+    });
+
+    var $input_next = $('#note_next');
+
+    let id;
+    $input_next.on('input', function(event) {
+        clearTimeout(id);// タイマーストップ
+        id = setTimeout(fire,8000);// タイマーリセット（8秒）
+    });
+
+    // 実際にnotes_controllerのメソッドを呼ぶ部分
+    var fire = function() {
+        fetch('/notes/gpt_api_request_next', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // CSRFトークンをmetaタグから取得して設定
+                'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({data: { value: $input_next.val() }})
+        });
+    };
+</script>

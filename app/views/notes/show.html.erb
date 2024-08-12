@@ -6,13 +6,13 @@
         height: 281px;
     }
     @media screen and (max-width: 767px) {
-      /* ここに横幅が767pxより小さい時に発動するスタイルを記述 */
-      #video {
-          width: 100%;
-          height: 100%;
-          margin:0 auto;
-          padding-top:56.25%;/*比率調整※16:9の画面幅*/
-      }
+        /* ここに横幅が767pxより小さい時に発動するスタイルを記述 */
+        #video {
+            width: 100%;
+            height: 100%;
+            margin:0 auto;
+            padding-top:56.25%;/*比率調整※16:9の画面幅*/
+        }
     }
 </style>
 
@@ -23,8 +23,15 @@
       <source src="<%= rails_blob_path(video.video) %>" type="video/mp4">
     </video>
   <% end %>
-  <div class="h2" style="margin-top: 40px; margin-bottom: 50px; font-weight: 700;">
-    <%= @note.title %>
+  <div class="d-flex justify-content-between align-items-center" style="margin-top: 40px; margin-bottom: 50px;">
+    <div class="h2 font-weight-700">
+      <%= @note.title %>
+    </div>
+    <% if @note.user_id == current_user.id %>
+      <%= link_to edit_note_path(@note), class: "btn" do %>
+        <i class="fas fa-edit" style="color: black; font-size: 1.5em;"></i>
+      <% end %>
+    <% end %>
   </div>
   <div class="card mb-3">
     <div class="card-header">上手くいった点</div>
