@@ -37,11 +37,6 @@
             <label id="title" for="note_title" class="form-label">タイトル</label>
             <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', placeholder: '例：「vs_〇〇の振り返り」「ビルドアップについて」)', style: "padding: 10px;" %>
         </div>
-        <!-- 動画のトリミング範囲を指定するフォーム -->
-        <%# <div class="form-group">
-            <label for="note_trim" class="form-label">トリミング範囲</label>
-            <%= form.text_field :trim_range, class: 'form-control mb-3', id:'note_trim_range', placeholder: '動画から切り抜く範囲を指定する（例：1分40秒〜3分50秒 => 1:40~3:50）※何も入力しない場合、切り抜く範囲は指定されず、元の動画全体が読み込まれます。'%>
-        <%# </div> %>
 
         <!-- 上手くいった点の入力フォーム -->
         <div class="form-group" id="div_good">
