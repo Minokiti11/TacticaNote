@@ -5,9 +5,7 @@ class GroupsController < ApplicationController
   def index
     @groups = current_user.groups
     @group_joining = GroupUser.where(user_id: current_user.id)
-    p "@group_joining: ", @group_joining
     if @group_joining.empty?
-      p "グループに参加していません。"
       @not_joining_group = true
     end
     @group_lists_none = "グループに参加していません。"
@@ -24,9 +22,7 @@ class GroupsController < ApplicationController
   def join_by_invite
     token = params[:invite_token]
     group = Group.find_by(invite_token: token)
-    p "group_id: ", params[:group_id]
     group_joining = GroupUser.where(group_id: params[:group_id], user_id: current_user.id)
-    p "group_joining: ", group_joining
     if group
       if group_joining.empty?
         # ユーザーをグループに追加する処理
