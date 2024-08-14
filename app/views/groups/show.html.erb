@@ -83,11 +83,11 @@ details[open] .details-content {
           <div class="panel-group">
             <div class="panel panel-default" style="margin-bottom: 30px;">
               <div class="panel-heading">
-                <a data-toggle="collapse" href="#collapse2">
+                <a data-toggle="collapse" href="#collapse2" aria-expanded="false" aria-controls="collapse2">
                   <%= image_tag 'group.png', size: "23x23" %><%= @group.users.size %>
                 </a>
               </div>
-              <div id="collapse2" class="panel-collapse collapse">
+              <div id="collapse2" class="panel-collapse collapse" aria-labelledby="headingTwo">
                 <ul class="list-group">
                   <% @group.users.each do |user| %>
                     <li class="list-group-item"><%= user.username %></li>
