@@ -73,6 +73,103 @@ details[open] .details-content {
     transform: none;
   }
 }
+
+/* From Uiverse.io by Na3ar-17 */ 
+.radio-input {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.radio-input * {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.radio-input label {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 0px 20px;
+  width: 220px;
+  cursor: pointer;
+  height: 50px;
+  position: relative;
+}
+
+.radio-input label::before {
+  position: absolute;
+  content: "";
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 220px;
+  height: 45px;
+  z-index: 0;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  border-radius: 10px;
+  border: 2px solid transparent;
+}
+.radio-input label:hover::before {
+  transition: all 0.2s ease;
+  background-color: #2a2e3c;
+}
+
+.radio-input .label:has(input:checked)::before {
+  background-color: #2d3750;
+  border-color: #435dd8;
+  height: 50px;
+}
+.radio-input .label .text {
+  color: #fff;
+  z-index: 3;
+}
+
+.radio-input .label input[type="radio"] {
+  background-color: #202030;
+  appearance: none;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.radio-input .label input[type="radio"]:checked {
+  background-color: #435dd8;
+  -webkit-animation: puls 0.7s forwards;
+  animation: pulse 0.7s forwards;
+}
+
+.radio-input .label input[type="radio"]:before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  transition: all 0.1s cubic-bezier(0.165, 0.84, 0.44, 1);
+  background-color: #fff;
+  transform: scale(0);
+}
+
+.radio-input .label input[type="radio"]:checked::before {
+  transform: scale(1);
+  z-index: 0;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
+
 </style>
 
 <div class='container px-5 px-sm-0'>
@@ -112,11 +209,28 @@ details[open] .details-content {
             <div class="modal-close">×</div>
             <!-- モーダル内のコンテンツ -->
             <div class="modal-content">
-              <p><span style="font-weight: bold;">このノートは</span><br>
-                <input type="radio" name="num_of_inq" id="radio-match" value="試合の振り返り" style="margin-top: 10px;"><label for="radio-match" style="margin-left: 5px;">試合の振り返り</label><br>
-                <input type="radio" name="num_of_inq" id="radio-practice" value="練習の振り返り"><label for="radio-practice" style="margin-left: 5px;">練習の振り返り</label>
+              <p><span style="font-weight: bold; color: white;">このノートは</span><br>
+                <div class="radio-input">
+                  <label class="label">
+                    <input
+                      type="radio"
+                      id="value-1"
+                      checked=""
+                      name="value-radio"
+                      value="value-1"
+                    />
+                    <p class="text">試合の振り返り</p>
+                  </label>
+                  <label class="label">
+                    <input type="radio" id="value-2" name="value-radio" value="value-2" />
+                    <p class="text">練習の振り返り</p>
+                  </label>
+                </div>
+
+                <%# <input type="radio" name="num_of_inq" id="radio-match" value="試合の振り返り" style="margin-top: 10px;"><label for="radio-match" style="margin-left: 5px;">試合の振り返り</label><br>
+                <input type="radio" name="num_of_inq" id="radio-practice" value="練習の振り返り"><label for="radio-practice" style="margin-left: 5px;">練習の振り返り</label> %>
               </p>
-              <div class="toggle_button">
+              <div class="toggle_button" style="color: white;">
                 動画の有無
                 <input id="toggle" class="toggle_input" type='checkbox'/>
                 <label for="toggle" class="toggle_label" />
@@ -125,7 +239,7 @@ details[open] .details-content {
               <div class="video-index" id="video-index" style="margin-bottom: 10px;">
                 <div class="list-group">
                   <% @videos.each_with_index do |video, index| %>
-                    <div class="list-group-item list-group-item-action" style="color: black;" data-video-id='<%= video.id %>' onclick="selectVideo(this)"><%= video.title %></div>
+                    <div class="list-group-item list-group-item-action" style="color: white; background-color: #202030;" data-video-id='<%= video.id %>' onclick="selectVideo(this)"><%= video.title %></div>
                   <% end %>
                 </div>
               </div>
@@ -137,7 +251,7 @@ details[open] .details-content {
                   // すべてのリストアイテムのoutlineと文字色をリセット
                   document.querySelectorAll('.list-group-item').forEach(item => {
                     item.style.outline = '';
-                    item.style.color = 'black';
+                    item.style.color = 'white';
                     item.style.boxShadow = '';
                     item.style.zIndex = '';
                   });
@@ -146,14 +260,14 @@ details[open] .details-content {
                   if (element.getAttribute('data-video-id') == selectedVideoId) {
                     selectedVideoId = null;
                     element.style.outline = '';
-                    element.style.color = 'black';
+                    element.style.color = 'white';
                     element.style.boxShadow = '';
                     element.style.zIndex = '';
                     $('#create-note-btn').addClass("disabled");
                   } else {
                     selectedVideoId = element.getAttribute('data-video-id');
-                    element.style.outline = '2px solid #1E90FF'; // 青色のoutline
-                    element.style.color = 'black';
+                    element.style.outline = '2px solid #435dd8'; // 青色のoutline
+                    element.style.color = 'white';
                     element.style.boxShadow = '0 4px 8px 0 rgba(0, 0, 0, 0.2)';
                     element.style.zIndex = '2'; // 最前面に表示
                     $("#create-note-btn").removeClass("disabled");
@@ -208,7 +322,7 @@ details[open] .details-content {
                   return path;
                 }
               </script>
-              <%= link_to 'ノートを作成', '#', "data-turbo": false, id: "create-note-btn",class: "btn btn btn-outline-dark", style: "margin-top: 10px; border-width: 2px; border-radius: 0;", onclick: "window.location.href = createNotePath();" %>
+              <%= link_to 'ノートを作成', '#', "data-turbo": false, id: "create-note-btn",class: "btn btn btn-outline-light", style: "margin-top: 10px; border-width: 2px; border-radius: 0;", onclick: "window.location.href = createNotePath();" %>
             </div>
 
           </div>
@@ -303,7 +417,6 @@ details[open] .details-content {
 
 <script>
   $(function(){
-    console.log("hey, it's a modal.js");
     // 変数に要素を入れる
     var open = $('.modal-open'),
       close = $('.modal-close'),
