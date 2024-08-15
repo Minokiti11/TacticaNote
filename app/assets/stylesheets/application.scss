@@ -39,7 +39,7 @@ textarea{
 	visibility: hidden;
 	transition: .3s;
     box-sizing: border-box;
-    z-index:1;
+    z-index: 1;
 }
 /*モーダル本体の擬似要素の指定*/
 .modal-container:before{
@@ -73,12 +73,12 @@ textarea{
 	width: 40px;
 	height: 40px;
 	font-size: 40px;
-	color: #fff;
+	color: #272737;
 	cursor: pointer;
 }
 /*モーダル内のコンテンツの指定*/
 .modal-content{
-	background: #fff;
+	background: #272737;
 	text-align: left;
 	padding: 30px;
     border-radius: 10px;
