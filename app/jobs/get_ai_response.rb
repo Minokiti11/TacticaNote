@@ -24,8 +24,6 @@ class GetAiResponse include ActionView::RecordIdentifier
                     具体的な練習方法については質問しないでください。解決策や具体例は提示しないでください。output only answer less than 5 sentences." }
 
     def perform(channel, prompt, type, response_id)
-        p "perform is called..."
-
         response = Response.find(response_id)
         target = "notes_#{type}"
         
@@ -40,8 +38,6 @@ class GetAiResponse include ActionView::RecordIdentifier
         )
 
         message = response_from_gpt4o_mini.dig("choices", 0, "message", "content")
-
-        p "response: ", message
 
         Turbo::StreamsChannel.broadcast_replace_later_to(
             channel,
