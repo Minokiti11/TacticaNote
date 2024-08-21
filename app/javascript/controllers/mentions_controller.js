@@ -18,10 +18,14 @@ export default class extends Controller {
             allowSpaces: true,
             lookup: 'username',
             values: this.fetchUsers,
+            trigger: '@'
         })
         this.tribute.attach(this.fieldTarget)
         this.tribute.range.pasteHtml = this._pasteHtml.bind(this)
         this.fieldTarget.addEventListener("tribute-replaced", this.replaced)
+
+        // @が入力された時にスペースを挿入するイベントリスナーを追加
+        this.fieldTarget.addEventListener("keydown", this.handleAtSymbol.bind(this))
     }
 
     fetchUsers(text, callback) {
@@ -34,15 +38,32 @@ export default class extends Controller {
     replaced(e) {
         let mention = e.detail.item.original
         let attachment = new Trix.Attachment({
-            content: `<span class="mention" style="color: #1f7790;">@${mention.username}&nbsp;</span>`
+            content: `<span class="mention" style="color: #1f7790;">@${mention.username}</span>`
         })
+        
         this.editor.insertAttachment(attachment)
-        // this.editor.insertAttachment(new Trix.Attachment({ content: " " }))
+        this.editor.insertString(" ")
     }
 
     _pasteHtml(html, startPos, endPos) {
         let position = this.editor.getPosition()
-        this.editor.setSelectedRange([position - endPos, position])
+        this.editor.setSelectedRange([position - 1, position])
         this.editor.deleteInDirection("backward")
+    }
+
+    // @が入力された時にスペースを挿入するメソッドを追加
+    handleAtSymbol(event) {
+        if (event.key === '@') {
+            let position = this.editor.getPosition()
+            if (position > 0 && this.editor.getDocument().getCharacterAtPosition(position - 1) !== ' ') {
+                event.preventDefault()
+                this.editor.insertString(' @')
+            }
+            else
+            {
+                event.preventDefault()
+                this.editor.insertString('@')
+            }
+        }
     }
 }
