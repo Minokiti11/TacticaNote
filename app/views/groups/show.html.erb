@@ -245,8 +245,7 @@ details[open] .details-content {
               </div>
 
               <script>
-                let selectedVideoId = null;
-
+                let selectedVideoId;
                 function selectVideo(element) {
                   // すべてのリストアイテムのoutlineと文字色をリセット
                   document.querySelectorAll('.list-group-item').forEach(item => {
@@ -272,12 +271,11 @@ details[open] .details-content {
                     element.style.zIndex = '2'; // 最前面に表示
                     $("#create-note-btn").removeClass("disabled");
                   }
-                   // 選択されたビデオのID
-                  console.log("selectedVideoId: ", selectedVideoId);
                 }
 
                 // セレクトボックス全体の四角を丸くする
-                document.addEventListener('DOMContentLoaded', function() {
+                document.addEventListener('turbo:load', function() {
+                  selectedVideoId = null;
                   document.querySelector('.list-group').style.borderRadius = '5px';
                   const toggle = document.getElementById('toggle');
                   if (toggle.checked) {
