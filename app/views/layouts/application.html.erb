@@ -37,8 +37,8 @@
 
 
   <body data-controller="<%= controller_name %>" data-action="<%= action_name %>">
-    <% if controller_name == 'groups' && action_name == 'show' %>
-      <% @id = params[:id] %>
+    <% if controller_name == 'groups' %>
+      <% @id = params[:id] if params[:id].present? %>
     <% end %>
     <%= render 'layouts/navbar' %>
     

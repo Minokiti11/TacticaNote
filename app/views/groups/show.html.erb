@@ -274,7 +274,7 @@ details[open] .details-content {
                 }
 
                 // セレクトボックス全体の四角を丸くする
-                document.addEventListener('turbo:load', function() {
+                document.addEventListener('DOMContentLoaded', function() {
                   selectedVideoId = null;
                   document.querySelector('.list-group').style.borderRadius = '5px';
                   const toggle = document.getElementById('toggle');
@@ -305,17 +305,12 @@ details[open] .details-content {
                   const toggle = document.getElementById('toggle');
                   let path = '<%= new_note_path(with_video: false) %>';
                   if (toggle.checked) {
-                    console.log("toggle is now checked.");
                     if (selectedVideoId) {
-                      console.log("selectedVideoId is now true.");
                       $("#create-note-btn").removeClass("disabled");
                       path = '<%= new_note_path(with_video: true) %>' + `&video_id=${selectedVideoId}`;
                     } else {
-                      console.log("selectedVideoId is now false.");
                       $("#create-note-btn").addClass("disabled");
                     }
-                  } else {
-                    console.log("toggle is not checked.");
                   }
                   return path;
                 }
