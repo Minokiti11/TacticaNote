@@ -15,14 +15,14 @@
       <% end %>
     <% end %>
     
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+    <div class="row mt-4">
       <% @video.notes.each do |note| %>
-        <div class="col">
-          <%= link_to note_path(note), "data-turbo": false, class: "card mb-3", style: "text-decoration: none; color: black; margin-top: 20px;" do %>
+        <div class="col-md-6 col-lg-4 mb-4">
+          <%= link_to note_path(note), "data-turbo": false, class: "card h-100", style: "text-decoration: none; color: black;" do %>
             <div class="card-body">
               <h5 class="card-title"><%= note.title %></h5>
-              <p class="card-text"><small class="text-body-secondary"><%= note.user.username %></p>
-              <p class="card-text"><small class="text-body-secondary"><time><%= note.updated_at.strftime("%Y-%m-%d %H:%M") %></time>更新</small></p>
+              <p class="card-text"><small class="text-body-secondary"><%= note.user.username %></small></p>
+              <p class="card-text mt-auto"><small class="text-body-secondary"><time><%= note.updated_at.strftime("%Y-%m-%d %H:%M") %></time>更新</small></p>
             </div>
           <% end %>
         </div>
