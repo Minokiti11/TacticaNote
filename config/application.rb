@@ -30,5 +30,7 @@ module TacticaChat
       end
     end
 
+    config.active_storage.service_urls_expire_in = 2.hours
+
   end
 end
