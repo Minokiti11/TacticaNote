@@ -111,4 +111,6 @@ Rails.application.configure do
   config.cache_store = :redis_cache_store, { url: ENV['REDIS_URL'] }
   config.session_store :cache_store, expire_after: 7.days
   # RailsのキャッシュストアとしてRedisを使用する設定を追加
+
+  config.active_storage.urls_expire_in = 2.hours
 end
