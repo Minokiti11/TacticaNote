@@ -21,8 +21,20 @@ class NotesController < ApplicationController
 
     def gpt_api_request_good
         data = params.require(:data).permit(:value)
+
+        if data[:value].present?
+            same_session_id_responses = Response.where(section_type: "good", session_id: session.id.to_s)
+            if same_session_id_responses.length != 0 && same_session_id_responses
+                previous_data = Response.where(section_type: "good", session_id: session.id.to_s).last.input
+                if previous_data.present?
+                    similar = check_content_similarity(previous_data, data[:value])
+                    return if similar
+                end
+            end
+        end
+        
         if !@@debug && !(data == nil) && !(data[:value] == "")
-            response = Response.create(section_type: "good", input: data["value"])
+            response = Response.create(section_type: "good", input: data["value"], session_id: session.id.to_s)
 
             Turbo::StreamsChannel.broadcast_replace_later_to(
                 "user_#{session.id}",
@@ -44,8 +56,20 @@ class NotesController < ApplicationController
 
     def gpt_api_request_bad
         data = params.require(:data).permit(:value)
+
+        if data[:value].present?
+            same_session_id_responses = Response.where(section_type: "bad", session_id: session.id.to_s)
+            if same_session_id_responses.length != 0 && same_session_id_responses
+                previous_data = Response.where(section_type: "bad", session_id: session.id.to_s).last.input
+                if previous_data.present?
+                    similar = check_content_similarity(previous_data, data[:value])
+                    return if similar
+                end
+            end
+        end
+
         if !@@debug && !(data == nil) && !(data[:value] == "")
-            response = Response.create(section_type: "bad", input: data["value"])
+            response = Response.create(section_type: "bad", input: data["value"], session_id: session.id.to_s)
 
             Turbo::StreamsChannel.broadcast_replace_later_to(
                 "user_#{session.id}",
@@ -69,8 +93,20 @@ class NotesController < ApplicationController
 
     def gpt_api_request_next
         data = params.require(:data).permit(:value)
+
+        if data[:value].present?
+            same_session_id_responses = Response.where(section_type: "next", session_id: session.id.to_s)
+            if same_session_id_responses.length != 0 && same_session_id_responses
+                previous_data = Response.where(section_type: "next", session_id: session.id.to_s).last.input
+                if previous_data.present?
+                    similar = check_content_similarity(previous_data, data[:value])
+                    return if similar
+                end
+            end
+        end
+
         if !@@debug && !(data == nil) && !(data[:value] == "")
-            response = Response.create(section_type: "next", input: data["value"])
+            response = Response.create(section_type: "next", input: data["value"], session_id: session.id.to_s)
 
             Turbo::StreamsChannel.broadcast_replace_later_to(
                 "user_#{session.id}",
@@ -131,5 +167,23 @@ class NotesController < ApplicationController
     private
     def note_params
         params.require(:note).permit(:id, :title, :note_type, :content, :good, :bad, :next, :discuss)
+    end
+
+    def check_content_similarity(text1, text2)
+        client = OpenAI::Client.new
+        response = client.chat(
+            parameters: {
+                model: "gpt-4o-mini",
+                messages: [
+                    { role: "system", content: "テキスト1はユーザーの前の文章、テキスト2はユーザーが編集した文章です。テキスト2に大きな内容の変更がなければ'true'を、変更があれば'false'を出力してください。" },
+                    { role: "user", content: "テキスト1: #{text1}\nテキスト2: #{text2}" }
+                ],
+                temperature: 0.2
+            }
+        )
+        #　response is 'true' or 'false'
+        similarity = response.dig("choices", 0, "message", "content")
+        
+        return similarity == "true"
     end
 end
