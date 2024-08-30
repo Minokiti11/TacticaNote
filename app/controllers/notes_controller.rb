@@ -25,7 +25,7 @@ class NotesController < ApplicationController
         if data[:value].present?
             same_session_id_responses = Response.where(section_type: "good", session_id: session.id.to_s)
             if same_session_id_responses.length != 0 && same_session_id_responses
-                previous_data = Response.where(section_type: "good", session_id: session.id.to_s).last.input
+                previous_data = same_session_id_responses.last.input
                 if previous_data.present?
                     similar = check_content_similarity(previous_data, data[:value])
                     return if similar
@@ -60,7 +60,7 @@ class NotesController < ApplicationController
         if data[:value].present?
             same_session_id_responses = Response.where(section_type: "bad", session_id: session.id.to_s)
             if same_session_id_responses.length != 0 && same_session_id_responses
-                previous_data = Response.where(section_type: "bad", session_id: session.id.to_s).last.input
+                previous_data = same_session_id_responses.last.input
                 if previous_data.present?
                     similar = check_content_similarity(previous_data, data[:value])
                     return if similar
@@ -97,7 +97,7 @@ class NotesController < ApplicationController
         if data[:value].present?
             same_session_id_responses = Response.where(section_type: "next", session_id: session.id.to_s)
             if same_session_id_responses.length != 0 && same_session_id_responses
-                previous_data = Response.where(section_type: "next", session_id: session.id.to_s).last.input
+                previous_data = same_session_id_responses.last.input
                 if previous_data.present?
                     similar = check_content_similarity(previous_data, data[:value])
                     return if similar
