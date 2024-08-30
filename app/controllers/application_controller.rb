@@ -20,7 +20,8 @@ class ApplicationController < ActionController::Base
     def set_current_group
         if params[:group_id]
             session[:current_group_id] = params[:group_id]
+            @id = session[:current_group_id]
         end
-        @id = session[:current_group_id]
+        @id = nil
     end
 end
