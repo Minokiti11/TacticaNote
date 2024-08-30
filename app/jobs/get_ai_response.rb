@@ -26,6 +26,13 @@ class GetAiResponse include ActionView::RecordIdentifier
     def perform(channel, prompt, type, response_id)
         response = Response.find(response_id)
         target = "notes_#{type}"
+
+        Turbo::StreamsChannel.broadcast_replace_later_to(
+            "rate",
+            target: "notes_#{type}_rate",
+            partial: "notes/rate",
+            locals: { rate: 4, target: "notes_#{type}_rate" }
+        )
         
         response_from_gpt4o_mini = OpenAI::Client.new.chat(
             parameters: {

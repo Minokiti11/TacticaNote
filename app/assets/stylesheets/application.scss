@@ -321,3 +321,37 @@ opacity: 8%;
         }
     }
 }
+
+/* From Uiverse.io by ahmed150up */ 
+input[type="checkbox"] {
+    display: none;
+}
+
+label svg {
+    width: 30px;
+    height: 30px;
+    margin-right: 2px;
+    margin-left: 2px;
+    fill: none;
+    stroke: #000;
+    stroke-width: 1.5px;
+}
+
+input[type="checkbox"]:checked + label svg {
+    fill: #FFC107;
+    animation: pop_42 0.5s ease-out;
+}
+
+@keyframes pop_42 {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.5);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}

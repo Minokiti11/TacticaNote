@@ -45,10 +45,13 @@
             <%= form.text_area :good, class: 'form-control mb-3', id: 'note_good', placeholder: '上手くいった点を記入
 (〇〇:〇〇のようにして、動画の指定された秒数を再生できます。　例：4:35, 07:56)', style: "padding: 10px; max-height: 400px; height: 100px;" %>
         </div>
+        <div id="notes_good_rate">
+        </div><br />
 
         <div id="notes_good">
             <!-- ここにメッセージがリアルタイムで表示される -->
         </div><br />
+        <%= turbo_stream_from "rate" %>
         <%= turbo_stream_from "user_#{session.id}" %>
         <%= turbo_stream_from "spinner" %>
         <div id="spinner_good"></div>
