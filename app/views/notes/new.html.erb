@@ -32,11 +32,46 @@
             </div>
         <% end %>
 
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+        <div class="flex items-center justify-center" style="margin: 30px;">
+            <div class="bg-white rounded-lg shadow-lg p-6 w-3/4">
+                <div class="flex justify-between items-center mb-4">
+                    <h1 class="text-gray-400 text-lg">Add a title—what are you aligning on?</h1>
+                    <span class="text-gray-400">杉村実紀 voted</span>
+                </div>
+                <div class="relative mb-4">
+                    <div class="h-2 bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 rounded-full"></div>
+                    <div class="absolute inset-0 flex justify-between items-center px-4">
+                        <div class="h-6 w-1 bg-red-500 rounded-full" style="position: absolute; left: 0;"></div>
+                        <div class="h-6 w-1 bg-gradient-to-r from-red-500 to-yellow-500 rounded-full" style="position: absolute; left: 25%;"></div>
+                        <div class="h-6 w-1 bg-yellow-500 rounded-full" style="position: absolute; left: 50%;"></div>
+                        <div class="h-6 w-1 bg-gradient-to-r from-yellow-500 to-green-500 rounded-full" style="position: absolute; left: 75%;"></div>
+                        <div class="h-6 w-1 bg-green-500 rounded-full" style="position: absolute; right: 0;"></div>
+                    </div>
+                    <div class="absolute inset-0 flex justify-center items-center">
+                        <div class="bg-green-800 text-white rounded-full h-8 w-8 flex items-center justify-center text-sm">実紀</div>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center px-4 mb-4">
+                    <span class="text-red-500">Strongly disagree</span>
+                    <span class="text-yellow-500">Neutral</span>
+                    <span class="text-green-500">Strongly agree</span>
+                </div>
+                <%# <div class="flex justify-center">
+                    <button class="bg-purple-500 text-white py-2 px-4 rounded-full flex items-center">
+                        <i class="fas fa-eye mr-2"></i> Results revealed
+                    </button>
+                </div> %>
+            </div>
+        </div>
+
         <!-- タイトル入力フォーム -->
         <div class="form-group">
             <label id="title" for="note_title" class="form-label">タイトル</label>
             <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', placeholder: '例：「vs_〇〇の振り返り」「ビルドアップについて」)', style: "padding: 10px;" %>
         </div>
+
 
         <!-- 上手くいった点の入力フォーム -->
         <div class="form-group" id="div_good">
