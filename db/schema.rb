@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_08_28_131637) do
+ActiveRecord::Schema[7.0].define(version: 2024_09_01_065233) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -98,6 +98,19 @@ ActiveRecord::Schema[7.0].define(version: 2024_08_28_131637) do
     t.index ["video_id"], name: "index_notes_on_video_id"
   end
 
+  create_table "practices", force: :cascade do |t|
+    t.string "name"
+    t.text "introduction"
+    t.integer "number_of_people"
+    t.text "issue"
+    t.text "key_points"
+    t.text "applicable_situation"
+    t.integer "group_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_practices_on_group_id"
+  end
+
   create_table "responses", force: :cascade do |t|
     t.string "section_type"
     t.text "input"
@@ -155,6 +168,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_08_28_131637) do
   add_foreign_key "notes", "groups"
   add_foreign_key "notes", "users"
   add_foreign_key "notes", "videos"
+  add_foreign_key "practices", "groups"
   add_foreign_key "responses", "groups"
   add_foreign_key "responses", "users"
   add_foreign_key "responses", "videos"

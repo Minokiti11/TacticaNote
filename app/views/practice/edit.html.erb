@@ -1,0 +1,44 @@
+<%= form_with model: @practice, local: true, html: {class: "needs-validation", novalidate: true} do |form| %>
+    <div class="container mt-3">
+        <div class="h3" style="margin-top: 40px; margin-bottom: 50px; font-weight: 700;">
+            練習メニューを編集
+        </div>
+
+        <!-- メニュー名の入力フォーム -->
+        <div class="form-group">
+            <label id="name" for="practice_name" class="form-label">練習メニュー名</label>
+            <%= form.text_field :name, class: 'form-control mb-3', placeholder: '例:「3対3 2サーバー」', style: "padding: 10px;" %>
+        </div>
+
+        <!-- 人数の入力フォーム -->
+        <div class="form-group">
+            <label for="practice_number_of_people" class="form-label">人数</label>
+            <%= form.number_field :number_of_people, class: 'form-control mb-3', style: "padding: 10px;" %>
+        </div>
+        
+        
+        <!-- 解決する課題の入力フォーム -->
+        <div class="form-group">
+            <label for="practice_issue" class="form-label">解決する課題</label>
+            <%= form.text_area :issue, class: 'form-control mb-3', placeholder: 'このトレーニングで解決する課題を記入', style: "padding: 10px; max-height: 400px; height: 100px;" %>
+        </div>
+
+        <!-- トレーニング内容の入力フォーム -->
+        <div class="form-group">
+            <label for="practice_introduction" class="form-label">トレーニング内容</label>
+            <%= form.text_area :introduction, class: 'form-control mb-3', placeholder: 'メニューの内容を記入', style: "padding: 10px; max-height: 400px; height: 100px;" %>
+        </div>
+
+        <!-- 話し合いたいこと・確認したいことの入力フォーム -->
+        <div class="form-group">
+            <label for="practice_key_points" class="form-label">意識するポイント</label>
+            <%= form.text_area :key_points, class: 'form-control mb-3', placeholder: 'このトレーニングで意識するポイントを記入', style: "max-height: 400px; height: 100px;" %>
+        </div>
+
+        <!-- 送信ボタン -->
+        <div class="form-group">
+            <%= form.button "更新", type: 'button', onclick: 'submit();', class: 'btn btn-outline-primary', style: "border-radius: 1;" %>
+        </div>
+        <br />
+    </div>
+<% end %>

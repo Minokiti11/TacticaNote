@@ -6,7 +6,7 @@
         height: 281px;
     }
     @media screen and (max-width: 767px) {
-        /* ここに横幅が767pxより小さい時に発動するスタイルを記述 */
+        /*　横幅が767pxより小さい時に適用するスタイル　*/
         #video {
             width: 100%;
             height: 100%;
@@ -34,8 +34,8 @@
 
         <script src="https://cdn.tailwindcss.com"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
-        <div class="flex items-center justify-center" style="margin: 30px;">
-            <div class="bg-white rounded-lg shadow-lg p-6 w-3/4">
+        <div class="flex items-center justify-center" style="margin-top: 30px; margin-bottom: 30px;">
+            <div class="bg-white rounded-lg shadow-lg p-6 w-full lg:w-3/4">
                 <div class="flex justify-between items-center mb-4">
                     <h1 class="text-gray-400 text-lg">Add a title—what are you aligning on?</h1>
                     <span class="text-gray-400">杉村実紀 voted</span>
@@ -53,10 +53,10 @@
                         <div class="bg-green-800 text-white rounded-full h-8 w-8 flex items-center justify-center text-sm">実紀</div>
                     </div>
                 </div>
-                <div class="flex justify-between items-center px-4 mb-4">
-                    <span class="text-red-500">Strongly disagree</span>
-                    <span class="text-yellow-500">Neutral</span>
-                    <span class="text-green-500">Strongly agree</span>
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-red-500 w-1/4 text-center">Strongly<br>disagree</span>
+                    <span class="text-yellow-500 w-1/2 text-center">Neutral</span>
+                    <span class="text-green-500 w-1/4 text-center">Strongly<br>agree</span>
                 </div>
                 <%# <div class="flex justify-center">
                     <button class="bg-purple-500 text-white py-2 px-4 rounded-full flex items-center">

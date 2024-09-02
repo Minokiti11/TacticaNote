@@ -3,6 +3,7 @@ require 'sidekiq/web'
 Rails.application.routes.draw do
   resources :videos
   resources :notes
+  resources :practices
   # devise_for :users
 
   devise_for :users, controllers: {
@@ -22,6 +23,7 @@ Rails.application.routes.draw do
     get 'groups/show' => 'groups#show'
     get 'video' => "groups#video"
     get 'note' => "groups#note"
+    get 'practice' => "groups#practice"
     delete "all_destroy" => 'groups#all_destroy'
   end
   

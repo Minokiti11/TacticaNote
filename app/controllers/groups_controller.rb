@@ -96,6 +96,11 @@ class GroupsController < ApplicationController
     @notes = @group.notes
   end
 
+  def practice
+    @group = Group.find(params[:group_id])
+    @practices = @group.practices
+  end
+
   def generate_invite_link
     @group = Group.find(params[:id])
     @group.generate_invite_token
