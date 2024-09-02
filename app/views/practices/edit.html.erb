@@ -34,6 +34,12 @@
             <label for="practice_key_points" class="form-label">意識するポイント</label>
             <%= form.text_area :key_points, class: 'form-control mb-3', placeholder: 'このトレーニングで意識するポイントを記入', style: "max-height: 400px; height: 100px;" %>
         </div>
+        
+        <!-- 話し合いたいこと・確認したいことの入力フォーム -->
+        <div class="form-group">
+            <label for="practice_applicable_situation" class="form-label">該当する試合のシチュエーション</label>
+            <%= form.text_area :applicable_situation, class: 'form-control mb-3', placeholder: 'このトレーニングが実際の試合のどんなシチュエーションを想定しているか', style: "max-height: 400px; height: 100px;" %>
+        </div>
 
         <!-- 送信ボタン -->
         <div class="form-group">
