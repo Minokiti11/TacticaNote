@@ -1,7 +1,16 @@
 <div class='container-fluid px-3 px-sm-5 py-4'>
-    <h2 style="margin-left: 20px; margin-top: 30px; margin-bottom: 60px;">練習メニュー</h2>
     <div class='row'>
         <div class='col-12 col-md-8 col-lg-6'>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 style="margin-left: 20px; margin-top: 30px; margin-bottom: 60px;">練習メニュー</h2>
+                <% if request.env['HTTP_USER_AGENT'].include?('Mobile') %>
+                    <%= link_to new_practice_path, class: "btn btn-dark d-block rounded-circle bg-black", style: "margin-bottom: 20px;" do %>
+                        <i class="fas fa-plus"></i>
+                    <% end %>
+                <% else %>
+                    <%= link_to 'メニューを追加', new_practice_path, class: "btn btn-primary d-block" %>
+                <% end %>
+            </div>
             <div class="list-group">
             <% @practices.each do |practice| %>
                 <%= link_to practice_path(practice), class: "list-group-item list-group-item-action p-3 border-0 mb-3 rounded shadow-sm" do %>
