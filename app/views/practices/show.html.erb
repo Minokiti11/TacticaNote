@@ -30,4 +30,32 @@
         <div class="card-header">試合で該当するシチュエーション</div>
         <div class="card-body note-content"><%= simple_format(@practice.applicable_situation, {}, sanitize: false, wrapper_tag: 'div') %></div>
     </div>
+    <div class="card mb-3">
+        <div class="card-header">外部リンク</div>
+        <div class="card-body note-content">
+            <% if @practice.links.start_with?("https://www.youtube.com") || @practice.links.start_with?("https://youtube.com") %>
+                <% video_id = @practice.links.split("v=").last.split("&").first %>
+                <% embed_url = "https://www.youtube.com/embed/#{video_id}" %>
+                <% if request.env['HTTP_USER_AGENT'].include?('Mobile') %>
+                    <iframe id="video-iframe" width="100%" height="315" src="<%= embed_url %>" allowfullscreen></iframe>
+                <% else %>
+                    <iframe width="560" height="315" src="<%= embed_url %>" allowfullscreen></iframe>
+                <% end %>
+            <% else %>
+                <%= @practice.links %>
+            <% end %>
+        </div>
+    </div>
 </div>
+
+<script>
+    function updateIframeHeight() {
+        var iframe = document.getElementById("video-iframe");
+        iframe.height = ((iframe.parentElement.clientWidth - 32) * 9 / 16) + "px";
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        updateIframeHeight(); // 初期幅設定
+        window.addEventListener("resize", updateIframeWidth); // 画面幅変更時に呼び出し
+    });
+</script>

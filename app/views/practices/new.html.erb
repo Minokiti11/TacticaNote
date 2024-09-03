@@ -41,6 +41,11 @@
             <%= form.text_area :applicable_situation, class: 'form-control mb-3', placeholder: 'このトレーニングが実際の試合のどんなシチュエーションを想定しているか', style: "max-height: 400px; height: 100px;" %>
         </div>
 
+        <div class="form-group">
+            <label for="practice_links" class="form-label">外部リンク</label>
+            <%= form.text_area :links, class: 'form-control mb-3', placeholder: 'YoutubeやWebサイトのリンクを記入', style: "padding: 10px;" %>
+        </div>
+
         <!-- 送信ボタン -->
         <div class="form-group">
             <%= form.button "作成", type: 'button', onclick: 'submit();', class: 'btn btn-outline-primary', style: "border-radius: 1;" %>

@@ -9,11 +9,12 @@ class PracticesController < ApplicationController
 
     def create
         @practice = Practice.new(practice_params)
-        @practice.group_id = @id
+        @practice.group_id = session[:current_group_id]
         if @practice.save
             redirect_to @practice
         else
-            render 'new'
+            flash.now[:alert] = "有効なURLを入力してください"
+            render "new"
         end
     end
 
@@ -39,6 +40,6 @@ class PracticesController < ApplicationController
 
     private
     def practice_params
-        params.require(:practice).permit(:id, :name, :issue, :number_of_people, :introduction, :key_points, :applicable_situation)
+        params.require(:practice).permit(:id, :name, :issue, :number_of_people, :introduction, :key_points, :applicable_situation, :links)
     end
 end
