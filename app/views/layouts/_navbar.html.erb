@@ -18,8 +18,8 @@
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <% if current_user.groups.any? %>
-                  <% if @id %>
-                    <% group = Group.find(@id) %>
+                  <% if session[:current_group_id] %>
+                    <% group = Group.find(session[:current_group_id]) %>
                   <% else %>
                     <% group = current_user.groups.first %>
                   <% end %>
