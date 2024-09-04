@@ -17,6 +17,7 @@ class PracticesController < ApplicationController
 
     def create
         @practice = Practice.new(practice_params)
+        @practice.user_id = current_user.id
         @practice.group_id = session[:current_group_id]
         if @practice.save
             redirect_to @practice
@@ -42,7 +43,7 @@ class PracticesController < ApplicationController
     def destroy
         @practice = Practice.find(params[:id])
         if @practice.destroy
-            redirect_to practices_path
+            redirect_to group_practice_path(session[:current_group_id])
         end
     end
 

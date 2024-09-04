@@ -1,11 +1,22 @@
-<div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center" style="margin-top: 40px; margin-bottom: 50px;">
+<!-- モバイルの場合 -->
+<%= link_to '← 練習メニューの一覧へ', group_practice_path(session[:current_group_id]), class: "me-2", "data-turbo": false, style: "font-size: 1em; display: block; margin-top: 30px; margin-left: 10px;" if request.env['HTTP_USER_AGENT'].include?('Mobile') %>
+<!-- 非モバイルの場合 -->
+<%= link_to '← 練習メニューの一覧へ', group_practice_path(session[:current_group_id]), class: "me-2", "data-turbo": false, style: "font-size: 1.2em; display: block; margin-top: 30px; margin-left: 30px;" unless request.env['HTTP_USER_AGENT'].include?('Mobile') %>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 50px;">
         <div class="h2 font-weight-700">
-        <%= @practice.name %>
+            <%= @practice.name %>
         </div>
-        <%= link_to edit_practice_path(@practice), class: "btn", "data-turbo": false do %>
-            <i class="fas fa-edit" style="color: black; font-size: 1.5em;"></i>
-        <% end %>
+        <div class="d-flex justify-content-end">
+            <%= link_to edit_practice_path(@practice), class: "btn", "data-turbo": false do %>
+                <i class="fas fa-edit" style="color: black; font-size: 1.5em;"></i>
+            <% end %>
+            <% if @practice.user_id == current_user.id %>
+                <%= button_to practice_path(@practice), "data-turbo": false, method: :delete, class: "btn", onclick: "return confirm('本当に削除しますか？');" do %>
+                    <i class="fas fa-trash-alt" style="color: black; font-size: 1.5em;"></i>
+                <% end %>
+            <% end %>
+        </div>
     </div>
     <div class="card mb-3">
         <div class="card-header">解決する課題</div>
