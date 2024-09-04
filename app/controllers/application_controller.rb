@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
     before_action :configurepermitted_parameters, if: :devise_controller?
     before_action :set_current_group
+    before_action :authenticate_user!, unless: :devise_controller?
     
     def self.render_with_signed_in_user(user, *args)
         ActionController::Renderer::RACK_KEY_TRANSLATION['warden'] ||= 'warden'
@@ -20,6 +21,13 @@ class ApplicationController < ActionController::Base
     def set_current_group
         if params[:group_id]
             session[:current_group_id] = params[:group_id]
+        end
+    end
+
+    def authenticate_user!
+        unless user_signed_in?
+            flash[:alert] = "ログインが必要です。"
+            redirect_to new_user_session_path
         end
     end
 end
