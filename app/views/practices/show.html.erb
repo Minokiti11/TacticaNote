@@ -1,11 +1,15 @@
 <!-- モバイルの場合 -->
 <%= link_to '← 練習メニューの一覧へ', group_practice_path(session[:current_group_id]), class: "me-2", "data-turbo": false, style: "font-size: 1em; display: block; margin-top: 30px; margin-left: 10px;" if request.env['HTTP_USER_AGENT'].include?('Mobile') %>
-<!-- 非モバイルの場合 -->
-<%= link_to '← 練習メニューの一覧へ', group_practice_path(session[:current_group_id]), class: "me-2", "data-turbo": false, style: "font-size: 1.2em; display: block; margin-top: 30px; margin-left: 30px;" unless request.env['HTTP_USER_AGENT'].include?('Mobile') %>
+
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 50px;">
+    <!-- 非モバイルの場合 -->
+    <%= link_to '← 練習メニューの一覧へ', group_practice_path(session[:current_group_id]), class: "me-2", "data-turbo": false, style: "font-size: 1.2em; display: block; margin-bottom: 30px;" unless request.env['HTTP_USER_AGENT'].include?('Mobile') %>
+    <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 30px;">
         <div class="h2 font-weight-700">
             <%= @practice.name %>
+            <span style="font-size: 0.5em; color: gray; margin-top: 20px; display: block;">
+                <%= @practice.user.username %> - <%= time_ago_in_words(@practice.created_at) %> ago
+            </span>
         </div>
         <div class="d-flex justify-content-end">
             <%= link_to edit_practice_path(@practice), class: "btn", "data-turbo": false do %>

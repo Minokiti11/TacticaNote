@@ -14,11 +14,15 @@
             <div class="list-group">
             <% @practices.each do |practice| %>
                 <%= link_to practice_path(practice), class: "list-group-item list-group-item-action p-3 border-0 mb-3 rounded shadow-sm" do %>
-                <div class="d-flex w-100 justify-content-between align-items-center">
                     <h5 class="mb-1 text-dark"><%= practice.name %></h5>
-                    <small class="text-muted"><%= practice.updated_at.strftime("%Y-%m-%d %H:%M") %>更新</small>
-                </div>
-                <p class="mb-1 text-truncate text-secondary"><%= practice.number_of_people %>人</p>
+                    <div class="d-flex w-100 justify-content-between align-items-center"style="margin-top: 30px;">
+                        <% if practice.number_of_people %>
+                            <p class="mb-1 text-truncate text-secondary"><%= practice.number_of_people %>人</p>
+                        <% end %>
+                        <div class="text-muted text-end"> <!-- 変更点: text-endを追加 -->
+                            <small><%= practice.user.username %> - <%= time_ago_in_words(practice.created_at) %> ago</small>
+                        </div>
+                    </div>
                 <% end %>
             <% end %>
             </div>
