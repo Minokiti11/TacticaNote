@@ -5,9 +5,6 @@ import "controllers"
 import jquery from "jquery"
 window.$ = jquery;
 
-$(function(){
-    console.log("Hello, jQuery.");
-})
 import "channels";
 import "@rails/actioncable";
 import "popper"
