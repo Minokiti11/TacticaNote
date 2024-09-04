@@ -8,6 +8,7 @@ class CreatePractices < ActiveRecord::Migration[7.0]
       t.text :key_points
       t.text :applicable_situation
 
+      t.references :user, foreign_key: true
       t.references :group, foreign_key: true
       
       t.timestamps

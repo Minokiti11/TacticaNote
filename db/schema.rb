@@ -105,11 +105,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_02_125400) do
     t.text "issue"
     t.text "key_points"
     t.text "applicable_situation"
+    t.integer "user_id"
     t.integer "group_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "links"
     t.index ["group_id"], name: "index_practices_on_group_id"
+    t.index ["user_id"], name: "index_practices_on_user_id"
   end
 
   create_table "responses", force: :cascade do |t|
@@ -170,6 +172,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_02_125400) do
   add_foreign_key "notes", "users"
   add_foreign_key "notes", "videos"
   add_foreign_key "practices", "groups"
+  add_foreign_key "practices", "users"
   add_foreign_key "responses", "groups"
   add_foreign_key "responses", "users"
   add_foreign_key "responses", "videos"
