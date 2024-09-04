@@ -11,7 +11,7 @@
     <%= link_to 'ノートを書く', new_note_path(with_video: true, video_id: @video_id), "data-turbo": false, class: "btn btn-success", style: "margin-top: 6px; margin-botom: 6px;" %>
     <% if current_user %>
       <% if @video.user_id == current_user.id %>
-        <%= button_to 'このビデオを削除', video_path(@video), "data-turbo": false, method: :delete, class: "btn btn-danger", style: "margin-top: 6px; margin-bottom: 30px;"%>
+        <%= button_to 'このビデオを削除', video_path(@video), "data-turbo": false, method: :delete, class: "btn btn-danger", style: "margin-top: 6px; margin-bottom: 30px;", onclick: "return confirm('本当に削除しますか？');"%>
       <% end %>
     <% end %>
     
