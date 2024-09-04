@@ -33,9 +33,11 @@
                     <h1 class="display-8" style = "color: white; font-size: calc(1.25rem + 2vw); font-weight: 750; ">課題と解決策を共有して、毎日の練習をより効果的に。</h1>
                     <h3 class="display-8" style = "color: white; font-size: calc(1.375rem + 1.0vw); margin-top: 50px;">　AI搭載。選手の思考の言語化をサポートする、共有型サッカーノート。　</h3>
                     <% if !session[:current_group_id] %>
-                      <% @id = current_user.groups.first.id %>
+                      <% group_id = current_user.groups.first.id %>
+                    <% else %>
+                      <% group_id = session[:current_group_id] %>
                     <% end %>
-                    <p style = "margin-top: 200px;"><%=link_to "Go To Dashboard", group_path(session[:current_group_id]), class: "btn btn-outline-light", style: "font-size: 17px;", "data-turbo": false %></p>
+                    <p style = "margin-top: 200px;"><%=link_to "Go To Dashboard", group_path(group_id), class: "btn btn-outline-light", style: "font-size: 17px;", "data-turbo": false %></p>
                   </div>
               </div>
           </div>
@@ -47,7 +49,7 @@
                   <div class="col-lg-12 mx-auto text-center">
                     <h1 class="display-8" style = "color: white; font-size: calc(1.25rem + 2vw); font-weight: 750; ">課題と解決策を共有して、練習をより効果的に。</h1>
                     <h3 class="display-8" style = "color: white; font-size: calc(1.375rem + 1.0vw); margin-top: 50px;">　AI搭載。選手の思考の言語化をサポートする、共有型サッカーノート。　</h3>
-                    <p style = "margin-top: 200px;"><%=link_to "Get Started",new_user_registration_path, class: "btn btn-outline-light", style: "font-size: 17px;"%></p>
+                    <p style = "margin-top: 200px;"><%=link_to "Get Started",new_user_registration_path, class: "btn btn-outline-light", style: "font-size: 17px;" %></p>
                   </div>
               </div>
           </div>
