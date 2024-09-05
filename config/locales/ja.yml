@@ -1,0 +1,23 @@
+ja:
+  datetime:
+    distance_in_words:
+      about_x_hours:
+        one: "約1時間"
+        other: "約%{count}時間"
+      about_x_months:
+        one: "約1ヶ月"
+        other: "約%{count}ヶ月"
+      x_months:
+        one: "1ヶ月"
+        other: "%{count}ヶ月"
+      x_days:
+        one: "1日"
+        other: "%{count}日"
+      x_hours:
+        one: "1時間"
+        other: "%{count}時間"
+      x_minites:
+        one: "1分"
+        other: "%{count}分"
+  time:
+    ago: "前"

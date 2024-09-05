@@ -20,7 +20,7 @@
                             <p class="mb-1 text-truncate text-secondary"><%= practice.number_of_people %>人</p>
                         <% end %>
                         <div class="text-muted text-end"> <!-- 変更点: text-endを追加 -->
-                            <small><%= practice.user.username %> - <%= time_ago_in_words(practice.created_at) %> ago</small>
+                            <small><%= practice.user.username %> - <%= time_ago_in_words(practice.created_at) %>前</small>
                         </div>
                     </div>
                 <% end %>
