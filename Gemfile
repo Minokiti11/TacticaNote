@@ -80,6 +80,8 @@ group :test do
 end
 
 gem 'devise'
+gem 'devise-i18n' # devise日本語化のためのGem
+
 gem 'actioncable'
 gem "bootstrap", "~> 5.2"
 
