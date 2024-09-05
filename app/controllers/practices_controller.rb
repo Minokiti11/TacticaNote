@@ -1,6 +1,7 @@
 class PracticesController < ApplicationController
     def show
         @practice = Practice.find(params[:id])
+        I18n.locale = :ja
         if !(session[:current_group_id].to_i == @practice.group_id)
             @group = Group.find(@practice.group_id)
             @videos = @group.videos

@@ -16,6 +16,7 @@ class GroupsController < ApplicationController
     @feeds = @group.notes.order('created_at DESC').first(7)
     @recent_videos = @videos.where("created_at > ?", Time.now - 14.days)
     @timeline = (@feeds + @recent_videos).sort_by(&:created_at).reverse
+    I18n.locale = :ja
   end
 
   def join_by_invite
@@ -93,11 +94,13 @@ class GroupsController < ApplicationController
   def note
     @group = Group.find(params[:group_id])
     @notes = @group.notes
+    I18n.locale = :ja
   end
 
   def practice
     @group = Group.find(params[:group_id])
     @practices = @group.practices
+    I18n.locale = :ja
   end
 
   def generate_invite_link
