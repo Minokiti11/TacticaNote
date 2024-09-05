@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   root to: "home#index"
   get "about" => "home#about"
 
-  resources :users
+  # resources :users
   resources :groups do
     member do
       post 'generate_invite_link' => 'groups#generate_invite_link'
