@@ -323,7 +323,7 @@ opacity: 8%;
 }
 
 /* From Uiverse.io by ahmed150up */ 
-input[type="checkbox"] {
+.star_rating {
     display: none;
 }
 
@@ -337,7 +337,7 @@ label svg {
     stroke-width: 1.5px;
 }
 
-input[type="checkbox"]:checked + label svg {
+.star_rating:checked + label svg {
     fill: #FFC107;
     animation: pop_42 0.5s ease-out;
 }
