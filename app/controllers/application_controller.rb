@@ -16,18 +16,19 @@ class ApplicationController < ActionController::Base
         devise_parameter_sanitizer.permit(:account_update, keys: [:username])
     end
 
+    # Deviseの authenticate_user! メソッドをオーバーライド
+    def authenticate_user!(opts = {})
+        if !user_signed_in?
+            flash[:alert] = "ログインが必要です。"
+            redirect_to new_user_session_path
+        end
+    end
+
     private
 
     def set_current_group
         if params[:group_id]
             session[:current_group_id] = params[:group_id]
-        end
-    end
-
-    def authenticate_user!
-        unless user_signed_in?
-            flash[:alert] = "ログインが必要です。"
-            redirect_to new_user_session_path
         end
     end
 end
