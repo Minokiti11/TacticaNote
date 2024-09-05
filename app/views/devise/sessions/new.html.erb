@@ -34,14 +34,14 @@
       </div>
 
       <% if devise_mapping.rememberable? %>
-        <div class="field">
-          <%= f.check_box :remember_me %>
-          <%= f.label :ログイン状態を維持 %>
+        <div class="form-check">
+          <%= f.check_box :remember_me, {class: "form-check-input", checked: true } %>
+          <%= f.label :remember_me, class: "form-check-label" %>
         </div>
       <% end %>
 
       <div class="actions mt-4 mb-5">
-        <%= f.submit "Log In", class: "form-control py-2 btn btn-primary fw-bold shadow", id: "login-btn" %>
+        <%= f.submit "Log In", class: "form-control py-2 btn btn-primary fw-bold shadow", id: "login-btn", "data-turbo": false %>
       </div>
     <% end %>
     <div class = "nav-link">
