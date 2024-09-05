@@ -33,7 +33,7 @@
                     <h1 class="display-8" style = "color: white; font-size: calc(1.25rem + 2vw); font-weight: 750; ">課題と解決策を共有して、毎日の練習をより効果的に。</h1>
                     <h3 class="display-8" style = "color: white; font-size: calc(1.375rem + 1.0vw); margin-top: 50px;">　AI搭載。選手の思考の言語化をサポートする、共有型サッカーノート。　</h3>
                     <% if !session[:current_group_id] %>
-                      <% group_id = current_user.groups.first.id %>
+                      <% group_id = 1 %>
                     <% else %>
                       <% group_id = session[:current_group_id] %>
                     <% end %>
