@@ -111,7 +111,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_04_152244) do
     t.string "links"
     t.integer "user_id"
     t.index ["group_id"], name: "index_practices_on_group_id"
-    t.index ["user_id"], name: "index_practices_on_user_id"
   end
 
   create_table "responses", force: :cascade do |t|
@@ -172,7 +171,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_04_152244) do
   add_foreign_key "notes", "users"
   add_foreign_key "notes", "videos"
   add_foreign_key "practices", "groups"
-  add_foreign_key "practices", "users"
+  add_foreign_key "practices", "users", on_delete: :cascade
   add_foreign_key "responses", "groups"
   add_foreign_key "responses", "users"
   add_foreign_key "responses", "videos"
