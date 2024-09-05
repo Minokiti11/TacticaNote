@@ -1,7 +1,7 @@
 class Video < ApplicationRecord
     has_one_attached :video
 
-    has_many :notes, dependent: :destroy
+    has_many :notes, dependent: :nullify
 
     belongs_to :user, optional: true
     belongs_to :group, optional: true
