@@ -51,7 +51,7 @@
         <div class="card mb-3">
             <div class="card-header">外部リンク</div>
             <div class="card-body note-content">
-                <% if @practice.links.start_with?("https://www.youtube.com") || @practice.links.start_with?("https://youtube.com") %>
+                <% if @practice.links.start_with?("https://www.youtube.com") || @practice.links.start_with?("https://youtube.com") || @practice.links.start_with?("https://youtu.be") %>
                     <% video_id = @practice.links.split("v=").last.split("&").first %>
                     <% embed_url = "https://www.youtube.com/embed/#{video_id}" %>
                     <% if request.env['HTTP_USER_AGENT'].include?('Mobile') %>
