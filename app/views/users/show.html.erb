@@ -1,0 +1,26 @@
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-6">
+            <div class="d-flex justify-content-between mb-4">
+                <h1 class="text-left">マイページ</h1>
+                <%= link_to edit_user_registration_path, class: "btn", "data-turbo": false do %>
+                    <i class="fas fa-edit" style="color: black; font-size: 1.5em;"></i>
+                <% end %>
+            </div>
+            <div class="list-group">
+                <a href="../users/edit" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">ユーザー名</h6>
+                        <small><%= @user.username %></small>
+                    </div>
+                </a>
+                <a href="../users/edit" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">メールアドレス</h6>
+                        <small><%= @user.email %></small>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
