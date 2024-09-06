@@ -54,7 +54,7 @@
   </div>
 
   <% if @note.user_id == current_user.id %>
-    <%= button_to 'このノートを削除', note_path(@note), method: :delete, class: "btn btn-danger", style: "margin-top: 6px; margin-bottom"%>
+    <%= button_to 'このノートを削除', note_path(@note), method: :delete, class: "btn btn-danger", style: "margin-top: 6px; margin-bottom", onclick: "return confirm('本当に削除しますか？');"%>
   <% end %>
 </div>
 
