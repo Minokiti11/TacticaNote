@@ -1,14 +1,18 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  get 'users/show'
   resources :videos
   resources :notes
   resources :practices
   # devise_for :users
 
   devise_for :users, controllers: {
-    omniauth_callbacks: 'users/omniauth_callbacks'
+    omniauth_callbacks: 'users/omniauth_callbacks',
+    registrations: 'users/registrations'
   }
+
+  get "my_page" => "users#show"
 
   root to: "home#index"
   get "about" => "home#about"
