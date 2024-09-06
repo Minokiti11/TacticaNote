@@ -32,6 +32,7 @@
             </div>
         <% end %>
 
+        <!--
         <script src="https://cdn.tailwindcss.com"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
         <div class="flex items-center justify-center" style="margin-top: 30px; margin-bottom: 30px;">
@@ -65,6 +66,7 @@
                 </div> %>
             </div>
         </div>
+        -->
 
         <!-- タイトル入力フォーム -->
         <div class="form-group">
@@ -121,7 +123,7 @@
         <div class="form-group" id="div_discuss">
             <label for="note_discuss" class="form-label">チームで話し合いたいこと・確認したいこと</label>
             <%= form.rich_text_area :discuss, id: 'note_discuss', placeholder: 'ミーティングなどでチームで話し合いたいこと・確認したいこと
-@someoneのようにしてチームのメンバーをメンションできます。', style: "max-height: 400px; height: 100px;", data: { controller: "mentions", mentions_target: "field" } %>
+@someoneのようにしてチームのメンバーをメンションできます。', style: "height: 100px;", data: { controller: "mentions", mentions_target: "field" } %>
             <div id="links">
 
             </div>
@@ -140,7 +142,6 @@
 <% end %>
 
 <script>
-
 $(function(){
     var loc=false;
     $(window).bind("beforeunload", function(e) {
