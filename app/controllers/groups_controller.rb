@@ -17,6 +17,17 @@ class GroupsController < ApplicationController
     @recent_videos = @videos.where("created_at > ?", Time.now - 14.days)
     @timeline = (@feeds + @recent_videos).sort_by(&:created_at).reverse
     @practices = @group.practices
+    if @group.daily_practice.present?
+      @daily_practice = @group.daily_practice
+    else
+      @daily_practice = DailyPractice.new(group_id: @group.id)
+      if @daily_practice.save
+        p "daily_practice was saved."
+      else
+        p "daily_practice was not saved."
+        p @daily_practice.errors.full_messages
+      end
+    end
     I18n.locale = :ja
   end
 
@@ -102,6 +113,29 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:group_id])
     @practices = @group.practices
     I18n.locale = :ja
+  end
+
+  def create_daily_practice_item
+    @group = Group.find(params[:id])
+    practice = Practice.find(params[:practice_id])
+    daily_practice = @group.daily_practice || DailyPractice.create(group_id: @group.id)
+
+    if daily_practice.persisted?
+      daily_practice.duration = params[:whole_training_time]
+      daily_practice.save
+      item = daily_practice.daily_practice_items.create(
+        practice: practice,
+        training_time: params[:training_time]
+      )
+
+      if item.persisted?
+        render json: { success: true }
+      else
+        render json: { success: false, error: item.errors.full_messages.join(', ') }
+      end
+    else
+      render json: { success: false, error: "Daily practice could not be created." }
+    end
   end
 
   def generate_invite_link

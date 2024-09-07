@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_04_152244) do
+ActiveRecord::Schema[7.0].define(version: 2024_09_07_062506) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -47,6 +47,24 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_04_152244) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "daily_practice_items", force: :cascade do |t|
+    t.integer "practice_id", null: false
+    t.integer "daily_practice_id", null: false
+    t.integer "training_time"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["daily_practice_id"], name: "index_daily_practice_items_on_daily_practice_id"
+    t.index ["practice_id"], name: "index_daily_practice_items_on_practice_id"
+  end
+
+  create_table "daily_practices", force: :cascade do |t|
+    t.integer "group_id", null: false
+    t.integer "duration"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_daily_practices_on_group_id"
   end
 
   create_table "group_users", force: :cascade do |t|
@@ -163,6 +181,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_04_152244) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "daily_practice_items", "daily_practices"
+  add_foreign_key "daily_practice_items", "practices"
+  add_foreign_key "daily_practices", "groups"
   add_foreign_key "group_users", "groups"
   add_foreign_key "group_users", "users"
   add_foreign_key "messages", "groups"

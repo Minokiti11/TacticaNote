@@ -383,6 +383,7 @@ select#practice-select {
                   type="number"
                   name="totalPracticeTime"
                   class="form-control"
+                  value="<%= @daily_practice.duration %>"
                 />
               </div>
 
@@ -405,13 +406,14 @@ select#practice-select {
                   class="form-control"
                   placeholder="時間 (分)"
                 />
-                <button id="add-practice" class="btn btn-primary mt-2" style="border-radius: 0px;">
+                <button id="add-practice" class="btn btn-primary mt-2" style="border-radius: 0px;" data-group-id="<%= @group.id %>">
                   追加
                 </button>
+                <p id="alert" style="color: red;"></p>
               </div>
 
               <div id="calender">
-                <h4>1日の練習カレンダー</h4>
+                <h4>練習スケジュール</h4>
                 <div class="card mt-4">
                   <%# <div class="card-header">
                     <h2 class="mb-0">1日の練習カレンダー</h2>
@@ -419,6 +421,20 @@ select#practice-select {
                   <div class="card-body">
                     <div id="time-slot" class="row">
                       <!-- 動的に生成される練習項目のカードがここに表示される -->
+                      <% if @group.daily_practice %>
+                        <% @group.daily_practice.daily_practice_items.each do |item| %>
+                          <div class="col-md-4 mb-3">
+                            <div class="card">
+                              <div class="card-body">
+                                <h5 class="card-title"><%= item.practice.name %></h5>
+                                <p class="card-text" id="card-time" data-training-time="<%= item.training_time %>"><%= item.training_time %> 分</p>
+                              </div>
+                            </div>
+                          </div>
+                        <% end %>
+                      <% else %>
+                        <p>現在、練習メニューが設定されていません。</p>
+                      <% end %>
                     </div>
                   </div>
                 </div>
@@ -556,6 +572,10 @@ select#practice-select {
   });
 
   var sum_of_time = 0;
+  $('#time-slot .card .card-body .card-text').each(function() {
+    sum_of_time += parseInt($(this).data('training-time'));
+  });
+  console.log(sum_of_time);
 
   document.getElementById('add-practice').addEventListener('click', function() {
     document.getElementById('calender').style = '';
@@ -566,22 +586,58 @@ select#practice-select {
     if (time && practiceName) {
       const total_time = parseInt(document.getElementById("total-practice-time").value);
       if (sum_of_time > total_time) {
-        alert("練習時間の合計が、指定した1日の練習時間を超えています。");
+        document.getElementById('alert').innerText = "練習時間の合計が、指定した1日の練習時間を超えています。";
         sum_of_time -= parseInt(time);
         return;
       }
-      const practiceCard = document.createElement('div');
-      practiceCard.className = 'col-md-4 mb-3';
-      practiceCard.innerHTML = `
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">${practiceName}</h5>
-            <p class="card-text">練習時間: ${time} 分</p>
-          </div>
-        </div>
-      `;
-      document.getElementById('time-slot').appendChild(practiceCard);
-      document.getElementById('sum_of_time').innerText = `総練習時間: ${sum_of_time} 分`;
+      else
+      {
+        document.getElementById('alert').text = "";
+      }
+
+      // サーバーにデータを送信
+      const groupId = this.getAttribute('data-group-id');
+      const practiceId = practiceSelect.options[practiceSelect.selectedIndex].value;
+      console.log("practiceId: ", practiceId);
+      
+      fetch(`/groups/${groupId}/create_daily_practice_item`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+          whole_training_time: parseInt(document.getElementById("total-practice-time").value),
+          practice_id: practiceId,
+          training_time: time
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          console.log("succeed!!");
+          const practiceCard = document.createElement('div');
+          practiceCard.className = 'col-md-4 mb-3';
+          practiceCard.innerHTML = `
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">${practiceName}</h5>
+                <p class="card-text">練習時間: ${time} 分</p>
+              </div>
+            </div>
+          `;
+          document.getElementById('time-slot').appendChild(practiceCard);
+          document.getElementById('sum_of_time').innerText = `総練習時間: ${sum_of_time} 分`;
+        } else {
+          console.log("faild...");
+          console.log(data.error);
+        }
+      })
+      .catch(error => {
+        console.error('エラー:', error);
+        alert('エラーが発生しました。');
+      });
+
     }
   });
 </script>

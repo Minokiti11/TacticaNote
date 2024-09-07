@@ -29,6 +29,7 @@ Rails.application.routes.draw do
     get 'note' => "groups#note"
     get 'practice' => "groups#practice"
     delete "all_destroy" => 'groups#all_destroy'
+    post 'create_daily_practice_item', on: :member
   end
   
   resources :mentions, only: [:index]

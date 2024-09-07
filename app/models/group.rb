@@ -5,6 +5,7 @@ class Group < ApplicationRecord
     has_many :videos, dependent: :destroy
     has_many :notes, dependent: :destroy
     has_many :practices, dependent: :destroy
+    has_one :daily_practice, dependent: :destroy
 
     validates :name, presence: true, uniqueness: true
     validates :introduction, presence: true
