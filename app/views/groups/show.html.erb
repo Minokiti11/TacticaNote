@@ -401,40 +401,66 @@ select#practice-select {
 
         <td>
           <div class="row" style="margin-top: 30px;">
-              <div class="d-flex flex-wrap justify-content-between">
-                <h4>1日の練習メニュー</h4>
-                <span id="daily-practice-time">練習時間: <input type="number" id="whole-practice-time" min="1" max="3" inputmode="numeric" oninput="if(this.value > 3) this.value = 3;" />時間</span>
+            <div class="container mt-5">
+              <h3 class="mb-4">1日の練習メニュー</h1>
+              
+              <div class="mb-3">
+                <label class="form-label">1日の練習時間 (分):</label>
+                <input
+                  type="number"
+                  name="totalPracticeTime"
+                  class="form-control"
+                />
               </div>
-              <div class="calendar">
-                <div class="calendar-header d-flex flex-wrap justify-content-between">
-                  <span>練習メニューを選択してください:</span>
-                  <select id="practice-select">
-                    <% @practices.each do |practice| %>
-                      <option value="<%= practice.id %>"><%= practice.name %></option>
-                    <% end %>
-                  </select>
-                  <div class="scroll-picker-container">
-                    <%# <div class="scroll-picker">
-                      <div class="scroll-picker-item">0時間</div>
-                      <div class="scroll-picker-item">1時間</div>
-                      <div class="scroll-picker-item">2時間</div>
-                      <div class="scroll-picker-item">3時間</div>
-                    </div> %>
-                    <div class="scroll-picker">
-                      <div class="scroll-picker-item">0分</div>
-                      <div class="scroll-picker-item">15分</div>
-                      <div class="scroll-picker-item">30分</div>
-                      <div class="scroll-picker-item">45分</div>
+
+              <div class="mb-3">
+                <label class="form-label">練習メニュー:</label>
+                <select
+                  name="newItem"
+                  class="form-control"
+                >
+                  <% @practices.each do |practice| %>
+                    <option value="<%= practice.id %>"><%= practice.name %></option>
+                  <% end %>
+                </select>
+                <input
+                  type="number"
+                  id="practice-time"
+                  name="newItemTime"
+                  class="form-control mt-2"
+                  placeholder="時間 (分)"
+                />
+                <button id="add_practice" class="btn btn-primary mt-2" style="border-radius: 0px;">
+                  追加
+                </button>
+              </div>
+
+              <div class="card mt-4">
+                <%# <div class="card-header">
+                  <h2 class="mb-0">1日の練習カレンダー</h2>
+                </div> %>
+                <div class="card-body">
+                  <div class="row">
+                    <!-- 動的に生成される練習項目のカードがここに表示される -->
+                    <div class="col-md-4 mb-3">
+                      <div class="card">
+                        <div class="card-body">
+                          <h5 class="card-title">練習メニュー名</h5>
+                          <p class="card-text">練習時間: XX 分</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <%= button_to '追加', id: 'add-practice', class: 'btn btn-outline-dark', style: "padding-top: 3px; padding-bottom: 3px; padding-left: 10px; padding-right: 10px; font-size: 90%; border-width: 2px; border-radius: 0;" %>
-                </div>
-                <div class="calendar-body">
-                  <div class="time-slot" id="time-slot">
-                    <!-- 練習メニューのカードがここに追加されます -->
-                  </div>
                 </div>
               </div>
+
+              <div class="mt-3">
+                <p>練習時間: XX 分</p>
+                <p class="text-danger" style="display: none;">
+                  警告: 総練習時間が1日の目標時間を超えています。
+                </p>
+              </div>
+            </div>
           </div>
         </td>
 
