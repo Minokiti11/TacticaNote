@@ -218,34 +218,6 @@ select#practice-select {
   }
 }
 
-.scroll-picker-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.scroll-picker {
-  width: 100px;
-  height: 150px;
-  overflow-y: scroll;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  text-align: center;
-  padding: 10px;
-  box-sizing: border-box;
-}
-
-.scroll-picker-item {
-  padding: 10px;
-  font-size: 18px;
-  cursor: pointer;
-}
-
-.scroll-picker-item:hover {
-  background-color: #f0f0f0;
-}
-
 </style>
 
 <div class='container px-5 px-sm-0'>
@@ -405,7 +377,7 @@ select#practice-select {
               <h3 class="mb-4">1日の練習メニュー</h1>
               
               <div class="mb-3">
-                <label class="form-label">1日の練習時間 (分):</label>
+                <label class="form-label">1日の練習時間 (分)</label>
                 <input
                   id="total-practice-time"
                   type="number"
@@ -415,7 +387,7 @@ select#practice-select {
               </div>
 
               <div class="mb-3">
-                <label class="form-label">練習メニュー:</label>
+                <label class="form-label">練習メニュー</label>
                 <select
                   id="practice-select"
                   name="newItem"
@@ -425,11 +397,12 @@ select#practice-select {
                     <option value="<%= practice.id %>"><%= practice.name %></option>
                   <% end %>
                 </select>
+                <label class="form-label mt-2">トレーニング時間(分)</label>
                 <input
                   type="number"
                   id="practice-time"
                   name="newItemTime"
-                  class="form-control mt-2"
+                  class="form-control"
                   placeholder="時間 (分)"
                 />
                 <button id="add-practice" class="btn btn-primary mt-2" style="border-radius: 0px;">
@@ -437,7 +410,8 @@ select#practice-select {
                 </button>
               </div>
 
-              <div >
+              <div id="calender">
+                <h4>1日の練習カレンダー</h4>
                 <div class="card mt-4">
                   <%# <div class="card-header">
                     <h2 class="mb-0">1日の練習カレンダー</h2>
@@ -452,9 +426,6 @@ select#practice-select {
 
               <div class="mt-3">
                 <p id="sum_of_time"></p>
-                <p class="text-danger" style="display: none;">
-                  警告: 総練習時間が1日の目標時間を超えています。
-                </p>
               </div>
             </div>
           </div>
@@ -587,6 +558,7 @@ select#practice-select {
   var sum_of_time = 0;
 
   document.getElementById('add-practice').addEventListener('click', function() {
+    document.getElementById('calender').style = '';
     const time = document.getElementById('practice-time').value;
     sum_of_time += parseInt(time);
     const practiceSelect = document.getElementById('practice-select');
