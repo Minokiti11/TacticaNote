@@ -218,6 +218,12 @@ select#practice-select {
   }
 }
 
+@media (min-width: 992px) {
+  .w-lg-50 {
+    width: 50% !important;
+  }
+}
+
 </style>
 
 <div class='container px-5 px-sm-0'>
@@ -382,7 +388,7 @@ select#practice-select {
                   id="total-practice-time"
                   type="number"
                   name="totalPracticeTime"
-                  class="form-control"
+                  class="form-control w-100 w-lg-50"
                   value="<%= @daily_practice.duration %>"
                 />
               </div>
@@ -392,7 +398,7 @@ select#practice-select {
                 <select
                   id="practice-select"
                   name="newItem"
-                  class="form-control"
+                  class="form-control w-100 w-lg-50"
                 >
                   <% @practices.each do |practice| %>
                     <option value="<%= practice.id %>"><%= practice.name %></option>
@@ -403,7 +409,7 @@ select#practice-select {
                   type="number"
                   id="practice-time"
                   name="newItemTime"
-                  class="form-control"
+                  class="form-control w-100 w-lg-50"
                   placeholder="時間 (分)"
                 />
                 <button id="add-practice" class="btn btn-primary mt-2" style="border-radius: 0px;" data-group-id="<%= @group.id %>">
@@ -414,7 +420,7 @@ select#practice-select {
 
               <div id="calender">
                 <h4>練習スケジュール</h4>
-                <div class="card mt-4">
+                <div class="card mt-4 w-100 w-lg-50">
                   <%# <div class="card-header">
                     <h2 class="mb-0">1日の練習カレンダー</h2>
                   </div> %>
@@ -423,7 +429,7 @@ select#practice-select {
                       <!-- 動的に生成される練習項目のカードがここに表示される -->
                       <% if @group.daily_practice %>
                         <% @group.daily_practice.daily_practice_items.each do |item| %>
-                          <div class="col-md-4 mb-3">
+                          <div class="col-md-12 mb-3">
                             <div class="card">
                               <div class="card-body">
                                 <h5 class="card-title"><%= item.practice.name %></h5>
