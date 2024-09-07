@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
     before_action :configurepermitted_parameters, if: :devise_controller?
     before_action :set_current_group
     before_action :authenticate_user!, unless: :devise_controller?
+    before_action :block_bad_ip
     
     def self.render_with_signed_in_user(user, *args)
         ActionController::Renderer::RACK_KEY_TRANSLATION['warden'] ||= 'warden'
@@ -29,6 +30,12 @@ class ApplicationController < ActionController::Base
     def set_current_group
         if params[:group_id]
             session[:current_group_id] = params[:group_id]
+        end
+    end
+
+    def block_bad_ip
+        if request.remote_ip == '91.92.251.54'
+            render plain: 'Access Denied', status: :forbidden
         end
     end
 end
