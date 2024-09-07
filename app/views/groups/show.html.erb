@@ -407,6 +407,7 @@ select#practice-select {
               <div class="mb-3">
                 <label class="form-label">1日の練習時間 (分):</label>
                 <input
+                  id="total-practice-time"
                   type="number"
                   name="totalPracticeTime"
                   class="form-control"
@@ -416,6 +417,7 @@ select#practice-select {
               <div class="mb-3">
                 <label class="form-label">練習メニュー:</label>
                 <select
+                  id="practice-select"
                   name="newItem"
                   class="form-control"
                 >
@@ -430,32 +432,26 @@ select#practice-select {
                   class="form-control mt-2"
                   placeholder="時間 (分)"
                 />
-                <button id="add_practice" class="btn btn-primary mt-2" style="border-radius: 0px;">
+                <button id="add-practice" class="btn btn-primary mt-2" style="border-radius: 0px;">
                   追加
                 </button>
               </div>
 
-              <div class="card mt-4">
-                <%# <div class="card-header">
-                  <h2 class="mb-0">1日の練習カレンダー</h2>
-                </div> %>
-                <div class="card-body">
-                  <div class="row">
-                    <!-- 動的に生成される練習項目のカードがここに表示される -->
-                    <div class="col-md-4 mb-3">
-                      <div class="card">
-                        <div class="card-body">
-                          <h5 class="card-title">練習メニュー名</h5>
-                          <p class="card-text">練習時間: XX 分</p>
-                        </div>
-                      </div>
+              <div >
+                <div class="card mt-4">
+                  <%# <div class="card-header">
+                    <h2 class="mb-0">1日の練習カレンダー</h2>
+                  </div> %>
+                  <div class="card-body">
+                    <div id="time-slot" class="row">
+                      <!-- 動的に生成される練習項目のカードがここに表示される -->
                     </div>
                   </div>
                 </div>
               </div>
 
               <div class="mt-3">
-                <p>練習時間: XX 分</p>
+                <p id="sum_of_time"></p>
                 <p class="text-danger" style="display: none;">
                   警告: 総練習時間が1日の目標時間を超えています。
                 </p>
@@ -588,33 +584,32 @@ select#practice-select {
     });
   });
 
+  var sum_of_time = 0;
+
   document.getElementById('add-practice').addEventListener('click', function() {
     const time = document.getElementById('practice-time').value;
+    sum_of_time += parseInt(time);
     const practiceSelect = document.getElementById('practice-select');
     const practiceName = practiceSelect.options[practiceSelect.selectedIndex].text;
     if (time && practiceName) {
-      const card = document.createElement('div');
-      card.className = 'practice-card';
-      card.innerText = `練習時間: ${time}\nメニュー: ${practiceName}`;
-      document.getElementById('time-slot').appendChild(card);
+      const total_time = parseInt(document.getElementById("total-practice-time").value);
+      if (sum_of_time > total_time) {
+        alert("練習時間の合計が、指定した1日の練習時間を超えています。");
+        sum_of_time -= parseInt(time);
+        return;
+      }
+      const practiceCard = document.createElement('div');
+      practiceCard.className = 'col-md-4 mb-3';
+      practiceCard.innerHTML = `
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">${practiceName}</h5>
+            <p class="card-text">練習時間: ${time} 分</p>
+          </div>
+        </div>
+      `;
+      document.getElementById('time-slot').appendChild(practiceCard);
+      document.getElementById('sum_of_time').innerText = `総練習時間: ${sum_of_time} 分`;
     }
-  });
-
-  document.addEventListener('DOMContentLoaded', function() {
-    const pickers = document.querySelectorAll('.scroll-picker');
-    pickers.forEach(picker => {
-      picker.addEventListener('scroll', function() {
-        const items = picker.querySelectorAll('.scroll-picker-item');
-        items.forEach(item => {
-          const rect = item.getBoundingClientRect();
-          const pickerRect = picker.getBoundingClientRect();
-          if (rect.top >= pickerRect.top && rect.bottom <= pickerRect.bottom) {
-            item.style.backgroundColor = '#e0e0e0';
-          } else {
-            item.style.backgroundColor = '';
-          }
-        });
-      });
-    });
   });
 </script>
