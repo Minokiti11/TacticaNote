@@ -169,6 +169,47 @@ details[open] .details-content {
   }
 }
 
+.calendar {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 20px;
+  margin-top: 20px;
+}
+.calendar-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.calendar-body {
+  margin-top: 20px;
+}
+.time-slot {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  min-height: 100px;
+}
+.practice-card {
+  background-color: #f8f9fa;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+select#practice-select {
+  width: 100%;
+  -webkit-appearance: none; /* Safari and Chrome */
+  -moz-appearance: none; /* Firefox */
+  appearance: none; /* Standard */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: url('data:image/svg+xml;utf8,<svg fill="%23333" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
+  background-size: 12px;
+  background-color: #fff;
+  box-sizing: border-box;
+}
 
 </style>
 
@@ -325,6 +366,31 @@ details[open] .details-content {
 
         <td>
           <div class="row" style="margin-top: 30px;">
+              <div class="d-flex flex-wrap justify-content-between">
+                <h4>1日の練習メニュー</h4>
+                <span id="daily-practice-time">練習時間: <input type="number" id="practice-time" min="1" max="3" inputmode="numeric" oninput="if(this.value > 3) this.value = 3;" />時間</span>
+              </div>
+              <div class="calendar">
+                <div class="calendar-header d-flex flex-wrap justify-content-between">
+                  <span>練習メニューを選択してください:</span>
+                  <select id="practice-select">
+                    <% @practices.each do |practice| %>
+                      <option value="<%= practice.id %>"><%= practice.name %></option>
+                    <% end %>
+                  </select>
+                  <%= button_to '追加', '#', id: 'add-practice', class: 'btn btn-outline-dark', style: "padding-top: 3px; padding-bottom: 3px; padding-left: 10px; padding-right: 10px; font-size: 90%; border-width: 2px; border-radius: 0;" %>
+                </div>
+                <div class="calendar-body">
+                  <div class="time-slot" id="time-slot">
+                    <!-- 練習メニューのカードがここに追加されます -->
+                  </div>
+                </div>
+              </div>
+          </div>
+        </td>
+
+        <td>
+          <div class="row" style="margin-top: 30px;">
             <details>
               <summary class="h4">直近の動画</summary>
               <div class="details-content row">
@@ -445,5 +511,17 @@ details[open] .details-content {
         videoIndex.hide();
       }
     });
+  });
+
+  document.getElementById('add-practice').addEventListener('click', function() {
+    const time = document.getElementById('practice-time').value;
+    const practiceSelect = document.getElementById('practice-select');
+    const practiceName = practiceSelect.options[practiceSelect.selectedIndex].text;
+    if (time && practiceName) {
+      const card = document.createElement('div');
+      card.className = 'practice-card';
+      card.innerText = `練習時間: ${time}\nメニュー: ${practiceName}`;
+      document.getElementById('time-slot').appendChild(card);
+    }
   });
 </script>
