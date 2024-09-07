@@ -437,6 +437,12 @@ select#practice-select {
                       <% end %>
                     </div>
                   </div>
+                  
+                  <% sum_of_training_time = 0 %>
+                  <% @group.daily_practice.daily_practice_items.each do |item| %>
+                    <% sum_of_training_time += item.training_time %>
+                  <% end %>
+                  <div style="margin-left: 20px; margin-bottom: 10px;">合計: <%= sum_of_training_time %>分</div>
                 </div>
               </div>
 
