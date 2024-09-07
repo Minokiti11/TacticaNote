@@ -211,6 +211,41 @@ select#practice-select {
   box-sizing: border-box;
 }
 
+@media (max-width: 600px) {
+  select#practice-select {
+    font-size: 16px;
+    padding: 12px;
+  }
+}
+
+.scroll-picker-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.scroll-picker {
+  width: 100px;
+  height: 150px;
+  overflow-y: scroll;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-align: center;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.scroll-picker-item {
+  padding: 10px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.scroll-picker-item:hover {
+  background-color: #f0f0f0;
+}
+
 </style>
 
 <div class='container px-5 px-sm-0'>
@@ -368,7 +403,7 @@ select#practice-select {
           <div class="row" style="margin-top: 30px;">
               <div class="d-flex flex-wrap justify-content-between">
                 <h4>1日の練習メニュー</h4>
-                <span id="daily-practice-time">練習時間: <input type="number" id="practice-time" min="1" max="3" inputmode="numeric" oninput="if(this.value > 3) this.value = 3;" />時間</span>
+                <span id="daily-practice-time">練習時間: <input type="number" id="whole-practice-time" min="1" max="3" inputmode="numeric" oninput="if(this.value > 3) this.value = 3;" />時間</span>
               </div>
               <div class="calendar">
                 <div class="calendar-header d-flex flex-wrap justify-content-between">
@@ -378,6 +413,20 @@ select#practice-select {
                       <option value="<%= practice.id %>"><%= practice.name %></option>
                     <% end %>
                   </select>
+                  <div class="scroll-picker-container">
+                    <%# <div class="scroll-picker">
+                      <div class="scroll-picker-item">0時間</div>
+                      <div class="scroll-picker-item">1時間</div>
+                      <div class="scroll-picker-item">2時間</div>
+                      <div class="scroll-picker-item">3時間</div>
+                    </div> %>
+                    <div class="scroll-picker">
+                      <div class="scroll-picker-item">0分</div>
+                      <div class="scroll-picker-item">15分</div>
+                      <div class="scroll-picker-item">30分</div>
+                      <div class="scroll-picker-item">45分</div>
+                    </div>
+                  </div>
                   <%= button_to '追加', id: 'add-practice', class: 'btn btn-outline-dark', style: "padding-top: 3px; padding-bottom: 3px; padding-left: 10px; padding-right: 10px; font-size: 90%; border-width: 2px; border-radius: 0;" %>
                 </div>
                 <div class="calendar-body">
@@ -523,5 +572,23 @@ select#practice-select {
       card.innerText = `練習時間: ${time}\nメニュー: ${practiceName}`;
       document.getElementById('time-slot').appendChild(card);
     }
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const pickers = document.querySelectorAll('.scroll-picker');
+    pickers.forEach(picker => {
+      picker.addEventListener('scroll', function() {
+        const items = picker.querySelectorAll('.scroll-picker-item');
+        items.forEach(item => {
+          const rect = item.getBoundingClientRect();
+          const pickerRect = picker.getBoundingClientRect();
+          if (rect.top >= pickerRect.top && rect.bottom <= pickerRect.bottom) {
+            item.style.backgroundColor = '#e0e0e0';
+          } else {
+            item.style.backgroundColor = '';
+          }
+        });
+      });
+    });
   });
 </script>
