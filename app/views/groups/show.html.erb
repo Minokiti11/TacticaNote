@@ -448,12 +448,8 @@ select#practice-select {
                   <% @group.daily_practice.daily_practice_items.each do |item| %>
                     <% sum_of_training_time += item.training_time %>
                   <% end %>
-                  <div style="margin-left: 20px; margin-bottom: 10px;">合計: <%= sum_of_training_time %>分</div>
+                  <div id="sum_of_time" style="margin-left: 20px; margin-bottom: 10px;">合計: <%= sum_of_training_time %>分</div>
                 </div>
-              </div>
-
-              <div class="mt-3">
-                <p id="sum_of_time"></p>
               </div>
             </div>
           </div>
@@ -587,7 +583,6 @@ select#practice-select {
   $('#time-slot .card .card-body .card-text').each(function() {
     sum_of_time += parseInt($(this).data('training-time'));
   });
-  console.log(sum_of_time);
 
   document.getElementById('add-practice').addEventListener('click', function() {
     document.getElementById('calender').style = '';
@@ -597,20 +592,22 @@ select#practice-select {
     const practiceName = practiceSelect.options[practiceSelect.selectedIndex].text;
     if (time && practiceName) {
       const total_time = parseInt(document.getElementById("total-practice-time").value);
-      if (sum_of_time > total_time) {
+      document.getElementById('alert').innerText = "";
+      if (isNaN(total_time)) {
+        document.getElementById('alert').innerText = "1日の練習時間を入力してください。";
+        sum_of_time -= parseInt(time);
+        return;
+      } else if (sum_of_time > total_time) {
         document.getElementById('alert').innerText = "練習時間の合計が、指定した1日の練習時間を超えています。";
         sum_of_time -= parseInt(time);
         return;
-      }
-      else
-      {
-        document.getElementById('alert').text = "";
+      } else {
+        document.getElementById('alert').innerText = "";
       }
 
       // サーバーにデータを送信
       const groupId = this.getAttribute('data-group-id');
       const practiceId = practiceSelect.options[practiceSelect.selectedIndex].value;
-      console.log("practiceId: ", practiceId);
       
       fetch(`/groups/${groupId}/create_daily_practice_item`, {
         method: 'POST',
@@ -627,29 +624,25 @@ select#practice-select {
       .then(response => response.json())
       .then(data => {
         if (data.success) {
-          console.log("succeed!!");
           const practiceCard = document.createElement('div');
           practiceCard.className = 'col-md-4 mb-3';
           practiceCard.innerHTML = `
             <div class="card">
               <div class="card-body">
                 <h5 class="card-title">${practiceName}</h5>
-                <p class="card-text">練習時間: ${time} 分</p>
+                <p class="card-text">${time} 分</p>
               </div>
             </div>
           `;
           document.getElementById('time-slot').appendChild(practiceCard);
-          document.getElementById('sum_of_time').innerText = `総練習時間: ${sum_of_time} 分`;
+          document.getElementById('sum_of_time').innerText = `合計: ${sum_of_time}分`;
         } else {
-          console.log("faild...");
           console.log(data.error);
         }
       })
       .catch(error => {
-        console.error('エラー:', error);
-        alert('エラーが発生しました。');
+        console.error(error);
       });
-
     }
   });
 </script>
