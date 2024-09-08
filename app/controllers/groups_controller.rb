@@ -129,7 +129,7 @@ class GroupsController < ApplicationController
       )
 
       if item.persisted?
-        render json: { success: true }
+        render json: { success: true, daily_practice_item_id: item.id }
       else
         render json: { success: false, error: item.errors.full_messages.join(', ') }
       end

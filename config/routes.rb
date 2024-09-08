@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :videos
   resources :notes
   resources :practices
+  resources :daily_practice_items, only: :destroy
   # devise_for :users
 
   devise_for :users, controllers: {

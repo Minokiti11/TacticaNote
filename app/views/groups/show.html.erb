@@ -256,7 +256,7 @@ select#practice-select {
         <%= link_to '練習メニュー', group_practice_path(@group), "data-turbo": false, class: "btn btn btn-outline-dark", style: "margin-top: 10px; border-width: 2px; border-radius: 0;" %>
 
         <!-- モーダルを開くボタン -->
-        <%= link_to 'ノートを書く', '', "data-turbo": false, class: "modal-open btn btn btn-outline-primary", style: "margin-top: 10px; border-width: 2px; border-radius: 0;" %>
+        <%= link_to 'ノートを書く', '', "data-turbo": false, id: "write_note", class: "modal-open btn btn btn-outline-primary", style: "margin-top: 10px; border-width: 2px; border-radius: 0;" %>
 
         <!-- モーダル本体 -->
         <div class="modal-container">
@@ -378,7 +378,7 @@ select#practice-select {
         </div>
 
         <td>
-          <div class="row" style="margin-top: 30px;">
+          <div class="row" id="daily_practice_section" style="margin-top: 30px;">
             <div class="container mt-5">
               <h3 class="mb-4">1日の練習メニュー</h1>
               
@@ -418,7 +418,7 @@ select#practice-select {
                 <p id="alert" style="color: red;"></p>
               </div>
 
-              <div id="calender">
+              <div id="calendar">
                 <h4>練習スケジュール</h4>
                 <div class="card mt-4 w-100 w-lg-50">
                   <%# <div class="card-header">
@@ -434,6 +434,9 @@ select#practice-select {
                               <div class="card-body">
                                 <h5 class="card-title"><%= item.practice.name %></h5>
                                 <p class="card-text" id="card-time" data-training-time="<%= item.training_time %>"><%= item.training_time %> 分</p>
+                                <%= button_to daily_practice_item_path(item), "data-turbo": false, method: :delete, class: "btn" do %>
+                                  <i class="fas fa-trash-alt" style="color: black; font-size: 1.5em;"></i>
+                                <% end %>
                               </div>
                             </div>
                           </div>
@@ -585,14 +588,13 @@ select#practice-select {
   });
 
   document.getElementById('add-practice').addEventListener('click', function() {
-    document.getElementById('calender').style = '';
+    document.getElementById('calendar').style = '';
     const time = document.getElementById('practice-time').value;
     sum_of_time += parseInt(time);
     const practiceSelect = document.getElementById('practice-select');
     const practiceName = practiceSelect.options[practiceSelect.selectedIndex].text;
     if (time && practiceName) {
       const total_time = parseInt(document.getElementById("total-practice-time").value);
-      document.getElementById('alert').innerText = "";
       if (isNaN(total_time)) {
         document.getElementById('alert').innerText = "1日の練習時間を入力してください。";
         sum_of_time -= parseInt(time);
@@ -625,12 +627,20 @@ select#practice-select {
       .then(data => {
         if (data.success) {
           const practiceCard = document.createElement('div');
-          practiceCard.className = 'col-md-4 mb-3';
+          // const csrf_token = document.getElementById("card-body").getAttribute('data-csrf-token');
+          practiceCard.className = 'col-md-12 mb-3';
           practiceCard.innerHTML = `
             <div class="card">
               <div class="card-body">
                 <h5 class="card-title">${practiceName}</h5>
                 <p class="card-text">${time} 分</p>
+                <form class="button_to" method="post" action="/daily_practice_items/${data.daily_practice_item_id}">
+                  <input type="hidden" name="_method" value="delete" autocomplete="off">
+                    <button data-turbo="false" class="btn" type="submit">
+                      <i class="fas fa-trash-alt" style="color: black; font-size: 1.5em;"></i>
+                    </button>
+                  <input type="hidden" name="authenticity_token" value="${document.querySelector('meta[name="csrf-token"]').content}" autocomplete="off">
+                </form>
               </div>
             </div>
           `;
@@ -644,5 +654,16 @@ select#practice-select {
         console.error(error);
       });
     }
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+      // URLにアンカー（#target_section）が含まれているか確認
+      const hash = window.location.hash;
+      if (hash) {
+          const target = document.querySelector(hash);
+          if (target) {
+            targetElement.scrollIntoView( {behavior: 'instant'});
+          }
+      }
   });
 </script>
