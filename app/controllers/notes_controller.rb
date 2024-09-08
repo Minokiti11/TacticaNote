@@ -13,6 +13,7 @@ class NotesController < ApplicationController
         @note = Note.new
         @@with_video = params[:with_video]
         @with_video = params[:with_video]
+        @@note_for = params[:note_for]
         if @@with_video
             @@video_id = params[:video_id]
             @video_id = params[:video_id]
@@ -43,7 +44,7 @@ class NotesController < ApplicationController
                 locals: { message: "", target: "notes_good" }
             )
             
-            GetAiResponse.perform_async("user_#{session.id}", data[:value], "good", response.id)
+            GetAiResponse.perform_async(@@note_for, "user_#{session.id}", data[:value], "good", data[:group_id], response.id)
             # スピナーを開始
             Turbo::StreamsChannel.broadcast_replace_later_to(
                 "spinner",

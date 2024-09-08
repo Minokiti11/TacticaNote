@@ -301,6 +301,17 @@ select#practice-select {
               </div>
 
               <script>
+                function getSelectedRadioValue() {
+                  const radios = document.getElementsByName('value-radio');
+                  let selectedValue;
+                  radios.forEach(radio => {
+                    if (radio.checked) {
+                      selectedValue = radio.value;
+                    }
+                  });
+                  return selectedValue;
+                }
+
                 let selectedVideoId;
                 function selectVideo(element) {
                   // すべてのリストアイテムのoutlineと文字色をリセット
@@ -359,11 +370,21 @@ select#practice-select {
 
                 function createNotePath() {
                   const toggle = document.getElementById('toggle');
-                  let path = '<%= new_note_path(with_video: false) %>';
+                  let path;
+                  if (getSelectedRadioValue() == "value-1") { 
+                    path = '<%= new_note_path(group_id: @group.id, with_video: false, note_for: "match") %>';
+                  } else {
+                    path = '<%= new_note_path(group_id: @group.id, with_video: false, note_for: "practice") %>';
+                  }
+                  
                   if (toggle.checked) {
                     if (selectedVideoId) {
                       $("#create-note-btn").removeClass("disabled");
-                      path = '<%= new_note_path(with_video: true) %>' + `&video_id=${selectedVideoId}`;
+                      if (getSelectedRadioValue() == "value-1") {
+                        path = '<%= new_note_path(group_id: @group.id, with_video: true, note_for: "match") %>' + `&video_id=${selectedVideoId}`;
+                      } else {
+                        path = '<%= new_note_path(group_id: @group.id, with_video: true, note_for: "practice") %>' + `&video_id=${selectedVideoId}`;
+                      }
                     } else {
                       $("#create-note-btn").addClass("disabled");
                     }
@@ -373,7 +394,6 @@ select#practice-select {
               </script>
               <%= link_to 'ノートを作成', '#', "data-turbo": false, id: "create-note-btn",class: "btn btn btn-outline-light", style: "margin-top: 10px; border-width: 2px; border-radius: 0;", onclick: "window.location.href = createNotePath();" %>
             </div>
-
           </div>
         </div>
 
@@ -432,11 +452,15 @@ select#practice-select {
                           <div class="col-md-12 mb-3">
                             <div class="card">
                               <div class="card-body">
-                                <h5 class="card-title"><%= item.practice.name %></h5>
-                                <p class="card-text" id="card-time" data-training-time="<%= item.training_time %>"><%= item.training_time %> 分</p>
-                                <%= button_to daily_practice_item_path(item), "data-turbo": false, method: :delete, class: "btn" do %>
-                                  <i class="fas fa-trash-alt" style="color: black; font-size: 1.5em;"></i>
-                                <% end %>
+                                <div class="d-flex justify-content-between align-items-center">
+                                  <div>
+                                    <h5 class="card-title"><%= item.practice.name %></h5>
+                                    <p class="card-text" id="card-time" data-training-time="<%= item.training_time %>"><%= item.training_time %> 分</p>
+                                  </div>
+                                  <%= button_to daily_practice_item_path(item), "data-turbo": false, method: :delete, class: "btn" do %>
+                                    <i class="fas fa-trash-alt" style="color: black; font-size: 1.5em;"></i>
+                                  <% end %>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -632,15 +656,19 @@ select#practice-select {
           practiceCard.innerHTML = `
             <div class="card">
               <div class="card-body">
-                <h5 class="card-title">${practiceName}</h5>
-                <p class="card-text">${time} 分</p>
-                <form class="button_to" method="post" action="/daily_practice_items/${data.daily_practice_item_id}">
-                  <input type="hidden" name="_method" value="delete" autocomplete="off">
-                    <button data-turbo="false" class="btn" type="submit">
-                      <i class="fas fa-trash-alt" style="color: black; font-size: 1.5em;"></i>
-                    </button>
-                  <input type="hidden" name="authenticity_token" value="${document.querySelector('meta[name="csrf-token"]').content}" autocomplete="off">
-                </form>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h5 class="card-title">${practiceName}</h5>
+                    <p class="card-text">${time} 分</p>
+                  </div>
+                  <form class="button_to" method="post" action="/daily_practice_items/${data.daily_practice_item_id}">
+                    <input type="hidden" name="_method" value="delete" autocomplete="off">
+                      <button data-turbo="false" class="btn" type="submit">
+                        <i class="fas fa-trash-alt" style="color: black; font-size: 1.5em;"></i>
+                      </button>
+                    <input type="hidden" name="authenticity_token" value="${document.querySelector('meta[name="csrf-token"]').content}" autocomplete="off">
+                  </form>
+                </div>
               </div>
             </div>
           `;
@@ -662,7 +690,7 @@ select#practice-select {
       if (hash) {
           const target = document.querySelector(hash);
           if (target) {
-            targetElement.scrollIntoView( {behavior: 'instant'});
+            target.scrollIntoView({ behavior: 'instant' });
           }
       }
   });

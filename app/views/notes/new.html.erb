@@ -76,7 +76,7 @@
 
 
         <!-- 上手くいった点の入力フォーム -->
-        <div class="form-group" id="div_good">
+        <div class="form-group" id="div_good" data-group-id="<%= params[:group_id]%>">
             <label for="note_good" class="form-label">上手くいったこと</label>
             <%# <%= form.rich_text_area :good, class: 'mb-3', id: 'note_good', placeholder: '上手くいった点を記入'%>
             <%= form.text_area :good, class: 'form-control mb-3', id: 'note_good', placeholder: '上手くいった点を記入
@@ -165,7 +165,7 @@ $input_good.on('change', function(event) {
             // CSRFトークンをmetaタグから取得して設定
             'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
-        body: JSON.stringify({data: { value: $input_good.val() }})
+        body: JSON.stringify({data: { value: $input_good.val(), group_id: parseInt($('#div_good').getAttribute("data-group-id"))}})
     });
 });
 
