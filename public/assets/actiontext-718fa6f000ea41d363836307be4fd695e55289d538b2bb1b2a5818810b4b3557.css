@@ -406,9 +406,9 @@ trix-editor .attachment__metadata {
   max-width: 100% !important;
 }
 
-.trix-button-group--file-tools {
+/* .trix-button-group--file-tools {
   display: none !important;
-}
+} */
 
 .trix-button--icon-strike {
   display: none !important;

@@ -406,9 +406,9 @@ trix-editor .attachment__metadata {
   max-width: 100% !important;
 }
 
-.trix-button-group--file-tools {
+/* .trix-button-group--file-tools {
   display: none !important;
-}
+} */
 
 .trix-button--icon-strike {
   display: none !important;
@@ -13966,11 +13966,9 @@ textarea.form-control-lg {
   max-width: 100% !important;
 }
 
-/* line 33, app/assets/stylesheets/actiontext.css */
-.trix-button-group--file-tools {
+/* .trix-button-group--file-tools {
   display: none !important;
-}
-
+} */
 /* line 37, app/assets/stylesheets/actiontext.css */
 .trix-button--icon-strike {
   display: none !important;
@@ -14360,4 +14358,9 @@ label svg {
   100% {
     transform: scale(1);
   }
+}
+
+/* line 359, app/assets/stylesheets/application.scss */
+figcaption {
+  display: none;
 }
