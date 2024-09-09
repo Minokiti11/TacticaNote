@@ -28,9 +28,8 @@ class GetAiResponse include ActionView::RecordIdentifier
     }
 
     #練習用のプロンプト
-
     PROMPTS_PRACTICE = {
-        good: "今から入力する文章は育成年代のサッカー選手が練習を振り返って、サッカーノートの「上手くいったこと」の欄に書いた文章です。
+        good: "今から入力する文章は育成年代のサッカー選手が以下の練習を振り返って、サッカーノートの「上手くいったこと」の欄に書いた文章です。
                 起こった現象の理由が書かれていなかったら、現象が起こった理由を書くように促してください。
                 書かれていたら、現象が起こった理由が明確になっていることを丁寧語で褒め、追加すべき情報を提示してください。(e.g. ビルドアップのことについて言及されていたら=>自チームと相手チームのフォーメーションが何だったか聞く)。
                 書かれていない事実を含めることや、具体例を提示することは避けてください。
@@ -111,9 +110,24 @@ class GetAiResponse include ActionView::RecordIdentifier
         if note_for == "match"
             prompt = PROMPTS_MATCH[type.to_sym]
         elsif note_for == "practice"
+            content_of_practice = "練習内容:\n"
             group = Group.find(group_id)
-            p group.daily_practice.daily_practice_items
-            prompt = PROMPTS_PRACTICE[type.to_sym]
+            group.daily_practice.daily_practice_items.each do |daily_practice_item|
+                practice_name = daily_practice_item.practice.name
+                number_of_people = daily_practice_item.practice.number_of_people
+                solvable_issues = daily_practice_item.practice.issue
+                key_points = daily_practice_item.practice.key_points
+                applicable_situation = daily_practice_item.practice.applicable_situation
+                content_of_practice += "練習メニュー名: #{practice_name}\n"
+                content_of_practice += "トレーニング内容: #{daily_practice_item.practice.introduction}\n"
+                content_of_practice += "練習時間: #{daily_practice_item.training_time}"
+                content_of_practice += "意識するポイント: #{key_points}\n"
+                content_of_practice += "試合で該当するシチュエーション: #{applicable_situation}\n"
+                content_of_practice += "解決する課題: #{solvable_issues}\n"
+
+            end
+            prompt = PROMPTS_PRACTICE[type.to_sym] + content_of_practice
+            p :prompt, prompt
         end
 
         response_from_gpt4o_mini = OpenAI::Client.new.chat(
