@@ -120,7 +120,7 @@ class GetAiResponse include ActionView::RecordIdentifier
                 applicable_situation = daily_practice_item.practice.applicable_situation
                 content_of_practice += "練習メニュー名: #{practice_name}\n"
                 content_of_practice += "トレーニング内容: #{daily_practice_item.practice.introduction}\n"
-                content_of_practice += "練習時間: #{daily_practice_item.training_time}"
+                content_of_practice += "練習時間(分): #{daily_practice_item.training_time}"
                 content_of_practice += "意識するポイント: #{key_points}\n"
                 content_of_practice += "試合で該当するシチュエーション: #{applicable_situation}\n"
                 content_of_practice += "解決する課題: #{solvable_issues}\n"
