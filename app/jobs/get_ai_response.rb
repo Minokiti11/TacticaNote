@@ -30,13 +30,10 @@ class GetAiResponse include ActionView::RecordIdentifier
     #練習用のプロンプト
     PROMPTS_PRACTICE = {
         good: "今から入力する文章は育成年代のサッカー選手が以下の練習を振り返って、サッカーノートの「上手くいったこと」の欄に書いた文章です。
-                起こった現象の理由が書かれていなかったら、現象が起こった理由を書くように促してください。
-                書かれていたら、現象が起こった理由が明確になっていることを丁寧語で褒め、追加すべき情報を提示してください。(e.g. ビルドアップのことについて言及されていたら=>自チームと相手チームのフォーメーションが何だったか聞く)。
+                練習内容を踏まえて、選手が有意義な練習をできていたか振り返らせるようにしてください。
+                (e.g. 与えられた練習内容の「意識するポイント」について言及し、意識できていたか聞く)。
                 書かれていない事実を含めることや、具体例を提示することは避けてください。
-                output only answer less than 5 sentences.
-                以下の例を参考にしてください。
-                user: 狭い中でもパスを通せた。
-                you: 狭い中でもパスを通せた理由は何だったと思いますか？相手のプレスの強度や掛け方、それによってどこにスペースが生まれていたかなど、具体的な原因を考えてみましょう。また、動画の中でそれが起きた秒数を指定すると他のメンバーが理解しやすくなるでしょう。04:46のように書くと4分46秒を再生するリンクが生成されます。",
+                output only answer less than 5 sentences.\n",
         bad: "今から入力する文章は育成年代の選手が練習を振り返って、サッカーノートの「上手くいかなかったこと」の欄に書いた文章です。
                 上手くいかなかった具体的な理由（自チームと相手チームのフォーメーションを書いただけのものは「具体的な理由」とは呼ばない。）が書かれていなかったら、現象が起こった原因やその時のシチュエーションを具体的に書くように促してください。
                 具体的な原因が書かれていたら、現象が起こった理由が具体的になっていることを認め、追加すべき情報を提示してください。
@@ -120,14 +117,14 @@ class GetAiResponse include ActionView::RecordIdentifier
                 applicable_situation = daily_practice_item.practice.applicable_situation
                 content_of_practice += "練習メニュー名: #{practice_name}\n"
                 content_of_practice += "トレーニング内容: #{daily_practice_item.practice.introduction}\n"
-                content_of_practice += "練習時間(分): #{daily_practice_item.training_time}"
+                content_of_practice += "練習時間(分): #{daily_practice_item.training_time}\n"
                 content_of_practice += "意識するポイント: #{key_points}\n"
                 content_of_practice += "試合で該当するシチュエーション: #{applicable_situation}\n"
                 content_of_practice += "解決する課題: #{solvable_issues}\n"
 
             end
             prompt = PROMPTS_PRACTICE[type.to_sym] + content_of_practice
-            p :prompt, prompt
+            print "prompt\n", prompt
         end
 
         response_from_gpt4o_mini = OpenAI::Client.new.chat(
