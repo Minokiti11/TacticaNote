@@ -9,10 +9,8 @@ module ApplicationCable
     private
     def find_verified_user
       if verified_user = env['warden'].user
-        p "found verfied_user"
         verified_user
       else
-        p "not found"
         reject_unauthorized_connection
       end
     end
