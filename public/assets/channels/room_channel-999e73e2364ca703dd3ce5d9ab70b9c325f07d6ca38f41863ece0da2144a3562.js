@@ -123,7 +123,6 @@ window.onload = function() {
         var min_height = 35; //テキストエリアの最小の高さをお好みで設定
         $(evt.target).height(min_height); //一旦最小サイズにする
         $(evt.target).height(evt.target.scrollHeight - 10); //スクロールなしでテキストが収まる最小の高さに上書き
-        console.log(evt.target.scrollHeight);
       });
     });
   });
@@ -134,7 +133,6 @@ window.onload = function() {
         var min_height = 35; //テキストエリアの最小の高さをお好みで設定
         $(evt.target).height(min_height); //一旦最小サイズにする
         $(evt.target).height(evt.target.scrollHeight - 10); //スクロールなしでテキストが収まる最小の高さに上書き
-        console.log(evt.target.scrollHeight);
       });
     });
   });
@@ -145,7 +143,6 @@ window.onload = function() {
         var min_height = 35; //テキストエリアの最小の高さをお好みで設定
         $(evt.target).height(min_height); //一旦最小サイズにする
         $(evt.target).height(evt.target.scrollHeight - 10); //スクロールなしでテキストが収まる最小の高さに上書き
-        console.log(evt.target.scrollHeight);
       });
     });
   });
@@ -156,7 +153,6 @@ window.onload = function() {
         var min_height = 35; //テキストエリアの最小の高さをお好みで設定
         $(evt.target).height(min_height); //一旦最小サイズにする
         $(evt.target).height(evt.target.scrollHeight - 10); //スクロールなしでテキストが収まる最小の高さに上書き
-        console.log(evt.target.scrollHeight);
       });
     });
   });
