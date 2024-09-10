@@ -158,7 +158,6 @@
     var $input_good = $('#note_good');
     // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
     $input_good.on('change', function(event) {
-        console.log("passed.");
         fetch('/notes/gpt_api_request_good', {
             method: 'POST',
             headers: {
