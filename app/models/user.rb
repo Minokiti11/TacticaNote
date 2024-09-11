@@ -5,6 +5,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable, :omniauthable, omniauth_providers: %i[facebook twitter google_oauth2]
   has_many :group_users
   has_many :groups, through: :group_users
+  has_many :notes
   # attachment :profile_image, destroy: false
 
   has_many :messages
