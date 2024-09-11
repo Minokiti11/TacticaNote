@@ -448,23 +448,25 @@ select#practice-select {
                     <div id="time-slot" class="row">
                       <!-- 動的に生成される練習項目のカードがここに表示される -->
                       <% if @group.daily_practice %>
-                        <% @group.daily_practice.daily_practice_items.each do |item| %>
-                          <div class="col-md-12 mb-3">
-                            <div class="card">
-                              <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center">
-                                  <div>
-                                    <h5 class="card-title"><%= item.practice.name %></h5>
-                                    <p class="card-text" id="card-time" data-training-time="<%= item.training_time %>"><%= item.training_time %> 分</p>
+                          <% @group.daily_practice.daily_practice_items.each do |item| %>
+                            <%= link_to practice_path(item.practice), "data-turbo": false do %>
+                              <div class="col-md-12 mb-3">
+                                <div class="card shadow-sm">
+                                  <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                      <div>
+                                        <h5 class="card-title" style="text-decoration: none; color: black;"><%= item.practice.name %></h5>
+                                        <p class="card-text" style="text-decoration: none; color: black;" id="card-time" data-training-time="<%= item.training_time %>"><%= item.training_time %> 分</p>
+                                      </div>
+                                      <%= button_to daily_practice_item_path(item), "data-turbo": false, method: :delete, class: "btn" do %>
+                                        <i class="fas fa-trash-alt" style="color: black; font-size: 1.2em;"></i>
+                                      <% end %>
+                                    </div>
                                   </div>
-                                  <%= button_to daily_practice_item_path(item), "data-turbo": false, method: :delete, class: "btn" do %>
-                                    <i class="fas fa-trash-alt" style="color: black; font-size: 1.2em;"></i>
-                                  <% end %>
                                 </div>
                               </div>
-                            </div>
-                          </div>
-                        <% end %>
+                            <% end %>
+                          <% end %>
                       <% else %>
                         <p>現在、練習メニューが設定されていません。</p>
                       <% end %>
