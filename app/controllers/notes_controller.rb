@@ -56,7 +56,7 @@ class NotesController < ApplicationController
     end
 
     def gpt_api_request_bad
-        data = params.require(:data).permit(:value)
+        data = params.require(:data).permit(:value, :group_id)
 
         if data[:value].present?
             same_session_id_responses = Response.where(section_type: "bad", session_id: session.id.to_s)
@@ -79,7 +79,7 @@ class NotesController < ApplicationController
                 locals: { message: "", target: "notes_bad" }
             )
 
-            GetAiResponse.perform_async("user_#{session.id}", data[:value], "bad", response.id)
+            GetAiResponse.perform_async(@@note_for, "user_#{session.id}", data[:value], "bad", data[:group_id], response.id)
 
 
             # スピナーを開始
@@ -93,7 +93,7 @@ class NotesController < ApplicationController
     end
 
     def gpt_api_request_next
-        data = params.require(:data).permit(:value)
+        data = params.require(:data).permit(:value, :group_id)
 
         if data[:value].present?
             same_session_id_responses = Response.where(section_type: "next", session_id: session.id.to_s)
@@ -116,7 +116,7 @@ class NotesController < ApplicationController
                 locals: { message: "", target: "notes_next" }
             )
 
-            GetAiResponse.perform_async("user_#{session.id}", data[:value], "next", response.id)
+            GetAiResponse.perform_async(@@note_for, "user_#{session.id}", data[:value], "next", data[:group_id], response.id)
             # スピナーを開始
             Turbo::StreamsChannel.broadcast_replace_later_to(
                 "spinner",
@@ -130,7 +130,7 @@ class NotesController < ApplicationController
     def create
         @note = Note.new(note_params)
         @note.user_id = current_user.id
-        @note.group_id = current_user.group_users[0].group_id
+        @note.group_id = params[:group_id]
         @note.note_type = "good_bad_next_discuss"
         if @@with_video
             @note.video_id = @@video_id
