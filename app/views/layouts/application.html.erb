@@ -40,9 +40,14 @@
     <%= render 'layouts/navbar' %>
     
     <% if flash[:notice] %>
-      <div class="alert alert-success alert-dismissible fade show mb-0" role="alert">
+      <div class="alert alert-success alert-dismissible fade show mb-0" role="alert" data-controller="clipboard" data-clipboard-target="source">
         <%= flash[:notice] %>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <% if flash[:notice].include?("招待リンクを発行しました") %>
+          <button id="copy_button" class="btn btn-outline-primary" data-action="clipboard#copy" data-content-value="<%= flash[:notice].sub('招待リンクを発行しました:', '') %>" style="font-size: 0.7em;">
+            <i class="fas fa-copy"></i> Copy to Clipboard
+          </button>
+        <% end %>
       </div>
     <% end %>
     <% if flash[:alert] %>
