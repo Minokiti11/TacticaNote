@@ -23,7 +23,7 @@
             </div>
 
         <div class="list-group mt-4">
-            <% @user.notes.each do |note| %>
+            <% @user.notes.reverse.each do |note| %>
                 <div class="card mb-3">
                     <div class="card-body">
                         <h5 class="card-title"><%= note.title %></h5>
