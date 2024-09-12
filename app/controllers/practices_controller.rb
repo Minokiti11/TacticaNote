@@ -45,6 +45,9 @@ class PracticesController < ApplicationController
         @practice = Practice.find(params[:id])
         if @practice.destroy
             redirect_to group_practice_path(session[:current_group_id])
+        else
+            flash[:alert] = "削除に失敗しました。"
+            redirect_to practice_path(@practice)
         end
     end
 
