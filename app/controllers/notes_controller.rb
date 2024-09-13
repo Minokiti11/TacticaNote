@@ -44,7 +44,7 @@ class NotesController < ApplicationController
                 locals: { message: "", target: "notes_good" }
             )
             
-            GetAiResponse.perform_async(@@note_for, "user_#{session.id}", data[:value], "good", data[:group_id], response.id)
+            GetAiResponse.perform_async(@@note_for, "user_#{session.id}", data[:value], "good", current_user.id, data[:group_id], response.id)
             # スピナーを開始
             Turbo::StreamsChannel.broadcast_replace_later_to(
                 "spinner",
@@ -79,7 +79,7 @@ class NotesController < ApplicationController
                 locals: { message: "", target: "notes_bad" }
             )
 
-            GetAiResponse.perform_async(@@note_for, "user_#{session.id}", data[:value], "bad", data[:group_id], response.id)
+            GetAiResponse.perform_async(@@note_for, "user_#{session.id}", data[:value], "bad", current_user.id, data[:group_id], response.id)
 
 
             # スピナーを開始
@@ -116,7 +116,7 @@ class NotesController < ApplicationController
                 locals: { message: "", target: "notes_next" }
             )
 
-            GetAiResponse.perform_async(@@note_for, "user_#{session.id}", data[:value], "next", data[:group_id], response.id)
+            GetAiResponse.perform_async(@@note_for, "user_#{session.id}", data[:value], "next", current_user.id, data[:group_id], response.id)
             # スピナーを開始
             Turbo::StreamsChannel.broadcast_replace_later_to(
                 "spinner",
@@ -134,6 +134,11 @@ class NotesController < ApplicationController
         @note.note_type = "good_bad_next_discuss"
         if @@with_video
             @note.video_id = @@video_id
+        end
+        if @@note_for == "match"
+            @note.note_for = "match"
+        elsif @@note_for == "practice"
+            @note.note_for = "practice"
         end
         if @note.save
             redirect_to @note

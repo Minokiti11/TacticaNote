@@ -31,7 +31,7 @@ class GetAiResponse include ActionView::RecordIdentifier
     PROMPTS_PRACTICE = {
         good: "今から入力する文章は育成年代のサッカー選手が以下の練習を振り返って、サッカーノートの「上手くいったこと」の欄に書いた文章です。
                 練習内容を踏まえて、選手が有意義な練習をできていたか振り返らせるようにしてください。
-                (e.g. 与えられた練習内容の「意識するポイント」について具体的に言及し、意識できていたか聞く)。
+                (e.g. 与えられた練習内容の「意識するポイント」について具体的に言及し、意識できていたか聞く, 前回の「次に意識すること・次に向けて取り組むこと」が意識できていたかどうか確認する, 前回の「上手くいかなかったこと」が今回どうなったか聞く)。
                 書かれていない事実を含めることや、具体例を提示することは避けてください。
                 output only answer less than 5 sentences.\n",
         bad: "今から入力する文章は育成年代の選手が以下の練習を振り返って、サッカーノートの「上手くいかなかったこと」の欄に書いた文章です。
@@ -116,7 +116,7 @@ class GetAiResponse include ActionView::RecordIdentifier
         next: ""
     }
 
-    def perform(note_for, channel, input, type, group_id, response_id)
+    def perform(note_for, channel, input, type, user_id, group_id, response_id)
         response = Response.find(response_id)
         target = "notes_#{type}"
         rate_prompt = nil
@@ -149,8 +149,23 @@ class GetAiResponse include ActionView::RecordIdentifier
         if note_for == "match"
             prompt = PROMPTS_MATCH[type.to_sym]
         elsif note_for == "practice"
-            content_of_practice = "練習内容:\n"
             group = Group.find(group_id)
+            previous_note = "前回のノート:\n"
+            latest_note = Note.where(user_id: user_id, group_id: group_id, note_for: "practice").order(created_at: :desc).first
+            if latest_note
+                previous_note += "上手くいったこと: \n"
+                previous_note += "#{latest_note.good}\n"
+                previous_note += "上手くいかなかったこと: \n"
+                previous_note += "#{latest_note.bad}\n"
+                previous_note += "次に意識すること・次に向けて取り組むこと: \n"
+                previous_note += "#{latest_note.next}\n"
+                previous_note += "チームで話し合いたいこと・確認したいこと: \n"
+                previous_note += "#{latest_note.discuss.to_s}\n"
+            else
+                previous_note = ""
+            end
+
+            content_of_practice = "今日の練習内容:\n"
             group.daily_practice.daily_practice_items.each do |daily_practice_item|
                 practice_name = daily_practice_item.practice.name
                 number_of_people = daily_practice_item.practice.number_of_people
@@ -164,7 +179,7 @@ class GetAiResponse include ActionView::RecordIdentifier
                 content_of_practice += "試合で該当するシチュエーション: #{applicable_situation}\n"
                 content_of_practice += "解決する課題: #{solvable_issues}\n"
             end
-            prompt = PROMPTS_PRACTICE[type.to_sym] + content_of_practice
+            prompt = PROMPTS_PRACTICE[type.to_sym] + previous_note + content_of_practice
             print "prompt\n", prompt
         end
 

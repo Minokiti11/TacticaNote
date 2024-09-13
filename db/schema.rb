@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_07_062506) do
+ActiveRecord::Schema[7.0].define(version: 2024_09_13_025518) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -111,6 +111,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_07_062506) do
     t.integer "video_id"
     t.string "note_type"
     t.text "discuss"
+    t.string "note_for"
     t.index ["group_id"], name: "index_notes_on_group_id"
     t.index ["user_id"], name: "index_notes_on_user_id"
     t.index ["video_id"], name: "index_notes_on_video_id"
