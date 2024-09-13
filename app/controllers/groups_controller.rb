@@ -77,6 +77,7 @@ class GroupsController < ApplicationController
   def all_destroy
     @group = Group.find(params[:group_id])
     if @group.destroy
+      session[:current_group_id] = nil
       redirect_to groups_path
     end
   end
