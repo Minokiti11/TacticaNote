@@ -131,7 +131,11 @@ class NotesController < ApplicationController
     def create
         @note = Note.new(note_params)
         @note.user_id = current_user.id
-        @note.group_id = params[:group_id]
+        if params[:group_id]
+            @note.group_id = params[:group_id]
+        elsif session[:current_group_id]
+            @note.group_id = session[:current_group_id]
+        end
         @note.note_type = "good_bad_next_discuss"
         if @@with_video
             @note.video_id = @@video_id
