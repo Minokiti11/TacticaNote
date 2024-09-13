@@ -12,7 +12,7 @@
         </div>
       <% end %>
       <%= turbo_stream_from "index_of_notes" %>
-      
+
       <div class="list-group" id="notes-list">
         <% @notes.reverse.each do |note| %>
           <%= link_to note_path(note), class: "list-group-item list-group-item-action p-3 border-0 mb-3 rounded shadow-sm" , "data-turbo": false do %>
@@ -32,7 +32,6 @@
 <script>
   document.addEventListener("turbo:load", () => {
     const searchInput = document.getElementById("search-input");
-    const notesList = document.getElementById("notes-list");
 
     searchInput.addEventListener("input", () => {
       const query = searchInput.value;
@@ -43,6 +42,13 @@
           'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         }
       })
+      .then(response => {
+        if (response.ok) {
+          console.log('検索リクエストが成功しました');
+        } else {
+          console.error('検索リクエストが失敗しました');
+        }
+      });
     });
   });
 </script>

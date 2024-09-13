@@ -186,6 +186,7 @@ class NotesController < ApplicationController
             partial: "groups/notes_list",
             locals: {notes: @notes}
         )
+        head :ok
     end
 
     private
