@@ -1,0 +1,12 @@
+<div class="list-group" id="notes-list">
+    <% notes.reverse.each do |note| %>
+        <%= link_to note_path(note), class: "list-group-item list-group-item-action p-3 border-0 mb-3 rounded shadow-sm" , "data-turbo": false do %>
+        <div class="d-flex w-100 justify-content-between align-items-center">
+            <h5 class="mb-1 text-dark"><%= note.title %></h5>
+        </div>
+        <div class="text-muted text-end">
+            <small><%= note.user.username %> - <%= time_ago_in_words(note.created_at) %>前</small>
+        </div>
+        <% end %>
+    <% end %>
+</div>

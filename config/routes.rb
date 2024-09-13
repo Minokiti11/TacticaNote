@@ -35,6 +35,8 @@ Rails.application.routes.draw do
   
   resources :mentions, only: [:index]
 
+  get 'search_notes', to: 'notes#search'
+
   post '/notes/gpt_api_request_good', to: 'notes#gpt_api_request_good'
   post '/notes/gpt_api_request_bad', to: 'notes#gpt_api_request_bad'
   post '/notes/gpt_api_request_next', to: 'notes#gpt_api_request_next'

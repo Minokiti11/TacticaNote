@@ -2,18 +2,47 @@
   <div class='row'>
     <h2 style="margin-left: 20px; margin-top: 30px; margin-bottom: 60px;">ノート一覧</h2>
     <div class='col-12 col-md-8 col-lg-6'>
-        <div class="list-group">
-          <% @notes.reverse.each do |note| %>
-            <%= link_to note_path(note), class: "list-group-item list-group-item-action p-3 border-0 mb-3 rounded shadow-sm" , "data-turbo": false do %>
-              <div class="d-flex w-100 justify-content-between align-items-center">
-                <h5 class="mb-1 text-dark"><%= note.title %></h5>
-              </div>
-              <div class="text-muted text-end">
-                <small><%= note.user.username %> - <%= time_ago_in_words(note.created_at) %>前</small>
-              </div>
-            <% end %>
-          <% end %>
+      <!-- 検索窓 -->
+      <%= form_with url: search_notes_path, method: :get, local: true, class: "mb-4", id: "search-form" do %>
+        <div class="input-group" style="">
+          <%= text_field_tag :query, params[:query], class: "form-control", placeholder: "ノートを検索", id: "search-input", style: "height: 40px;" %>
+          <span class="input-group-text" style="height: 40px;">
+            <button class="btn" type="submit"><i class="fas fa-search"></i></button>
+          </span>
         </div>
+      <% end %>
+      <%= turbo_stream_from "index_of_notes" %>
+      
+      <div class="list-group" id="notes-list">
+        <% @notes.reverse.each do |note| %>
+          <%= link_to note_path(note), class: "list-group-item list-group-item-action p-3 border-0 mb-3 rounded shadow-sm" , "data-turbo": false do %>
+            <div class="d-flex w-100 justify-content-between align-items-center">
+              <h5 class="mb-1 text-dark"><%= note.title %></h5>
+            </div>
+            <div class="text-muted text-end">
+              <small><%= note.user.username %> - <%= time_ago_in_words(note.created_at) %>前</small>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener("turbo:load", () => {
+    const searchInput = document.getElementById("search-input");
+    const notesList = document.getElementById("notes-list");
+
+    searchInput.addEventListener("input", () => {
+      const query = searchInput.value;
+
+      fetch(`/search_notes?query=${query}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+      })
+    });
+  });
+</script>

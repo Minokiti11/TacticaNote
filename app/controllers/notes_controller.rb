@@ -171,6 +171,23 @@ class NotesController < ApplicationController
         end
     end
 
+    def search
+        @group = Group.find(session[:current_group_id])
+        @query = params[:query]
+        @notes = if @query.present?
+                    @group.notes.where('title LIKE ?', "%#{@query}%")
+                else
+                    @group.notes
+                end.to_a
+
+        Turbo::StreamsChannel.broadcast_replace_later_to(
+            "index_of_notes",
+            target: "notes-list",
+            partial: "groups/notes_list",
+            locals: {notes: @notes}
+        )
+    end
+
     private
     def note_params
         params.require(:note).permit(:id, :title, :note_type, :content, :good, :bad, :next, :discuss)
