@@ -72,7 +72,7 @@
         <div class="form-group">
             <label id="title" for="note_title" class="form-label">タイトル</label>
             <% if params[:note_for] == "practice" %>
-                <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', value: "#{Date.today}の練習の振り返り", placeholder: "例：「#{Date.today}の振り返り」)", style: "padding: 10px;" %>
+                <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', value: "[#{Date.today}] 練習の振り返り", placeholder: "例：「#{Date.today}の振り返り」)", style: "padding: 10px;" %>
             <% else %>
                 <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', placeholder: '例：「vs_〇〇の振り返り」「ビルドアップについて」)', style: "padding: 10px;" %>
             <% end %>
