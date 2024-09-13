@@ -30,20 +30,23 @@ class GetAiResponse include ActionView::RecordIdentifier
     #練習用のプロンプト
     PROMPTS_PRACTICE = {
         good: "今から入力する文章は育成年代のサッカー選手が以下の練習を振り返って、サッカーノートの「上手くいったこと」の欄に書いた文章です。
-                練習内容を踏まえて、選手が有意義な練習をできていたか振り返らせるようにしてください。
-                (e.g. 与えられた練習内容の「意識するポイント」について具体的に言及し、意識できていたか聞く, 前回の「次に意識すること・次に向けて取り組むこと」が意識できていたかどうか確認する, 前回の「上手くいかなかったこと」が今回どうなったか聞く)。
+                「今日の練習内容」を踏まえて、選手が有意義な練習をできていたか振り返らせるようにしてください。
+                (e.g. 与えられた練習内容の「意識するポイント」について具体的に言及し、意識できていたか聞く, 前回のノートの「次に意識すること・次に向けて取り組むこと」が意識できていたかどうか確認する, 前回の「上手くいかなかったこと」が今回どうなったか聞く)。
                 書かれていない事実を含めることや、具体例を提示することは避けてください。
-                output only answer less than 5 sentences.\n",
+                output only answer less than 5 sentences.
+                以下の例を参考にしてください。※{練習メニュー名}には与えられた「今日の練習内容」の「練習メニュー名」が入る。userの入力ではなく、このプロンプト自体に「今日の練習内容」が与えられていない場合は、他の練習について聞くこと自体を避けること。
+                例: user: '3対1の時、ワンタッチ目を2人に出せる方向に置いて相手を困らせた' => you: 'ワンタッチ目を2人にも出せる方向に置くことで、パスコースを複数確保し、ボール保持の時間を増やすことができたのですね。他の練習メニューについてはどうでしたか？{練習メニュー名}や{練習メニュー名}についても振り返ってみましょう。（「今日の練習内容」が与えられている場合。）'\n",
         bad: "今から入力する文章は育成年代の選手が以下の練習を振り返って、サッカーノートの「上手くいかなかったこと」の欄に書いた文章です。
+                練習内容を踏まえて、選手が有意義な練習をできていたか振り返らせるようにしてください。
                 上手くいかなかった具体的な理由（自チームと相手チームのフォーメーションを書いただけのものは「具体的な理由」とは呼ばない。）が書かれていなかったら、現象が起こった原因やその時のシチュエーションを具体的に書くように促してください。
                 具体的な原因が書かれていたら、現象が起こった理由が具体的になっていることを認め、追加すべき情報を提示してください。
                 具体的でありながら簡潔に回答し、考えられる原因や解決策は提示しないでください。output less than 5 sentences.
                 以下の例を参考にしてください。
-                例: user:「相手のチームの4-4-2のブロックに対して、4-3-3でのビルドアップが上手くいかなかった。」=> you:「ビルドアップが上手くいかなかった原因を考えてみましょう。相手のプレスの掛け方や、相手とのフォーメーションの噛み合わせで発生した問題など、原因を具体的に考えてみましょう。」\n",
+                例: user:「」=> you:「」\n",
         next: "今から入力する文章は育成年代のサッカー選手が以下の練習を振り返って、サッカーノートの「次に意識すること・次までに取り組むこと」の欄に書いた文章です。
-                実現させるために必要なものや今ある課題に対しての解決策が書かれていたら、解決策が明確になっていることを褒めてください。
-                書かれていなかったら具体的な解決策を書くように促してください。（e.g. 「崩し方を練習する」=> 「具体的にどのような崩し方を想定していますか？」）
-                具体的な練習方法については質問しないでください。解決策や具体例は提示しないでください。output only answer less than 5 sentences.\n"
+                次に取り組むことや意識することが明確に書かれていたら、アクションプランが明確になっていることを褒めてください。
+                書かれていなかったら具体的なアクションを書くように促してください。（e.g. 「崩し方を練習する」=> 「具体的にどのような崩し方を想定していますか？」）
+                具体的な練習方法については質問しないでください。output only answer less than 5 sentences.\n"
     }
 
     # ユーザーの文章を５段階評価するプロンプト(試合用)
@@ -95,7 +98,7 @@ class GetAiResponse include ActionView::RecordIdentifier
             1点: 「あいうえお」「こんにちは」
             2点: 「ビルドアップが上手くいった。」「シュートの本数が多かった。」「相手の縦パスや地上でのビルドアップから失点することがなかった。」
             3点: 「それぞれが早めに準備していて、ビルドアップが上手くいった。」
-            4点: 「相手の中盤があまりプレスをかけてこなかったのと、相手の3トップが作るゲートに対して2ボランチがポジショニングをとり、ビルドアップが上手くいった。」
+            4点: 「3対1の時、ワンタッチ目を2人にも出せる方向に置いて相手を困らせた」
             5点: 「相手の中盤があまりプレスをかけてこなかったのと、相手の3トップが作るゲートに対して2ボランチがポジショニングをとり、ビルドアップが上手くいった。(07:36)」
             output only integer from 1 to 5.",
         bad: "今から入力する文章は育成年代のサッカー選手が試合を振り返って、サッカーノートの「上手くいかなかったこと」の欄に書いた文章です。
@@ -164,20 +167,23 @@ class GetAiResponse include ActionView::RecordIdentifier
             else
                 previous_note = ""
             end
-
-            content_of_practice = "今日の練習内容:\n"
-            group.daily_practice.daily_practice_items.each do |daily_practice_item|
-                practice_name = daily_practice_item.practice.name
-                number_of_people = daily_practice_item.practice.number_of_people
-                solvable_issues = daily_practice_item.practice.issue
-                key_points = daily_practice_item.practice.key_points
-                applicable_situation = daily_practice_item.practice.applicable_situation
-                content_of_practice += "練習メニュー名: #{practice_name}\n"
-                content_of_practice += "トレーニング内容: #{daily_practice_item.practice.introduction}\n"
-                content_of_practice += "練習時間(分): #{daily_practice_item.training_time}\n"
-                content_of_practice += "意識するポイント: #{key_points}\n"
-                content_of_practice += "試合で該当するシチュエーション: #{applicable_situation}\n"
-                content_of_practice += "解決する課題: #{solvable_issues}\n"
+            if group.daily_practice.daily_practice_items.length != 0
+                content_of_practice = "今日の練習内容:\n"
+                group.daily_practice.daily_practice_items.each do |daily_practice_item|
+                    practice_name = daily_practice_item.practice.name
+                    number_of_people = daily_practice_item.practice.number_of_people
+                    solvable_issues = daily_practice_item.practice.issue
+                    key_points = daily_practice_item.practice.key_points
+                    applicable_situation = daily_practice_item.practice.applicable_situation
+                    content_of_practice += "練習メニュー名: #{practice_name}\n"
+                    content_of_practice += "トレーニング内容: #{daily_practice_item.practice.introduction}\n"
+                    content_of_practice += "練習時間(分): #{daily_practice_item.training_time}\n"
+                    content_of_practice += "意識するポイント: #{key_points}\n"
+                    content_of_practice += "試合で該当するシチュエーション: #{applicable_situation}\n"
+                    content_of_practice += "解決する課題: #{solvable_issues}\n"
+                end
+            else
+                content_of_practice = ""
             end
             prompt = PROMPTS_PRACTICE[type.to_sym] + previous_note + content_of_practice
             print "prompt\n", prompt

@@ -3,6 +3,7 @@ class NotesController < ApplicationController
     @@debug = false
 
     @@with_video = false
+    @@note_for = ""
     @@video_id = nil
 
     def index
