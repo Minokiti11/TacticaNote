@@ -123,32 +123,33 @@ class GetAiResponse include ActionView::RecordIdentifier
         response = Response.find(response_id)
         target = "notes_#{type}"
         rate_prompt = nil
+        if type != "next"
+            if note_for == "match"
+                rate_prompt = PROOMPTS_RATE_MATCH[type.to_sym]
+            elsif note_for == "practice"
+                rate_prompt = PROMPTS_RATE_PRACTICE[type.to_sym]
+            end
 
-        if note_for == "match"
-            rate_prompt = PROOMPTS_RATE_MATCH[type.to_sym]
-        elsif note_for == "practice"
-            rate_prompt = PROMPTS_RATE_PRACTICE[type.to_sym]
+            rate_response_from_gpt4o_mini = OpenAI::Client.new.chat(
+                parameters: {
+                    model: MODEL_NAME,
+                    messages: [{ role: "system", content: rate_prompt }, { role: "user", content: input}],
+                    temperature: TEMPERATURE,
+                    max_tokens: 10,
+                    n: RESPONSES_PER_MESSAGE
+                }
+            )
+
+            rate = rate_response_from_gpt4o_mini.dig("choices", 0, "message", "content")
+
+            Turbo::StreamsChannel.broadcast_replace_later_to(
+                "rate",
+                target: "notes_#{type}_rate",
+                partial: "notes/rate",
+                locals: { rate: rate.to_i, target: "notes_#{type}_rate" }
+            )
         end
-
-        rate_response_from_gpt4o_mini = OpenAI::Client.new.chat(
-            parameters: {
-                model: MODEL_NAME,
-                messages: [{ role: "system", content: rate_prompt }, { role: "user", content: input}],
-                temperature: TEMPERATURE,
-                max_tokens: 10,
-                n: RESPONSES_PER_MESSAGE
-            }
-        )
-
-        rate = rate_response_from_gpt4o_mini.dig("choices", 0, "message", "content")
-
-        Turbo::StreamsChannel.broadcast_replace_later_to(
-            "rate",
-            target: "notes_#{type}_rate",
-            partial: "notes/rate",
-            locals: { rate: rate.to_i, target: "notes_#{type}_rate" }
-        )
-
+        
         if note_for == "match"
             prompt = PROMPTS_MATCH[type.to_sym]
         elsif note_for == "practice"
@@ -186,7 +187,7 @@ class GetAiResponse include ActionView::RecordIdentifier
                 content_of_practice = ""
             end
             prompt = PROMPTS_PRACTICE[type.to_sym] + previous_note + content_of_practice
-            print "prompt\n", prompt
+            print "prompt:\n", prompt
         end
 
         response_from_gpt4o_mini = OpenAI::Client.new.chat(
