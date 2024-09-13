@@ -16,7 +16,11 @@
     }
 </style>
 
+<!-- モバイル端末の場合 -->
+<%= link_to '← ノートの一覧へ', group_note_path(session[:current_group_id]), class: "me-2", "data-turbo": false, style: "font-size: 1em; display: block; margin-top: 30px; margin-left: 10px;" if request.env['HTTP_USER_AGENT'].include?('Mobile') %>
 <div class="container mt-5">
+  <!-- 非モバイル端末の場合 -->
+  <%= link_to '← ノートの一覧へ', group_note_path(session[:current_group_id]), class: "me-2", "data-turbo": false, style: "font-size: 1.2em; display: block; margin-bottom: 30px;" unless request.env['HTTP_USER_AGENT'].include?('Mobile') %>
   <% video = Video.find_by(id: @note.video_id) %>
   <% if video %>
     <video class="video-js vjs-big-play-centered" preload="metadata" controls playsinline id="video">

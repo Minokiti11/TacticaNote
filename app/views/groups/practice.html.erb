@@ -1,8 +1,12 @@
+<!-- モバイルの場合 -->
+<%= link_to '← グループのトップへ', group_path(session[:current_group_id]), class: "me-2", "data-turbo": false, style: "font-size: 1em; display: block; margin-top: 30px; margin-left: 10px;" if request.env['HTTP_USER_AGENT'].include?('Mobile') %>
 <div class='container-fluid px-3 px-sm-5 py-4'>
+    <!-- 非モバイル端末の場合 -->
+    <%= link_to '← グループのトップへ', group_path(session[:current_group_id]), class: "me-2", "data-turbo": false, style: "font-size: 1.2em; display: block; margin-bottom: 30px;" unless request.env['HTTP_USER_AGENT'].include?('Mobile') %>
     <div class='row'>
         <div class='col-12 col-md-8 col-lg-6'>
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 style="margin-left: 20px; margin-top: 30px; margin-bottom: 60px;">練習メニュー</h2>
+                <h2>練習メニュー</h2>
                 <% if request.env['HTTP_USER_AGENT'].include?('Mobile') %>
                     <%= link_to new_practice_path, class: "btn btn-dark d-block rounded-circle bg-black", style: "margin-bottom: 20px;" do %>
                         <i class="fas fa-plus"></i>
