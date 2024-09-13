@@ -92,7 +92,7 @@
         <div id="notes_good">
             <!-- ここにメッセージがリアルタイムで表示される -->
         </div><br />
-        <%= turbo_stream_from "rate" %>
+        <%= turbo_stream_from "rate_user_#{session.id}" %>
         <%= turbo_stream_from "user_#{session.id}" %>
         <%= turbo_stream_from "spinner" %>
         <div id="spinner_good"></div>
@@ -129,8 +129,13 @@
         <!-- 話し合いたいこと・確認したいことの入力フォーム -->
         <div class="form-group" id="div_discuss">
             <label for="note_discuss" class="form-label">チームで話し合いたいこと・確認したいこと</label>
-            <%= form.rich_text_area :discuss, id: 'note_discuss', placeholder: 'ミーティングなどでチームで話し合いたいこと・確認したいこと
-@someoneのようにしてチームのメンバーをメンションできます。', style: "height: 100px;", data: { controller: "mentions", mentions_target: "field" } %>
+            <% if params[:note_for] == "practice" %>
+                <%= form.rich_text_area :discuss, id: 'note_discuss', placeholder: 'チームで話し合いたいこと・確認したいこと(例：練習時間が長い, )
+                @someoneのようにしてチームのメンバーをメンションできます。', style: "height: 100px;", data: { controller: "mentions", mentions_target: "field" } %>
+            <% else %>
+                <%= form.rich_text_area :discuss, id: 'note_discuss', placeholder: 'ミーティングなどでチームで話し合いたいこと・確認したいこと
+                @someoneのようにしてチームのメンバーをメンションできます。', style: "height: 100px;", data: { controller: "mentions", mentions_target: "field" } %>
+            <% end %>
             <div id="links">
 
             </div>

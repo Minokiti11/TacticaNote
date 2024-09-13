@@ -123,7 +123,7 @@ class GetAiResponse include ActionView::RecordIdentifier
         response = Response.find(response_id)
         target = "notes_#{type}"
         rate_prompt = nil
-        if type != "next"
+        if type != "next" && note_for == "match"
             if note_for == "match"
                 rate_prompt = PROOMPTS_RATE_MATCH[type.to_sym]
             elsif note_for == "practice"
@@ -143,13 +143,13 @@ class GetAiResponse include ActionView::RecordIdentifier
             rate = rate_response_from_gpt4o_mini.dig("choices", 0, "message", "content")
 
             Turbo::StreamsChannel.broadcast_replace_later_to(
-                "rate",
+                "rate_" + channel,
                 target: "notes_#{type}_rate",
                 partial: "notes/rate",
                 locals: { rate: rate.to_i, target: "notes_#{type}_rate" }
             )
         end
-        
+
         if note_for == "match"
             prompt = PROMPTS_MATCH[type.to_sym]
         elsif note_for == "practice"
