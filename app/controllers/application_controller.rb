@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
     before_action :configurepermitted_parameters, if: :devise_controller?
     before_action :set_current_group
+    before_action :set_current_user
     before_action :authenticate_user!, unless: :devise_controller?
     before_action :block_bad_ip
     
@@ -33,8 +34,14 @@ class ApplicationController < ActionController::Base
         end
     end
 
+    def set_current_user
+        if current_user
+            session[:current_user_id] = current_user.id
+        end
+    end
+
     def block_bad_ip
-        if request.remote_ip == '91.92.251.54'
+        if request.remote_ip == '91.92.251.54' || request.remote_ip == '172.68.242.61'
             render plain: 'Access Denied', status: :forbidden
         end
     end
