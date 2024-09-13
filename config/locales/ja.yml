@@ -16,7 +16,7 @@ ja:
       x_hours:
         one: "1時間"
         other: "%{count}時間"
-      x_minites:
+      x_minutes:
         one: "1分"
         other: "%{count}分"
   time:
