@@ -482,11 +482,12 @@ select#practice-select {
             </div>
           </div>
         </td>
-
+        
+        <!-- ノートを作成時の日付ごとに並べる -->
         <td>
           <%# <h4 style="margin-top: 30px;">ノート一覧</h4> %>
           <% @group.notes.group_by { |note| note.created_at.to_date }.each do |date, notes| %>
-            <div class="list-group w-100 w-lg-50">
+            <div class="list-group w-100 w-lg-50 mb-3">
               <div class="list-group-item list-group-item-action" style="background-color: black; color: white; border-color: black;">
                 <%= date.strftime('%Y年%m月%d日') %>
               </div>
