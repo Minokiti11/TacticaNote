@@ -11,7 +11,7 @@ gem "sprockets-rails"
 
 # Use sqlite3 as the database for Active Record
 # gem "sqlite3", "~> 1.4"
-gem 'sqlite3'
+gem 'sqlite3', '~> 1.4'
 
 gem 'pg'
 
@@ -108,3 +108,7 @@ gem 'rack-cors', require: 'rack/cors'
 gem 'meta-tags'
 
 gem 'pry-rails'
+
+gem 'whenever', require: false
+
+gem 'sassc-rails'
