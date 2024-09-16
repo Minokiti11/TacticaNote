@@ -153,6 +153,20 @@ class GroupsController < ApplicationController
     redirect_to group_path(@group)
   end
 
+  def load_more_notes
+    group = Group.find(params[:id])
+    last_date = params[:last_date]
+    count = params[:count].to_i
+
+    notes = group.notes.where('created_at < ?', last_date).order(created_at: :desc).limit(count)
+    has_more_notes = group.notes.where('created_at < ?', notes.last.created_at).exists? if notes.any?
+
+    render json: {
+      notes: notes.as_json(include: :user),
+      has_more_notes: has_more_notes
+    }
+  end
+
   private
 
   def group_params

@@ -43,4 +43,6 @@ Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
   
   mount Sidekiq::Web => '/sidekiq'
+  
+  get 'groups/:id/load_more_notes', to: 'groups#load_more_notes', as: 'load_more_notes'
 end
