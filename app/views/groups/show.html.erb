@@ -486,7 +486,7 @@ select#practice-select {
         <!-- ノートを作成時の日付ごとに並べる -->
         <td>
           <%# <h4 style="margin-top: 30px;">ノート一覧</h4> %>
-          <% @group.notes.reverse.group_by { |note| note.created_at.to_date }.each do |date, notes| %>
+          <% @group.notes.reverse.group_by { |note| note.created_at.to_date }.first(5).each do |date, notes| %>
             <div class="list-group w-100 w-lg-50 mb-3">
               <div class="list-group-item list-group-item-action" style="background-color: black; color: white; border-color: black;">
                 <%= date.strftime('%Y年%m月%d日') %>
@@ -498,6 +498,11 @@ select#practice-select {
                 </a>
               <% end %>
             </div>
+          <% end %>
+          <% if @group.notes.count > 5 %>
+            <button id="show-more-notes" class="btn btn-primary mt-2" style="border-radius: 0px;" data-group-id="<%= @group.id %>">
+              もっと見る
+            </button>
           <% end %>
         </td>
 
@@ -617,7 +622,6 @@ select#practice-select {
         document.getElementById('alert').innerText = "";
       }
 
-      // サーバーにデータを送信
       const groupId = this.getAttribute('data-group-id');
       const practiceId = practiceSelect.options[practiceSelect.selectedIndex].value;
       
