@@ -29,6 +29,20 @@ class GroupsController < ApplicationController
       end
     end
     I18n.locale = :ja
+
+    # ノートの日付を取得し、重複を排除して降順に並べる
+    @note_dates = @group.notes.order(created_at: :desc).pluck("DATE(created_at)").uniq
+
+    # 初期表示のグループ数
+    initial_limit = 5
+    @initial_dates = @note_dates.first(initial_limit)
+
+    # 初期表示のノートを日付でグループ化
+    @initial_note_groups = @group.notes.where("DATE(created_at) IN (?)", @initial_dates)
+                                     .order(created_at: :desc)
+                                     .group_by { |note| note.created_at.to_date }
+
+    @total_date_groups = @note_dates.size
   end
 
   def join_by_invite
@@ -153,17 +167,40 @@ class GroupsController < ApplicationController
     redirect_to group_path(@group)
   end
 
-  def load_more_notes
+  def load_more_date_groups
     group = Group.find(params[:id])
-    last_date = params[:last_date]
-    count = params[:count].to_i
+    offset = params[:offset].to_i
+    limit = params[:limit].to_i
 
-    notes = group.notes.where('created_at < ?', last_date).order(created_at: :desc).limit(count)
-    has_more_notes = group.notes.where('created_at < ?', notes.last.created_at).exists? if notes.any?
+    # 次に読み込む日付グループを取得
+    next_dates = group.notes.order(created_at: :desc)
+                       .pluck("DATE(created_at)").uniq
+                       .slice(offset, limit)
 
-    render json: {
-      notes: notes.as_json(include: :user),
-      has_more_notes: has_more_notes
+    # 取得した日付に基づきノートをグループ化
+    next_note_groups = group.notes.where("DATE(created_at) IN (?)", next_dates)
+                            .order(created_at: :desc)
+                            .group_by { |note| note.created_at.to_date }
+
+    has_more = (offset + limit) < group.notes.order(created_at: :desc).pluck("DATE(created_at)").uniq.size
+
+    # JSON形式でデータを準備
+    grouped_notes = next_note_groups.map do |date, notes|
+      {
+        date: date.strftime('%Y年%m月%d日'),
+        notes: notes.map do |note|
+          {
+            id: note.id,
+            title: note.title,
+            username: note.user.username
+          }
+        end
+      }
+    end
+
+    render json: { 
+      note_groups: grouped_notes,
+      has_more: has_more
     }
   end
 

@@ -23,6 +23,9 @@ Rails.application.routes.draw do
     member do
       post 'generate_invite_link' => 'groups#generate_invite_link'
     end
+    member do
+      get 'load_more_date_groups'
+    end
     get 'join/:invite_token', to: 'groups#join_by_invite', as: :join_group_by_invite
     get 'chat' => "groups#chat"
     get 'groups/show' => 'groups#show'
@@ -43,6 +46,4 @@ Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
   
   mount Sidekiq::Web => '/sidekiq'
-  
-  get 'groups/:id/load_more_notes', to: 'groups#load_more_notes', as: 'load_more_notes'
 end
