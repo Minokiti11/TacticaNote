@@ -38,6 +38,7 @@ class NotesController < ApplicationController
         if !@@debug && !(data == nil) && !(data[:value] == "")
             response = Response.create(section_type: "good", input: data["value"], session_id: session.id.to_s)
 
+            p "passed."
             Turbo::StreamsChannel.broadcast_replace_later_to(
                 "user_#{session.id}",
                 target: "notes_good",
@@ -81,7 +82,6 @@ class NotesController < ApplicationController
             )
 
             GetAiResponse.perform_async(@@note_for, "user_#{session.id}", data[:value], "bad", current_user.id, data[:group_id], response.id)
-
 
             # スピナーを開始
             Turbo::StreamsChannel.broadcast_replace_later_to(
@@ -128,6 +128,15 @@ class NotesController < ApplicationController
         end
     end
 
+    # def self.daily_job(group_id)
+    #     puts "毎日昼の12時に実行されるジョブです。"
+    #     @group = Group.find(group_id)
+    #     p :group, @group
+    #     @notes = @group.notes.where('created_at >= ?', Time.now - 24.hours).where('created_at <= ?', Time.now)
+    #     p :notes, @notes
+    #     Summary.create(group_id: group_id)
+    # end
+
     def create
         @note = Note.new(note_params)
         @note.user_id = current_user.id
@@ -158,9 +167,13 @@ class NotesController < ApplicationController
 
     def edit
         @note = Note.find(params[:id])
+        @@with_video = params[:with_video]
+        @with_video = params[:with_video]
+        @@note_for = params[:note_for]
     end
 
     def update
+        @note = Note.find(params[:id])
         if @note.update(note_params)
             redirect_to note_path
         else
