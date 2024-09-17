@@ -1,6 +1,7 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  get 'summaries/create'
   get 'users/show'
   resources :videos
   resources :notes
@@ -37,6 +38,8 @@ Rails.application.routes.draw do
   end
   
   resources :mentions, only: [:index]
+
+  resources :summaries, only: [:create]
 
   get 'search_notes', to: 'notes#search'
 

@@ -129,7 +129,7 @@ class GetAiResponse include ActionView::RecordIdentifier
         rate_prompt = nil
         if type != "next" && note_for == "match"
             if note_for == "match"
-                rate_prompt = PROOMPTS_RATE_MATCH[type.to_sym]
+                rate_prompt = PROMPTS_RATE_MATCH[type.to_sym]
             elsif note_for == "practice"
                 rate_prompt = PROMPTS_RATE_PRACTICE[type.to_sym]
             end
@@ -222,6 +222,11 @@ class GetAiResponse include ActionView::RecordIdentifier
             partial: "spinner/hide",
             locals: {target: "spinner_#{type}"}
         )
+    rescue Faraday::BadRequestError => e
+        Rails.logger.error("BadRequestError: #{e.message}")
+        # 必要に応じてリトライや通知を実装
+    rescue => e
+        Rails.logger.error("Unexpected error: #{e.message}")
     end
 
     # デバッグに時間かかるのでとりあえずspinner使う方針に変更

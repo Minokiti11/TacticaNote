@@ -484,6 +484,8 @@ select#practice-select {
         </td>
         
         <!-- ノートを作成時の日付ごとに並べる -->
+        <%= turbo_stream_from "summary_user_#{session.id}" %>
+        <%= turbo_stream_from "spinner_summary" %>
         <td>
           <div id="notes-container">
             <% @initial_note_groups.each do |date, notes| %>
@@ -498,16 +500,28 @@ select#practice-select {
                   </a>
                 <% end %>
               </div>
+              <% if Summary.find_by(date_for: date, group_id: @group.id) %>
+                <% summary = Summary.find_by(date_for: date, group_id: @group.id) %>
+                <div class="fw-bold mb-2">🤖 AIによる要約 🤖</div>
+                <div style="margin-bottom: 30px;">
+                  <%= summary.content %>
+                </div>
+              <% else %>
+                <button class="btn btn-outline-primary" style="border-radius: 0px; margin-bottom: 30px;" onclick="createSummary('<%= date %>', <%= @group.id %>)">AIで要約する</button>
+                <div id="summary_for_<%= date %>"></div>
+                <div id="spinner_<%= date %>"></div>
+              <% end %>
             <% end %>
           </div>
 
           <% if @total_date_groups > 5 %>
-            <button id="show-more-groups" class="btn btn-primary mt-2" style="border-radius: 0px;"
-                    data-group-id="<%= @group.id %>"
-                    data-offset="5"
-                    data-limit="15">
+            <a id="show-more-groups" class="btn mt-2" href="#"
+              data-group-id="<%= @group.id %>"
+              data-offset="5"
+              data-limit="15"
+              style="border-radius: 0px; background-color: transparent; color: rgba(90, 90, 90, 0.8); text-decoration: none; cursor: pointer;">
               もっと見る
-            </button>
+            </a>
           <% end %>
         </td>
 
@@ -690,6 +704,11 @@ select#practice-select {
       }
   });
 
+  document.getElementById('show-more-groups').addEventListener('click', function(event) {
+    event.preventDefault();
+    showMoreGroups();
+  });
+
   function showMoreGroups() {
     const button = document.getElementById('show-more-groups');
     const groupId = button.getAttribute('data-group-id');
@@ -741,11 +760,28 @@ select#practice-select {
       });
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const showMoreButton = document.getElementById('show-more-groups');
-
-    if (showMoreButton) {
-      showMoreButton.addEventListener('click', showMoreGroups);
-    }
-  });
+  function createSummary(date, group_id) {
+    fetch('/summaries', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+      },
+      body: JSON.stringify({
+        summary: { 
+          date_for: date, 
+          group_id: group_id
+        }
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        location.reload();
+      }
+    })
+    .catch(error => {
+      console.error('エラーが発生しました:', error);
+    });
+  }
 </script>

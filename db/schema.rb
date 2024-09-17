@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_13_025518) do
+ActiveRecord::Schema[7.0].define(version: 2024_09_17_021742) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -156,6 +156,15 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_13_025518) do
     t.index ["user_id"], name: "index_sns_credentials_on_user_id"
   end
 
+  create_table "summaries", force: :cascade do |t|
+    t.integer "group_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "content"
+    t.date "date_for"
+    t.index ["group_id"], name: "index_summaries_on_group_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -198,6 +207,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_13_025518) do
   add_foreign_key "responses", "users"
   add_foreign_key "responses", "videos"
   add_foreign_key "sns_credentials", "users"
+  add_foreign_key "summaries", "groups"
   add_foreign_key "videos", "groups"
   add_foreign_key "videos", "users"
 end

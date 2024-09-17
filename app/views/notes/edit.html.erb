@@ -18,7 +18,7 @@
 
 <%= form_with model: @note, local: true, html: {class: "needs-validation", novalidate: true} do |form| %>
     <div class="container mt-3">
-        <% if @note.video_id %>
+        <% if @with_video == "true" %>
             <% video = Video.find_by(id: @note.video_id)%>
             <video class="video-js vjs-big-play-centered" preload="metadata" controls playsinline id="video">
                 <source src="<%= rails_blob_path(video.video) %>" type="video/mp4">
@@ -45,7 +45,7 @@
         <%# </div> %>
 
         <!-- 上手くいった点の入力フォーム -->
-        <div class="form-group" id="div_good">
+        <div class="form-group" id="div_good" data-group-id="<%= params[:group_id]%>">
             <label for="note_good" class="form-label">上手くいった点</label>
             <%# <%= form.rich_text_area :good, class: 'mb-3', id: 'note_good', placeholder: '上手くいった点を記入'%>
             <%= form.text_area :good, class: 'form-control mb-3', id: 'note_good', placeholder: '上手くいった点を記入
@@ -101,7 +101,7 @@
 
         <!-- 送信ボタン -->
         <div class="form-group">
-            <%= form.button "作成", type: 'button', onclick: 'submit();', class: 'btn btn-outline-primary', style: "border-radius: 1;" %>
+            <%= form.button "更新", type: 'button', onclick: 'submit();', class: 'btn btn-outline-primary', style: "border-radius: 1;" %>
         </div>
         <br />
     </div>
@@ -131,7 +131,7 @@
                 // CSRFトークンをmetaタグから取得して設定
                 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
-            body: JSON.stringify({data: { value: $input_good.val() }})
+            body: JSON.stringify({data: { value: $input_good.val(), group_id: parseInt(document.getElementById("div_good").getAttribute("data-group-id")) }})
         });
     });
 
@@ -145,7 +145,7 @@
                 // CSRFトークンをmetaタグから取得して設定
                 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
-            body: JSON.stringify({data: { value: $input_bad.val() }})
+            body: JSON.stringify({data: { value: $input_bad.val(), group_id: parseInt(document.getElementById("div_good").getAttribute("data-group-id")) }})
         });
     });
 
@@ -166,58 +166,79 @@
                 // CSRFトークンをmetaタグから取得して設定
                 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
-            body: JSON.stringify({data: { value: $input_next.val() }})
+            body: JSON.stringify({data: { value: $input_next.val(), group_id: parseInt(document.getElementById("div_good").getAttribute("data-group-id")) }})
         });
     };
+</script>
 
+<% if @with_video == "true" %>
+    <script>
     const player = videojs('video', {
         autoplay: false, // 自動再生を無効
         fluid: false, // 動画コンテンツを親要素いっぱいに広げる
         loop: false, // 繰り返し再生無効
         controls: true, // コントローラ表示
-        playbackRates: [0.5, 1, 1.25, 1.5], // 再生速度の倍率
+        playbackRates: [0.5, 1, 1.3, 1.5], // 再生速度の倍率
     });
     var video_el = document.getElementById("video");
 
     // videojsのreadyイベントを使用して、メタデータがロードされたときの処理を設定
     player.ready(function() {
-        this.on('loadedmetadata', function() {
-        // コントローラに10秒戻しボタンと10秒送りボタンを追加
-        const rewindButton = player.getChild('ControlBar').addChild('button');
-        const forwardButton = player.getChild('ControlBar').addChild('button');
-        rewindButton.controlText('10秒戻し');
-        forwardButton.controlText('10秒送り');
+        var self = this;
+        self.on('loadedmetadata', () => {
+            // コントローラに10秒戻しボタンと10秒送りボタンを追加
+            const rewindButton = player.getChild('ControlBar').addChild('button');
+            const forwardButton = player.getChild('ControlBar').addChild('button');
+            rewindButton.controlText('10秒戻し');
+            forwardButton.controlText('10秒送り');
 
-        // アイコンを設定
-        player.getChild('ControlBar')
-            .el()
-            .insertBefore(
-                rewindButton.el(),
-                player.getChild('ControlBar').getChild('pictureInPictureToggle').el()
-            )
-            .innerHTML = `<img src=<%= asset_path 'rewind.png' %> width=20 />`;
+            // アイコンを設定
+            player.getChild('ControlBar')
+                .el()
+                .insertBefore(
+                    rewindButton.el(),
+                    player.getChild('ControlBar').getChild('pictureInPictureToggle').el()
+                )
+                .innerHTML = `<img src=<%= asset_path 'rewind.png' %> width=20 />`;
 
-        player.getChild('ControlBar')
-            .el()
-            .insertBefore(
-                forwardButton.el(),
-                player.getChild('ControlBar').getChild('pictureInPictureToggle').el()
-            )
-            .innerHTML = `<img src=<%= asset_path 'forward.png' %> width=20 />`;
+            player.getChild('ControlBar')
+                .el()
+                .insertBefore(
+                    forwardButton.el(),
+                    player.getChild('ControlBar').getChild('pictureInPictureToggle').el()
+                )
+                .innerHTML = `<img src=<%= asset_path 'forward.png' %> width=20 />`;
 
-        // スキップ処理を追加
-        rewindButton.el().addEventListener('click', () => {
-            var newTime = this.currentTime() - 10;
-            if (newTime < 0) newTime = 0; //現在時刻が0未満にならないように調整
-            this.currentTime(newTime);
-        });
-        
-        forwardButton.el().addEventListener('click', () => {
-            var newTime = this.currentTime() + 10;
-            var maxTime = this.duration(); // ビデオの長さを取得
-            if (newTime > maxTime) newTime = maxTime; //現在時刻がビデオの長さ以上にならないように調整
-            this.currentTime(newTime);
-        });
+            // スキップ処理を追加
+            rewindButton.el().addEventListener('click', () => {
+                var newTime = this.currentTime() - 10;
+                if (newTime < 0) newTime = 0; //現在時刻が0未満にならないように調整
+                this.currentTime(newTime);
+            });
+            
+            forwardButton.el().addEventListener('click', () => {
+                var newTime = this.currentTime() + 10;
+                var maxTime = this.duration(); // ビデオの長さを取得
+                if (newTime > maxTime) newTime = maxTime; //現在時刻がビデオの長さ以上にならないように調整
+                this.currentTime(newTime);
+            });
+
+            document.addEventListener('keydown', function (e) {
+                if (player.paused() == false) {
+                    if (e.code == 'ArrowLeft') {
+                        var newTime = self.currentTime() - 10;
+                        if (newTime < 0) newTime = 0; //現在時刻が0未満にならないように調整
+                        self.currentTime(newTime);
+                    } else if (e.code == 'ArrowRight') {
+                        var newTime = self.currentTime() + 10;
+                        var maxTime = self.duration(); // ビデオの長さを取得
+                        if (newTime > maxTime) newTime = maxTime; //現在時刻がビデオの長さ以上にならないように調整
+                        self.currentTime(newTime);
+                    }
+                }
+
+            })
         });
     });
-</script>
+    </script>
+<% end %>
