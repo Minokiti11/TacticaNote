@@ -13,11 +13,28 @@ class SummaryGenerator include ActionView::RecordIdentifier
         group = Group.find(group_id)
 
         notes = group.notes.where("DATE(created_at) = ?", date).order(created_at: :desc)
-        notes_for_summary = notes.map do |note|
+        good_for_summary = notes.map do |note|
             note.good
         end.join("\n")
 
-        print("notes_for_summary: \n", notes_for_summary)
+        bad_for_summary = notes.map do |note|
+            note.bad
+        end.join("\n")
+
+        next_for_summary = notes.map do |note|
+            note.next
+        end.join("\n")
+
+        discuss_for_summary = notes.map do |note|
+            note.discuss
+        end.join("\n")
+
+        print("上手くいったところ: \n" + good_for_summary)
+        print("上手くいかなかったところ: \n" + bad_for_summary)
+        print("次に意識すること: \n" + next_for_summary)
+        print("チームで確認したいこと: \n" + discuss_for_summary)
+
+        notes_for_summary = "上手くいったところ:\n" + good_for_summary + "上手くいかなかったところ:\n" + bad_for_summary + "次に意識すること:\n" + next_for_summary + "チームで話し合いたいこと:\n" + discuss_for_summary
 
         response_from_gpt4o_mini = OpenAI::Client.new.chat(
             parameters: {

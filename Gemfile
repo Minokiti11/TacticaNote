@@ -112,3 +112,5 @@ gem 'pry-rails'
 gem 'whenever', require: false
 
 gem 'sassc-rails'
+
+gem 'redcarpet'

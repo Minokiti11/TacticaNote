@@ -504,7 +504,7 @@ select#practice-select {
                 <% summary = Summary.find_by(date_for: date, group_id: @group.id) %>
                 <div class="fw-bold mb-2">🤖 AIによる要約 🤖</div>
                 <div style="margin-bottom: 30px;">
-                  <%= summary.content %>
+                  <%= markdown(summary.content) %>
                 </div>
               <% else %>
                 <button class="btn btn-outline-primary" style="border-radius: 0px; margin-bottom: 30px;" onclick="createSummary('<%= date %>', <%= @group.id %>)">AIで要約する</button>
