@@ -38,6 +38,10 @@
       loop: false, // 繰り返し再生無効
       controls: true, // コントローラ表示
       playbackRates: [0.5, 1, 1.3, 1.5], // 再生速度の倍率
+      controlBar: {
+        pictureInPictureToggle: false, // ピクチャーインピクチャーを無効にする
+        fullscreenToggle: true // 全画面ボタンを有効にする
+      }
   });
   var video_el = document.getElementById("video");
 
@@ -53,21 +57,28 @@
       forwardButton.controlText('10秒送り');
 
       // アイコンを設定
-      player.getChild('ControlBar')
-          .el()
-          .insertBefore(
-              rewindButton.el(),
-              player.getChild('ControlBar').getChild('pictureInPictureToggle').el()
-          )
-          .innerHTML = `<img src=<%= asset_path 'rewind.png' %> width=20 />`;
+      const controlBar = player.getChild('ControlBar');
+      const pipToggle = controlBar.getChild('pictureInPictureToggle');
+      const fullscreenToggle = controlBar.getChild('fullscreenToggle');
 
-      player.getChild('ControlBar')
-          .el()
-          .insertBefore(
-              forwardButton.el(),
-              player.getChild('ControlBar').getChild('pictureInPictureToggle').el()
-          )
-          .innerHTML = `<img src=<%= asset_path 'forward.png' %> width=20 />`;
+      // 挿入位置を決定（PiPボタンが存在しない場合は全画面ボタンの前に挿入）
+      const insertBeforeElement = pipToggle || fullscreenToggle;
+
+      if (insertBeforeElement) {
+        controlBar.el().insertBefore(
+          rewindButton.el(),
+          insertBeforeElement.el()
+        ).innerHTML = `<img src="<%= asset_path 'rewind.png' %>" width="20" />`;
+        
+        controlBar.el().insertBefore(
+          forwardButton.el(),
+          insertBeforeElement.el()
+        ).innerHTML = `<img src="<%= asset_path 'forward.png' %>" width="20" />`;
+      } else {
+        // デフォルトの挿入位置（最後）に追加
+        controlBar.el().appendChild(rewindButton.el()).innerHTML = `<img src="<%= asset_path 'rewind.png' %>" width="20" />`;
+        controlBar.el().appendChild(forwardButton.el()).innerHTML = `<img src="<%= asset_path 'forward.png' %>" width="20" />`;
+      }
 
       // スキップ処理を追加
       rewindButton.el().addEventListener('click', () => {
