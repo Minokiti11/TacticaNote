@@ -36,6 +36,8 @@ Rails.application.routes.draw do
     delete "all_destroy" => 'groups#all_destroy'
     post 'create_daily_practice_item', on: :member
   end
+
+  resources :ai_practices, only: [:create]
   
   resources :mentions, only: [:index]
 

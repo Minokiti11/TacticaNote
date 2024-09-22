@@ -38,7 +38,6 @@ class NotesController < ApplicationController
         if !@@debug && !(data == nil) && !(data[:value] == "")
             response = Response.create(section_type: "good", input: data["value"], session_id: session.id.to_s)
 
-            p "passed."
             Turbo::StreamsChannel.broadcast_replace_later_to(
                 "user_#{session.id}",
                 target: "notes_good",

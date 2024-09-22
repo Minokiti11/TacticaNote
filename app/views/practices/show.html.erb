@@ -54,9 +54,12 @@
                 <% if @practice.links.start_with?("https://www.youtube.com") || @practice.links.start_with?("https://youtube.com") || @practice.links.start_with?("https://youtu.be") %>
                     <% if @practice.links.start_with?("https://youtu.be") %>
                         <% video_id = @practice.links.split("youtu.be/").last.split("?").first %>
+                    <% elsif @practice.links.include?("shorts") %>
+                        <% video_id = @practice.links.split("shorts/").last.split("?").first %>
                     <% else %>
                         <% video_id = @practice.links.split("v=").last.split("&").first %>
                     <% end %>
+                    
                     <% embed_url = "https://www.youtube.com/embed/#{video_id}" %>
                     <% if @practice.links.include?("&t=") %>
                         <% time = @practice.links.split("t=").last.split("&").first %>

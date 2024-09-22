@@ -1,7 +1,6 @@
 class ApplicationController < ActionController::Base
     before_action :configurepermitted_parameters, if: :devise_controller?
     before_action :set_current_group
-    before_action :set_current_user
     before_action :authenticate_user!, unless: :devise_controller?
     before_action :block_bad_ip
     
@@ -31,12 +30,6 @@ class ApplicationController < ActionController::Base
     def set_current_group
         if params[:group_id]
             session[:current_group_id] = params[:group_id]
-        end
-    end
-
-    def set_current_user
-        if current_user
-            session[:current_user_id] = current_user.id
         end
     end
 

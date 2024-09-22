@@ -1,0 +1,2 @@
+class AiPractice < ApplicationRecord
+end

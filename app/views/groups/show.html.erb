@@ -485,7 +485,9 @@ select#practice-select {
         
         <!-- ノートを作成時の日付ごとに並べる -->
         <%= turbo_stream_from "summary_user_#{session.id}" %>
+        <%= turbo_stream_from "ai_practice_user_#{session.id}" %>
         <%= turbo_stream_from "spinner_summary" %>
+        <%= turbo_stream_from "ai_practice_spinner" %>
         <td>
           <div id="notes-container">
             <% @initial_note_groups.each do |date, notes| %>
@@ -500,6 +502,19 @@ select#practice-select {
                   </a>
                 <% end %>
               </div>
+              <% if notes[0].note_for == "match" %>
+                <% if AiPractice.find_by(date_for: date, group_id: @group.id) %>
+                  <% ai_practice = AiPractice.find_by(date_for: date, group_id: @group.id) %>
+                  <div class="fw-bold mb-2">⚡️ 練習メニューのレコメンド ⚡️</div>
+                  <div style="margin-bottom: 30px;">
+                    <%= markdown(ai_practice.content) %>
+                  </div>
+                <% else %>
+                  <button class="btn btn-outline-primary" style="border-radius: 0px; margin-bottom: 30px;" onclick="recommendPractice('<%= date %>', <%= @group.id %>)">AIに練習を考えてもらう</button>
+                  <div id="ai_practice_for_<%= date %>"></div>
+                  <div id="ai_practice_spinner_<%= date %>"></div>
+                <% end %>
+              <% end %>
               <% if Summary.find_by(date_for: date, group_id: @group.id) %>
                 <% summary = Summary.find_by(date_for: date, group_id: @group.id) %>
                 <div class="fw-bold mb-2">🤖 AIによる要約 🤖</div>
@@ -694,14 +709,14 @@ select#practice-select {
   });
 
   document.addEventListener('DOMContentLoaded', function () {
-      // URLにアンカー（#target_section）が含まれているか確認
-      const hash = window.location.hash;
-      if (hash) {
-          const target = document.querySelector(hash);
-          if (target) {
-            target.scrollIntoView({ behavior: 'instant' });
-          }
-      }
+    // URLにアンカー（#target_section）が含まれているか確認
+    const hash = window.location.hash;
+    if (hash) {
+        const target = document.querySelector(hash);
+        if (target) {
+          target.scrollIntoView({ behavior: 'instant' });
+        }
+    }
   });
 
   document.getElementById('show-more-groups').addEventListener('click', function(event) {
@@ -778,6 +793,26 @@ select#practice-select {
     .then(data => {
       if (data.success) {
         location.reload();
+      }
+    })
+    .catch(error => {
+      console.error('エラーが発生しました:', error);
+    });
+  }
+
+  function recommendPractice(date, group_id) {
+    fetch(`/ai_practices`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+      },
+      body: JSON.stringify({ai_practice: { date_for: date, group_id: group_id }})
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        console.log("recommend was succeed.");
       }
     })
     .catch(error => {
