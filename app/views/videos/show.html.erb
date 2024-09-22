@@ -65,14 +65,16 @@
       const forwardButton = player.getChild('ControlBar').addChild('button');
       rewindButton.controlText('10秒戻し');
       forwardButton.controlText('10秒送り');
+      rewindButton.el().style.marginRight = '-6px';
+
+      forwardButton.el().style.marginLeft = '-6px';
 
       // アイコンを設定
       const controlBar = player.getChild('ControlBar');
-      const pipToggle = controlBar.getChild('pictureInPictureToggle');
       const fullscreenToggle = controlBar.getChild('fullscreenToggle');
 
       // 挿入位置を決定（PiPボタンが存在しない場合は全画面ボタンの前に挿入）
-      const insertBeforeElement = pipToggle || fullscreenToggle;
+      const insertBeforeElement = fullscreenToggle;
 
       if (insertBeforeElement) {
         controlBar.el().insertBefore(
