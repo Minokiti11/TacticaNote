@@ -2,41 +2,225 @@
 <link href="https://vjs.zencdn.net/7.20.2/video-js.css" rel="stylesheet" />
 
 <style>
-  @media (max-width: 600px) {
+  @media (max-width: 1100px) {
     .vjs-remaining-time {
+      display: none;
+    }
+
+    .for-pc {
+      display: none;
+    }
+  }
+  .timestamp-list {
+    display: flex;
+    overflow-x: auto; /* 横スクロールを有効にする */
+    white-space: nowrap;
+    flex-direction: column;
+    list-style: none;
+    padding: 0;
+    position: relative; /* タイムラインの線を配置するため */
+    /* margin-left: 20px; */
+  }
+
+  .timestamp-list::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #ccc; /* 線の色 */
+  }
+
+  .timestamp-list li {
+    /* flex: 1 1 20%; */
+    box-sizing: border-box; /* パディングとボーダーを含めた幅を計算 */
+    position: relative;
+    margin-bottom: 10px;
+    /* padding-left: 20px; */
+  }
+
+  .timestamp-list li::before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 5px;
+    width: 10px;
+    height: 10px;
+    /* background: #fff;
+    border: 2px solid #343a40;
+    border-radius: 50%; */
+  }
+
+  .timestamp-link {
+    text-decoration: none;
+    color: #343a40;
+    display: flex;
+    flex-direction: column; /* 縦方向に配置 */
+    align-items: flex-start; /* 左揃え */
+    width: 100%; /* 幅を均等にする */
+  }
+
+  .timestamp-card {
+    margin-right: 10px;
+  }
+
+  .timestamp-time {
+    font-weight: bold;
+    margin-top: 5px; /* 説明と時間の間にスペースを追加 */
+  }
+
+  .timestamp-description {
+    flex-grow: 1;
+  }
+
+  @media (min-width: 1101px) {
+    .container-wrapper {
+      display: flex; /* 横並びにする */
+    }
+
+    #container {
+      flex: 1; /* containerを左に表示 */
+    }
+
+    .timestamp-list {
+      width: 400px; /* timestamp-listの幅を設定 */
+    }
+
+    .for-mobile {
       display: none;
     }
   }
 </style>
-
-<div class="container mt-5">
-  <% if @video.video.attached? %>
-    <video class="video-js vjs-big-play-centered" preload="metadata" controls playsinline id="video">
-      <source src="<%= rails_blob_path(@video.video) %>" type="video/mp4">
-    </video>
-    <h3 style="margin-top: 15px;"><%= @video.title %></h3>
-    <%= @video.introduction %><br>
-    <%= link_to 'ノートを書く', new_note_path(with_video: true, video_id: @video_id), "data-turbo": false, class: "btn btn-success", style: "margin-top: 6px; margin-botom: 6px;" %>
-    <% if current_user %>
-      <% if @video.user_id == current_user.id %>
-        <%= button_to 'このビデオを削除', video_path(@video), "data-turbo": false, method: :delete, class: "btn btn-danger", style: "margin-top: 6px; margin-bottom: 30px;", onclick: "return confirm('本当に削除しますか？');"%>
-      <% end %>
-    <% end %>
-    
-    <div class="row mt-4">
-      <% @video.notes.each do |note| %>
-        <div class="col-md-6 col-lg-4 mb-4">
-          <%= link_to note_path(note), "data-turbo": false, class: "card h-100", style: "text-decoration: none; color: black;" do %>
-            <div class="card-body">
-              <h5 class="card-title"><%= note.title %></h5>
-              <p class="card-text"><small class="text-body-secondary"><%= note.user.username %></small></p>
-              <p class="card-text mt-auto"><small class="text-body-secondary"><time><%= note.updated_at.strftime("%Y-%m-%d %H:%M") %></time>更新</small></p>
-            </div>
-          <% end %>
+<div class="container-wrapper">
+  <div id="container" class="px-3 mt-5">
+    <% if @video.video.attached? %>
+      <video class="video-js vjs-big-play-centered" preload="metadata" controls playsinline id="video">
+        <source src="<%= rails_blob_path(@video.video) %>" type="video/mp4">
+      </video>
+      <h3 style="margin-top: 15px;">
+        <%= @video.title %>
+      </h3>
+      <hr style="border-top: 1px solid grey; width: 100%; margin-top: 20px; margin-bottom: 20px;">
+      <!-- タイムスタンプリスト -->
+      <div id="timestamp-list" class="for-mobile" style="margin-top: 10px;">
+        <div class="d-flex justify-content-between align-items-center" style="margin-right: 10px;">
+          <h5 style="margin-bottom: 20px;">タイムライン</h5>
+          <button class="modal-open btn btn-dark d-block rounded-circle bg-black" style="margin-bottom: 20px;">
+            <i class="fas fa-plus"></i>
+          </button>
         </div>
+
+        <!-- モーダル本体 -->
+        <div class="modal-container">
+          <div class="modal-body">
+            <!-- 閉じるボタン -->
+            <div class="modal-close">×</div>
+            <!-- モーダル内のコンテンツ -->
+            <div class="modal-content">
+              <p><span style="font-weight: bold; color: white;">タイムスタンプの名前</span><br>
+                <input type="text" name="timestamp_name" id="timestamp_name" style="margin-top: 10px;">
+              </p>
+              <p><span style="font-weight: bold; color: white;">時間 (分:秒)</span><br>
+                <div style="margin-top: 10px;">
+                  <input type="number" name="timestamp_minutes" id="timestamp_minutes" placeholder="分" min="0" style="width: 60px; margin-right: 5px;"><span style="color: white;">:</span>
+                  <input type="number" name="timestamp_seconds" id="timestamp_seconds" placeholder="秒" min="0" max="59" style="width: 60px;">
+                </div>
+              </p>
+              <%= link_to '作成', '#', "data-turbo": false, id: "create-note-btn",class: "btn btn btn-outline-light", style: "margin-top: 10px; border-width: 2px; border-radius: 0;", onclick: "addTimestamp(#{@video.id})" %>
+            </div>
+          </div>
+        </div>
+
+        <ul class="timestamp-list">
+          <% @video.timestamps.order(time_s: :asc).each do |timestamp| %>
+            <li>
+              <div class="card timestamp-card">
+                <div class="card-body">
+                  <a href="#" class="timestamp-link" data-turbo="false" onclick="jumpTo(<%= timestamp.time_s %>)">
+                    <span class="timestamp-description"><%= timestamp.description %></span>
+                    <span class="timestamp-time"><%= "#{(timestamp.time_s / 60).to_i}:#{(timestamp.time_s % 60).to_i}" %></span>
+                  </a>
+                </div>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+
+      
+      <%= @video.introduction %><br>
+      <%= link_to 'ノートを書く', new_note_path(with_video: true, video_id: @video_id), "data-turbo": false, class: "btn btn-success", style: "margin-top: 6px; margin-botom: 6px;" %>
+      <% if current_user %>
+        <% if @video.user_id == current_user.id %>
+          <%= button_to 'このビデオを削除', video_path(@video), "data-turbo": false, method: :delete, class: "btn btn-danger", style: "margin-top: 6px; margin-bottom: 30px;", onclick: "return confirm('本当に削除しますか？');"%>
+        <% end %>
       <% end %>
+      
+      <div class="row mt-4">
+        <% @video.notes.each do |note| %>
+          <div class="col-md-6 col-lg-4 mb-4">
+            <%= link_to note_path(note), "data-turbo": false, class: "card h-100", style: "text-decoration: none; color: black;" do %>
+              <div class="card-body">
+                <h5 class="card-title"><%= note.title %></h5>
+                <p class="card-text"><small class="text-body-secondary"><%= note.user.username %></small></p>
+                <p class="card-text mt-auto"><small class="text-body-secondary"><time><%= note.updated_at.strftime("%Y-%m-%d %H:%M") %></time>更新</small></p>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if !request.env['HTTP_USER_AGENT'].include?('Mobile') %>
+    <!-- タイムスタンプリスト -->
+    <div id="timestamp-list" class="for-pc mt-5" style="margin-top: 10px;">
+      <div class="d-flex justify-content-between align-items-center" style="margin-right: 10px;">
+        <h5 style="margin-bottom: 20px;">タイムライン</h5>
+        <button class="modal-open btn btn-dark d-block rounded-circle bg-black" style="margin-bottom: 20px;">
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+
+      <!-- モーダル本体 -->
+      <div class="modal-container">
+        <div class="modal-body">
+          <!-- 閉じるボタン -->
+          <div class="modal-close">×</div>
+          <!-- モーダル内のコンテンツ -->
+          <div class="modal-content">
+            <p><span style="font-weight: bold; color: white;">タイムスタンプの名前</span><br>
+              <input type="text" name="timestamp_name" id="timestamp_name" style="margin-top: 10px;">
+            </p>
+            <p><span style="font-weight: bold; color: white;">時間 (分:秒)</span><br>
+              <div style="margin-top: 10px;">
+                <input type="number" name="timestamp_minutes" id="timestamp_minutes" placeholder="分" min="0" style="width: 60px; margin-right: 5px;"><span style="color: white;">:</span>
+                <input type="number" name="timestamp_seconds" id="timestamp_seconds" placeholder="秒" min="0" max="59" style="width: 60px;">
+              </div>
+            </p>
+            <%= link_to '作成', '#', "data-turbo": false, id: "create-note-btn",class: "btn btn btn-outline-light", style: "margin-top: 10px; border-width: 2px; border-radius: 0;", onclick: "addTimestamp(#{@video.id})" %>
+          </div>
+        </div>
+      </div>
+
+      <ul class="timestamp-list">
+        <% @video.timestamps.order(time_s: :asc).each do |timestamp| %>
+          <li>
+            <div class="card timestamp-card">
+              <div class="card-body">
+                <a href="#" class="timestamp-link" data-turbo="false" onclick="jumpTo(<%= timestamp.time_s %>)">
+                  <span class="timestamp-description"><%= timestamp.description %></span>
+                  <span class="timestamp-time"><%= "#{(timestamp.time_s / 60).to_i}:#{(timestamp.time_s % 60).to_i}" %></span>
+                </a>
+              </div>
+            </div>
+          </li>
+        <% end %>
+      </ul>
     </div>
   <% end %>
+
 </div>
 
 <script>
@@ -64,9 +248,9 @@
       const rewindButton = player.getChild('ControlBar').addChild('button');
       const forwardButton = player.getChild('ControlBar').addChild('button');
       rewindButton.controlText('10秒戻し');
-      forwardButton.controlText('10秒送り');
-      rewindButton.el().style.marginRight = '-6px';
+      forwardButton.controlText('10秒り');
 
+      rewindButton.el().style.marginRight = '-6px';
       forwardButton.el().style.marginLeft = '-6px';
 
       // アイコンを設定
@@ -109,7 +293,7 @@
       document.addEventListener('keydown', function (e) {
         if (e.code == 'ArrowLeft') {
           var newTime = self.currentTime() - 10;
-          if (newTime < 0) newTime = 0; // 現在時刻が0未満にならないように調整
+          if (newTime < 0) newTime = 0; // 現在時刻が0未満にならないように調
           self.currentTime(newTime);
         } else if (e.code == 'ArrowRight') {
           var newTime = self.currentTime() + 10;
@@ -120,4 +304,65 @@
       })
     });
   });
+
+  function jumpTo(time) {
+    player.currentTime(time);
+  }
+
+  $(function(){
+    // 変数に要素を入れる
+    var open = $('.modal-open'),
+      close = $('.modal-close'),
+      container = $('.modal-container');
+
+    //開くボタンをクリックしたらモーダルを表示る
+    open.on('click',function(){	
+      container.addClass('active');
+      return false;
+    });
+
+    //閉じるボタンをクリックしたらモーダルを閉じる
+    close.on('click',function(){	
+      container.removeClass('active');
+    });
+
+    //モーダルの外側をクリックしたらモーダルを閉じる
+    $(document).on('click',function(e) {
+      if(!$(e.target).closest('.modal-body').length) {
+        container.removeClass('active');
+      }
+    });
+  });
+
+  //タイムスタンプを追加するボタン
+  function addTimestamp(video_id) {
+    const name = document.getElementById('timestamp_name').value;
+    const minutes = parseInt(document.getElementById('timestamp_minutes').value) || 0;
+    const seconds = parseInt(document.getElementById('timestamp_seconds').value) || 0;
+    const totalSeconds = minutes * 60 + seconds;
+    console.log(video_id);
+
+    fetch('/timestamps', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+      },
+      body: JSON.stringify({
+        timestamp: { 
+          description: name,
+          time_s: totalSeconds,
+          video_id: video_id
+        }
+      })
+    })
+    .then(response => {
+      if (response.ok) {
+        location.reload();
+      }
+    })
+    .catch(error => {
+      console.error('エラーが発生しました:', error);
+    });
+  }
 </script>
