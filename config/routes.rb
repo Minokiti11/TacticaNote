@@ -43,7 +43,7 @@ Rails.application.routes.draw do
 
   resources :summaries, only: [:create]
 
-  resources :timestamps, only: [:create]
+  resources :timestamps
 
   get 'search_notes', to: 'notes#search'
 

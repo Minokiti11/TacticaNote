@@ -8,6 +8,15 @@ class TimestampsController < ApplicationController
         end
     end
 
+    def destroy
+        @timestamp = Timestamp.find(params[:id])
+        if @timestamp.destroy
+            redirect_to video_path(@timestamp.video_id)
+        else
+            flash[:alert] = "タイムスタンプを削除できませんでした。ネットワーク接続を確認して再度お試しください。"
+        end
+    end
+
     private
     def timestamp_params
         params.require(:timestamp).permit(:description, :time_s, :video_id)

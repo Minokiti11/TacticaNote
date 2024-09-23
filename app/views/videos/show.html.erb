@@ -137,10 +137,15 @@
             <li>
               <div class="card timestamp-card">
                 <div class="card-body">
-                  <a href="#" class="timestamp-link" data-turbo="false" onclick="jumpTo(<%= timestamp.time_s %>)">
-                    <span class="timestamp-description"><%= timestamp.description %></span>
-                    <span class="timestamp-time"><%= "#{(timestamp.time_s / 60).to_i}:#{(timestamp.time_s % 60).to_i}" %></span>
-                  </a>
+                  <div class="d-flex align-items-center">
+                    <a href="#" class="timestamp-link" data-turbo="false" onclick="jumpTo(<%= timestamp.time_s %>)">
+                      <span class="timestamp-description"><%= timestamp.description %></span>
+                      <span class="timestamp-time"><%= "#{(timestamp.time_s / 60).to_i}:#{(timestamp.time_s % 60).to_i}" %></span>
+                    </a>
+                    <%= button_to timestamp_path(timestamp, video_id: @video.id), "data-turbo": false, method: :delete, class: "btn btn-link p-0 ml-2", onclick: "return confirm('本当に削除しますか？');" do %>
+                      <i class="fas fa-trash-alt" style="color: black; font-size: 1.0em;"></i>
+                    <% end %>
+                  </div>
                 </div>
               </div>
             </li>
@@ -210,10 +215,15 @@
           <li>
             <div class="card timestamp-card">
               <div class="card-body">
-                <a href="#" class="timestamp-link" data-turbo="false" onclick="jumpTo(<%= timestamp.time_s %>)">
-                  <span class="timestamp-description"><%= timestamp.description %></span>
-                  <span class="timestamp-time"><%= "#{(timestamp.time_s / 60).to_i}:#{(timestamp.time_s % 60).to_i}" %></span>
-                </a>
+                <div class="d-flex align-items-center">
+                  <a href="#" class="timestamp-link" data-turbo="false" onclick="jumpTo(<%= timestamp.time_s %>)">
+                    <span class="timestamp-description"><%= timestamp.description %></span>
+                    <span class="timestamp-time"><%= "#{(timestamp.time_s / 60).to_i}:#{(timestamp.time_s % 60).to_i}" %></span>
+                  </a>
+                  <%= button_to timestamp_path(timestamp), "data-turbo": false, method: :delete, class: "btn btn-link p-0 ml-2", onclick: "return confirm('本当に削除しますか？');" do %>
+                    <i class="fas fa-trash-alt" style="color: black; font-size: 1.0em;"></i>
+                  <% end %>
+                </div>
               </div>
             </div>
           </li>
