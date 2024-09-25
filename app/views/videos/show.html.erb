@@ -121,9 +121,12 @@
                       <span class="timestamp-description"><%= timestamp.description %></span>
                       <span class="timestamp-time"><%= "#{(timestamp.time_s / 60).to_i}:#{(timestamp.time_s % 60).to_i}" %></span>
                     </a>
-                    <%= button_to timestamp_path(timestamp), "data-turbo": false, method: :delete, class: "btn btn-link p-0 ml-2", onclick: "console.log('passed.');" do %>
+                    <%= button_to timestamp_path(timestamp), "data-turbo": false, method: :delete, class: "btn btn-link p-0 ml-2" do %>
                       <i class="fas fa-trash-alt" style="color: black; font-size: 1.0em;"></i>
                     <% end %>
+                    <div class="btn update-modal-open" data-timestamp-name = '<%= timestamp.description %>' data-timestamp-minutes = '<%= (timestamp.time_s / 60).to_i %>' data-timestamp-seconds = '<%= (timestamp.time_s % 60).to_i %>'>
+                      <i class="fas fa-edit" style="color: black; font-size: 1.0em;"></i>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -178,9 +181,12 @@
                     <span class="timestamp-description"><%= timestamp.description %></span>
                     <span class="timestamp-time"><%= "#{(timestamp.time_s / 60).to_i}:#{(timestamp.time_s % 60).to_i}" %></span>
                   </a>
-                  <%= button_to timestamp_path(timestamp), "data-turbo": false, method: :delete, class: "btn btn-link p-0 ml-2",onclick: "console.log('passed.');" do %>
+                  <%= button_to timestamp_path(timestamp), "data-turbo": false, method: :delete, class: "btn btn-link p-0 ml-2", onclick: "console.log('passed.');" do %>
                     <i class="fas fa-trash-alt" style="color: black; font-size: 1.0em;"></i>
                   <% end %>
+                  <div class="btn update-modal-open" data-timestamp-name = '<%= timestamp.description %>' data-timestamp-minutes = '<%= (timestamp.time_s / 60).to_i %>' data-timestamp-seconds = '<%= (timestamp.time_s % 60).to_i %>'>
+                    <i class="fas fa-edit" style="color: black; font-size: 1.0em;"></i>
+                  </div>
                 </div>
               </div>
             </div>
@@ -208,7 +214,7 @@
           <input type="number" name="timestamp_seconds" id="timestamp_seconds" placeholder="秒" min="0" max="59" style="width: 60px;">
         </div>
       </p>
-      <%= link_to '作成', '#', "data-turbo": false, id: "create-note-btn",class: "btn btn btn-outline-light", style: "margin-top: 10px; border-width: 2px; border-radius: 0;", onclick: "addTimestamp(#{@video.id})" %>
+      <%= link_to '作成', '#', "data-turbo": false, id: "create-timestamp-btn",class: "btn btn btn-outline-light", style: "margin-top: 10px; border-width: 2px; border-radius: 0;", onclick: "addTimestamp(#{@video.id})" %>
     </div>
   </div>
 </div>
@@ -302,12 +308,24 @@
   $(function(){
     // 変数に要素を入れる
     var open = $('.modal-open'),
+      update_open = $('.update-modal-open'),
       close = $('.modal-close'),
       container = $('.modal-container');
 
-    //開くボタンをクリックしたらモーダルを表示る
-    open.on('click',function(){	
+    //開くボタンをクリックしたらモーダルを表示する
+    open.on('click', function() {	
       container.addClass('active');
+      return false;
+    });
+
+    update_open.on('click', function() {
+      container.addClass('active');
+      // タイムスタンプの値を設定
+      $('#timestamp_name').val($(this).data('timestamp-name'));
+      $('#timestamp_minutes').val(parseInt($(this).data('timestamp-minutes')));
+      $('#timestamp_seconds').val(parseInt($(this).data('timestamp-seconds')));
+
+      $('#create-timestamp-btn').text('更新');
       return false;
     });
 
@@ -333,6 +351,48 @@
     console.log(video_id);
 
     fetch('/timestamps', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+      },
+      body: JSON.stringify({
+        timestamp: { 
+          description: name,
+          time_s: totalSeconds,
+          video_id: video_id
+        }
+      })
+    })
+    .then(response => {
+      if (response.ok) {
+        location.reload();
+      }
+    })
+    .catch(error => {
+      console.error('エラーが発生しました:', error);
+    });
+  }
+
+  // タイムスタンプの更新用のモーダルを開くボタン
+  function open_update_timestamp_modal(timestamp_name, timestamp_minutes, timestamp_seconds) {
+    var container = $('.modal-container');
+    container.addClass('active');
+    console.log(container.attr('class'));
+
+
+    return false;
+  };
+
+  //タイムスタンプを更新するボタン
+  function updateTimestamp(timestamp_id, video_id) {
+    const name = document.getElementById('timestamp_name').value;
+    const minutes = parseInt(document.getElementById('timestamp_minutes').value) || 0;
+    const seconds = parseInt(document.getElementById('timestamp_seconds').value) || 0;
+    const totalSeconds = minutes * 60 + seconds;
+    console.log(video_id);
+
+    fetch(`/timestamps/${timestamp_id}/update`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -8,6 +8,19 @@ class TimestampsController < ApplicationController
         end
     end
 
+    def edit
+        @timestamp = Timestamp.find(params[:id])
+    end
+
+    def update
+        @timestamp = Timestamp.find(params[:id])
+        if @timestamp.update(timestamp_params)
+            redirect_to video_path(@timestamp.video_id)
+        else
+            render "edit"
+        end
+    end
+
     def destroy
         @timestamp = Timestamp.find(params[:id])
         if @timestamp.destroy
