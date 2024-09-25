@@ -238,6 +238,11 @@
   });
   var video_el = document.getElementById("video");
 
+  player.on('error', function() {
+    const error = player.error();
+    alert('セッションが切断されました。リロードしてみてください。');
+  });
+
   // videojsのreadyイベントを使用して、メタデータがロードされたときの処理を設定
   player.ready(function() {
     var self = this;
