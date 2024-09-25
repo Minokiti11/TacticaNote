@@ -43,7 +43,11 @@ Rails.application.routes.draw do
 
   resources :summaries, only: [:create]
 
-  resources :timestamps
+  resources :timestamps, only: [:create, :update, :destroy] do
+    member do
+      post 'update'
+    end
+  end
 
   get 'search_notes', to: 'notes#search'
 

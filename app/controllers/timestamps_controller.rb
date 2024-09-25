@@ -14,10 +14,13 @@ class TimestampsController < ApplicationController
 
     def update
         @timestamp = Timestamp.find(params[:id])
+        redirect_path = params[:timestamp][:redirect_path]
+        p "Redirecting to: #{redirect_path}"
+
         if @timestamp.update(timestamp_params)
-            redirect_to video_path(@timestamp.video_id)
+            redirect_to params[:timestamp][:redirect_path], notice: 'Timestamp was successfully updated.', allow_other_host: true
         else
-            render "edit"
+            redirect_to params[:timestamp][:redirect_path], allow_other_host: true
         end
     end
 

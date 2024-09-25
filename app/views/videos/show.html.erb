@@ -95,7 +95,7 @@
 <div class="container-wrapper">
   <div id="container" class="px-3 mt-5">
     <% if @video.video.attached? %>
-      <video class="video-js vjs-big-play-centered" preload="metadata" controls playsinline id="video">
+      <video class="video-js vjs-big-play-centered" preload="metadata" controls playsinline id="video" data-video-id="<%= @video_id%>">
         <source src="<%= rails_blob_path(@video.video) %>" type="video/mp4">
       </video>
       <h3 style="margin-top: 15px;">
@@ -124,7 +124,7 @@
                     <%= button_to timestamp_path(timestamp), "data-turbo": false, method: :delete, class: "btn btn-link p-0 ml-2" do %>
                       <i class="fas fa-trash-alt" style="color: black; font-size: 1.0em;"></i>
                     <% end %>
-                    <div class="btn update-modal-open" data-timestamp-name = '<%= timestamp.description %>' data-timestamp-minutes = '<%= (timestamp.time_s / 60).to_i %>' data-timestamp-seconds = '<%= (timestamp.time_s % 60).to_i %>'>
+                    <div class="btn update-modal-open" data-timestamp-id = '<%= timestamp.id %>' data-timestamp-name = '<%= timestamp.description %>' data-timestamp-minutes = '<%= (timestamp.time_s / 60).to_i %>' data-timestamp-seconds = '<%= (timestamp.time_s % 60).to_i %>'>
                       <i class="fas fa-edit" style="color: black; font-size: 1.0em;"></i>
                     </div>
                   </div>
@@ -184,7 +184,7 @@
                   <%= button_to timestamp_path(timestamp), "data-turbo": false, method: :delete, class: "btn btn-link p-0 ml-2", onclick: "console.log('passed.');" do %>
                     <i class="fas fa-trash-alt" style="color: black; font-size: 1.0em;"></i>
                   <% end %>
-                  <div class="btn update-modal-open" data-timestamp-name = '<%= timestamp.description %>' data-timestamp-minutes = '<%= (timestamp.time_s / 60).to_i %>' data-timestamp-seconds = '<%= (timestamp.time_s % 60).to_i %>'>
+                  <div class="btn update-modal-open" data-timestamp-id = '<%= timestamp.id %>' data-timestamp-name = '<%= timestamp.description %>' data-timestamp-minutes = '<%= (timestamp.time_s / 60).to_i %>' data-timestamp-seconds = '<%= (timestamp.time_s % 60).to_i %>'>
                     <i class="fas fa-edit" style="color: black; font-size: 1.0em;"></i>
                   </div>
                 </div>
@@ -198,26 +198,29 @@
   <% end %>
 </div>
 
-<!-- モーダル本体 -->
-<div class="modal-container">
-  <div class="modal-body">
-    <!-- 閉じるボタン -->
-    <div class="modal-close" style="color: white;">×</div>
-    <!-- モーダル内のコンテンツ -->
-    <div class="modal-content">
-      <p><span style="font-weight: bold; color: white;">タイムスタンプの名前</span><br>
-        <input type="text" name="timestamp_name" id="timestamp_name" style="margin-top: 10px;">
-      </p>
-      <p><span style="font-weight: bold; color: white;">時間 (分:秒)</span><br>
-        <div style="margin-top: 10px;">
-          <input type="number" name="timestamp_minutes" id="timestamp_minutes" placeholder="分" min="0" style="width: 60px; margin-right: 5px;"><span style="color: white;">:</span>
-          <input type="number" name="timestamp_seconds" id="timestamp_seconds" placeholder="秒" min="0" max="59" style="width: 60px;">
-        </div>
-      </p>
-      <%= link_to '作成', '#', "data-turbo": false, id: "create-timestamp-btn",class: "btn btn btn-outline-light", style: "margin-top: 10px; border-width: 2px; border-radius: 0;", onclick: "addTimestamp(#{@video.id})" %>
+
+<% if @video_id %>
+  <!-- モーダル本体 -->
+  <div class="modal-container">
+    <div class="modal-body">
+      <!-- 閉じるボタン -->
+      <div class="modal-close" style="color: white;">×</div>
+      <!-- モーダル内のコンテンツ -->
+      <div class="modal-content">
+        <p><span style="font-weight: bold; color: white;">タイムスタンプの名前</span><br>
+          <input type="text" name="timestamp_name" id="timestamp_name" style="margin-top: 10px;">
+        </p>
+        <p><span style="font-weight: bold; color: white;">時間 (分:秒)</span><br>
+          <div style="margin-top: 10px;">
+            <input type="number" name="timestamp_minutes" id="timestamp_minutes" placeholder="分" min="0" style="width: 60px; margin-right: 5px;"><span style="color: white;">:</span>
+            <input type="number" name="timestamp_seconds" id="timestamp_seconds" placeholder="秒" min="0" max="59" style="width: 60px;">
+          </div>
+        </p>
+        <%= link_to '作成', '#', "data-turbo": false, id: "create-timestamp-btn", class: "btn btn btn-outline-light", style: "margin-top: 10px; border-width: 2px; border-radius: 0;", onclick: "addTimestamp(#{@video.id})" %>
+      </div>
     </div>
   </div>
-</div>
+<% end %>
 
 <script>
   const player = videojs('video', {
@@ -319,14 +322,15 @@
     });
 
     update_open.on('click', function() {
-      container.addClass('active');
-      // タイムスタンプの値を設定
-      $('#timestamp_name').val($(this).data('timestamp-name'));
-      $('#timestamp_minutes').val(parseInt($(this).data('timestamp-minutes')));
-      $('#timestamp_seconds').val(parseInt($(this).data('timestamp-seconds')));
+        container.addClass('active');
+        // タイムスタンプの値を設定
+        $('#timestamp_name').val($(this).data('timestamp-name'));
+        $('#timestamp_minutes').val(parseInt($(this).data('timestamp-minutes')));
+        $('#timestamp_seconds').val(parseInt($(this).data('timestamp-seconds')));
 
-      $('#create-timestamp-btn').text('更新');
-      return false;
+        $('#create-timestamp-btn').text('更新');
+        $('#create-timestamp-btn').attr('onclick', `updateTimestamp(${parseInt($(this).data('timestamp-id'))}, ${parseInt(video_el.getAttribute('data-video-id'))}, "/notes/new?note_for=match&video_id=${parseInt(video_el.getAttribute('data-video-id'))}&with_video=true")`);
+        return false;
     });
 
     //閉じるボタンをクリックしたらモーダルを閉じる
@@ -376,43 +380,44 @@
 
   // タイムスタンプの更新用のモーダルを開くボタン
   function open_update_timestamp_modal(timestamp_name, timestamp_minutes, timestamp_seconds) {
-    var container = $('.modal-container');
-    container.addClass('active');
-    console.log(container.attr('class'));
+      var container = $('.modal-container');
+      container.addClass('active');
+      console.log(container.attr('class'));
 
 
-    return false;
+      return false;
   };
 
   //タイムスタンプを更新するボタン
-  function updateTimestamp(timestamp_id, video_id) {
-    const name = document.getElementById('timestamp_name').value;
-    const minutes = parseInt(document.getElementById('timestamp_minutes').value) || 0;
-    const seconds = parseInt(document.getElementById('timestamp_seconds').value) || 0;
-    const totalSeconds = minutes * 60 + seconds;
-    console.log(video_id);
+  function updateTimestamp(timestamp_id, video_id, redirect_path) {
+      const name = document.getElementById('timestamp_name').value;
+      const minutes = parseInt(document.getElementById('timestamp_minutes').value) || 0;
+      const seconds = parseInt(document.getElementById('timestamp_seconds').value) || 0;
+      const totalSeconds = minutes * 60 + seconds;
+      console.log(video_id);
 
-    fetch(`/timestamps/${timestamp_id}/update`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
-      },
-      body: JSON.stringify({
-        timestamp: { 
-          description: name,
-          time_s: totalSeconds,
-          video_id: video_id
-        }
+      fetch(`/timestamps/${timestamp_id}/update`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+          },
+          body: JSON.stringify({
+              timestamp: { 
+              description: name,
+              time_s: totalSeconds,
+              video_id: video_id,
+              redirect_path: redirect_path
+              }
+          })
       })
-    })
-    .then(response => {
-      if (response.ok) {
-        location.reload();
-      }
-    })
-    .catch(error => {
-      console.error('エラーが発生しました:', error);
-    });
+      .then(response => {
+          if (response.ok) {
+              location.reload();
+          }
+      })
+      .catch(error => {
+          console.error('エラーが発生しました:', error);
+      });
   }
 </script>
