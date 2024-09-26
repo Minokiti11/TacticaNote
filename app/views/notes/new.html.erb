@@ -104,6 +104,7 @@
     <% end %>
     <div class="container-wrapper">
         <div id = "container" class="px-3 mt-3">
+            <% video = nil %>
             <% if @with_video && @video_id %>
                 <% video = Video.find_by(id: @video_id)%>
                 <video class="video-js vjs-big-play-centered" preload="metadata" controls playsinline id="video" data-video-id="<%= @video_id%>">
@@ -188,8 +189,10 @@
                 <label id="title" for="note_title" class="form-label">タイトル</label>
                 <% if params[:note_for] == "practice" %>
                     <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', value: "[#{Date.today}] 練習の振り返り", placeholder: "例：「#{Date.today}の振り返り」)", style: "padding: 10px;" %>
-                <% else %>
+                <% elsif video %>
                     <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', value: "#{video.title}の振り返り", style: "padding: 10px;" %>
+                <% else %>
+                    <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', style: "padding: 10px;" %>
                 <% end %>
             </div>
 
@@ -266,7 +269,7 @@
             </div>
             <br />
         </div>
-        <% if !request.env['HTTP_USER_AGENT'].include?('Mobile') %>
+        <% if !request.env['HTTP_USER_AGENT'].include?('Mobile') && video %>
             <!-- タイムスタンプリスト -->
             <div id="timestamp-list" class="for-pc mt-3" style="margin-top: 10px;">
             <div class="d-flex justify-content-between align-items-center" style="margin-right: 10px;">
