@@ -184,6 +184,8 @@ class NotesController < ApplicationController
         @note = Note.find(params[:id])
         if @note.destroy
             redirect_to group_path(@note.group)
+        else
+            flash[:alert] = "ノートの削除に失敗しました。ノートの作成者があなたであることを確認してください。"
         end
     end
 
