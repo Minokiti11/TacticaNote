@@ -144,15 +144,18 @@ class NotesController < ApplicationController
         elsif session[:current_group_id]
             @note.group_id = session[:current_group_id]
         end
+
         @note.note_type = "good_bad_next_discuss"
         if @@with_video
             @note.video_id = @@video_id
         end
+
         if @@note_for == "match"
             @note.note_for = "match"
         elsif @@note_for == "practice"
             @note.note_for = "practice"
         end
+        
         if @note.save
             redirect_to @note
         else

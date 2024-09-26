@@ -92,6 +92,16 @@
     }
 </style>
 <%= form_with model: @note, local: true, html: {class: "needs-validation", novalidate: true, params: { group_id: params[:group_id] } } do |form| %>
+    <% if @note.errors.any? %>
+        <div id="error_explanation">
+            <h2><%= pluralize(@note.errors.count, "error") %> prohibited this note from being saved:</h2>
+            <ul>
+                <% @note.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                <% end %>
+            </ul>
+        </div>
+    <% end %>
     <div class="container-wrapper">
         <div id = "container" class="px-3 mt-3">
             <% if @with_video && @video_id %>
