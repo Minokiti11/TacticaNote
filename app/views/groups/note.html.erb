@@ -18,7 +18,7 @@
       <%= turbo_stream_from "index_of_notes" %>
 
       <div class="list-group" id="notes-list">
-        <% @notes.reverse.each do |note| %>
+        <% @notes.each do |note| %>
           <%= link_to note_path(note), class: "list-group-item list-group-item-action p-3 border-0 mb-3 rounded shadow-sm" , "data-turbo": false do %>
             <div class="d-flex w-100 justify-content-between align-items-center">
               <h5 class="mb-1 text-dark"><%= note.title %></h5>
