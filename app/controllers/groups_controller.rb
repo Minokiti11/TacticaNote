@@ -120,7 +120,7 @@ class GroupsController < ApplicationController
 
   def note
     @group = Group.find(params[:group_id])
-    @notes = @group.notes
+    @notes = @group.notes.order(created_at: :desc)
     I18n.locale = :ja
   end
 
