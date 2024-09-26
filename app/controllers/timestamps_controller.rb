@@ -15,12 +15,12 @@ class TimestampsController < ApplicationController
     def update
         @timestamp = Timestamp.find(params[:id])
         redirect_path = params[:timestamp][:redirect_path]
-        p "Redirecting to: #{redirect_path}"
 
         if @timestamp.update(timestamp_params)
-            redirect_to params[:timestamp][:redirect_path], notice: 'Timestamp was successfully updated.', allow_other_host: true
+            redirect_to redirect_path, notice: 'Timestamp was successfully updated.', allow_other_host: true
         else
-            redirect_to params[:timestamp][:redirect_path], allow_other_host: true
+            redirect_to redirect_path, allow_other_host: true
+            flash[:alert] = 'タイムスタンプの更新に失敗しました'
         end
     end
 

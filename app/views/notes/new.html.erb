@@ -91,7 +91,7 @@
         }
     }
 </style>
-<%= form_with model: @note, local: true, html: {class: "needs-validation", novalidate: true} do |form| %>
+<%= form_with model: @note, local: true, html: {class: "needs-validation", novalidate: true, params: { group_id: params[:group_id] } } do |form| %>
     <div class="container-wrapper">
         <div id = "container" class="px-3 mt-3">
             <% if @with_video && @video_id %>
@@ -258,7 +258,7 @@
 
             <!-- 送信ボタン -->
             <div class="form-group">
-                <%= form.button "作成", type: 'button', onclick: 'submit();', class: 'btn btn-outline-primary', style: "border-radius: 1;", params: { group_id: params[:group_id] } %>
+                <%= form.button "作成", type: 'submit', class: 'btn btn-outline-primary', style: "border-radius: 1;" %>
             </div>
             <br />
         </div>
