@@ -294,7 +294,7 @@ select#practice-select {
 
               <div class="video-index" id="video-index" style="margin-bottom: 10px;">
                 <div class="list-group">
-                  <% @videos.each_with_index do |video, index| %>
+                  <% @videos.order(created_at: :desc).each do |video| %>
                     <div class="list-group-item list-group-item-action" style="color: white; background-color: #202030;" data-video-id='<%= video.id %>' onclick="selectVideo(this)"><%= video.title %></div>
                   <% end %>
                 </div>
