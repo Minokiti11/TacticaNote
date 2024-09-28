@@ -248,12 +248,13 @@
             <div class="form-group" id="div_discuss">
                 <label for="note_discuss" class="form-label">チームで話し合いたいこと・確認したいこと</label>
                 <% if params[:note_for] == "practice" %>
-                    <%= form.rich_text_area :discuss, id: 'note_discuss', placeholder: 'チームで話し合いたいこと・確認したいこと(例：練習時間が長い, )
+                    <%= form.rich_text_area :discuss, id: 'note_discuss', placeholder: 'チームで話し合いたいこと・確認したいこと(例：練習時間が長い)
                     @someoneのようにしてチームのメンバーをメンションできます。', style: "height: 100px;", data: { controller: "mentions", mentions_target: "field" } %>
                 <% else %>
                     <%= form.rich_text_area :discuss, id: 'note_discuss', placeholder: 'ミーティングなどでチームで話し合いたいこと・確認したいこと
                     @someoneのようにしてチームのメンバーをメンションできます。', style: "height: 100px;", data: { controller: "mentions", mentions_target: "field" } %>
                 <% end %>
+
                 <div id="links">
 
                 </div>
@@ -450,6 +451,29 @@
 
         function jumpTo(time) {
             player.currentTime(time);
+        }
+
+        document.addEventListener("trix-initialize", function(event) {
+            console.log("passed.");
+            const buttonHTML = '<button type="button" class="trix-button" onclick="insertCurrentTime()" title="Insert Current Time" tabindex="-1" style="width: 3.0em;"><i class="fas fa-clock" style="color: black;"></i></button>';
+            event.target.toolbarElement.querySelector(".trix-button-group--file-tools").insertAdjacentHTML("beforeend", buttonHTML);
+        });
+
+        document.addEventListener("trix-action-invoke", function(event) {
+            if (event.actionName === "insertCurrentTime") {
+                insertCurrentTime();
+            }
+        });
+
+        function insertCurrentTime() {
+            const player = videojs('video');
+            const currentTime = player.currentTime();
+            const minutes = Math.floor(currentTime / 60);
+            const seconds = Math.floor(currentTime % 60);
+            const timeString = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            const discussField = document.getElementById('note_discuss');
+            const trixEditor = discussField.editor;
+            trixEditor.insertString(` ${timeString}`);
         }
     </script>
 <% end %>
