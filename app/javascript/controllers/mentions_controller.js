@@ -1,6 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 import Tribute from "tribute"
-import Trix from "trix"
+import "@rails/actiontext"
+import * as Trix from "trix"
 
 export default class extends Controller {
     static targets = [ "field" ]

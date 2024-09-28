@@ -28,6 +28,9 @@ class ApplicationController < ActionController::Base
     private
 
     def set_current_group
+        if params[:controller] == 'groups' && params[:action] == 'show'
+            session[:current_group_id] = params[:id]
+        end
         if params[:group_id]
             session[:current_group_id] = params[:group_id]
         end
