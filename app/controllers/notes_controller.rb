@@ -155,7 +155,7 @@ class NotesController < ApplicationController
         elsif @@note_for == "practice"
             @note.note_for = "practice"
         end
-        
+
         if @note.save
             redirect_to @note
         else
@@ -170,8 +170,11 @@ class NotesController < ApplicationController
     def edit
         @note = Note.find(params[:id])
         @@with_video = params[:with_video]
-        @with_video = params[:with_video]
-        @@note_for = params[:note_for]
+        if @@with_video
+            @with_video = params[:with_video]
+            @@note_for = params[:note_for]
+            @video_id = params[:video_id]
+        end
     end
 
     def update

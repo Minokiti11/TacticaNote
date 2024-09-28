@@ -105,7 +105,7 @@
     <div class="container-wrapper">
         <div id = "container" class="px-3 mt-3">
             <% video = nil %>
-            <% if @with_video && @video_id %>
+            <% if @with_video == "true" && @video_id %>
                 <% video = Video.find_by(id: @video_id)%>
                 <video class="video-js vjs-big-play-centered" preload="metadata" controls playsinline id="video" data-video-id="<%= @video_id%>">
                     <source src="<%= rails_blob_path(video.video) %>" type="video/mp4">
@@ -198,11 +198,14 @@
 
 
             <!-- 上手くいった点の入力フォーム -->
-            <div class="form-group" id="div_good" data-group-id="<%= params[:group_id]%>">
+            <div class="form-group" id="good" data-group-id="<%= params[:group_id]%>">
                 <label for="note_good" class="form-label">上手くいったこと</label>
-                <%# <%= form.rich_text_area :good, class: 'mb-3', id: 'note_good', placeholder: '上手くいったことを記入'%>
-                <%= form.rich_text_area :good, class: 'form-control mb-3', id: 'note_good', placeholder: '上手くいったことを記入
-    (〇〇:〇〇のようにして、動画の指定された秒数を再生できます。　例：4:35, 07:56)', style: "padding: 10px; max-height: 400px; height: 100px;" %>
+                <% if @with_video == "true" %>
+                    <% placeholder_text = '上手くいったことを記入 (🕓アイコンを押して、動画の現在の時間を入力できます。)' %>
+                <% else %>
+                    <% placeholder_text = '上手くいったことを記入' %>
+                <% end %>
+                <%= form.rich_text_area :good, class: 'form-control mb-3', id: 'note_good', placeholder: placeholder_text, style: "padding: 10px; max-height: 400px; height: 100px;" %>
             </div>
             <div id="notes_good_rate">
             </div><br />
@@ -216,10 +219,14 @@
             <div id="spinner_good"></div>
             
             <!-- 上手くいかなかった点の入力フォーム -->
-            <div class="form-group">
+            <div class="form-group" id="bad">
                 <label for="note_bad" class="form-label">上手くいかなかったこと</label>
-                <%= form.rich_text_area :bad, class: 'form-control mb-3', id: 'note_bad', placeholder: '上手くいかなかったことを記入
-    (〇〇:〇〇のようにして、動画の指定された秒数を再生できます。　例：4:35, 07:56)', style: "padding: 10px; max-height: 400px; height: 100px;" %>
+                <% if @with_video == "true" %>
+                    <% placeholder_text = '上手くいかなかったことを記入 (🕓アイコンを押して、動画の現在の時間を入力できます。)' %>
+                <% else %>
+                    <% placeholder_text = '上手くいかなかったことを記入' %>
+                <% end %>
+                <%= form.rich_text_area :bad, class: 'form-control mb-3', id: 'note_bad', placeholder: placeholder_text, style: "padding: 10px; max-height: 400px; height: 100px;" %>
             </div>
             <div id="notes_bad_rate">
             </div><br />
@@ -229,10 +236,14 @@
             <div id="spinner_bad"></div>
 
             <!-- 次のステップの入力フォーム -->
-            <div class="form-group" id="div_next">
+            <div class="form-group" id="next">
                 <label for="note_next" class="form-label">次に意識すること・次に向けて取り組むこと</label>
-                <%= form.rich_text_area :next, class: 'form-control mb-3', id: 'note_next', placeholder: '次に向けて取り組むことを記入
-    (〇〇:〇〇のようにして、動画の指定された秒数を再生できます。　例：4:35, 07:56)', style: "padding: 10px; max-height: 400px; height: 100px;" %>
+                <% if @with_video == "true" %>
+                    <% placeholder_text = '次に向けて取り組むことを記入 (🕓アイコンを押して、動画の現在の時間を入力できます。)' %>
+                <% else %>
+                    <% placeholder_text = '次に向けて取り組むことを記入' %>
+                <% end %>
+                <%= form.rich_text_area :next, class: 'form-control mb-3', id: 'note_next', placeholder: placeholder_text, style: "padding: 10px; max-height: 400px; height: 100px;" %>
                 <div id="links">
 
                 </div>
@@ -245,7 +256,7 @@
             <div id="spinner_next"></div>
 
             <!-- 話し合いたいこと・確認したいことの入力フォーム -->
-            <div class="form-group" id="div_discuss">
+            <div class="form-group" id="discuss">
                 <label for="note_discuss" class="form-label">チームで話し合いたいこと・確認したいこと</label>
                 <% if params[:note_for] == "practice" %>
                     <%= form.rich_text_area :discuss, id: 'note_discuss', placeholder: 'チームで話し合いたいこと・確認したいこと(例：練習時間が長い)
@@ -266,7 +277,7 @@
 
             <!-- 送信ボタン -->
             <div class="form-group">
-                <%= form.button "作成", type: 'submit', class: 'btn btn-outline-primary', style: "border-radius: 1;" %>
+                <%= form.button "作成", type: 'submit', "data-turbo": false, class: 'btn btn-outline-primary', style: "border-radius: 1;" %>
             </div>
             <br />
         </div>
@@ -454,25 +465,38 @@
         }
 
         document.addEventListener("trix-initialize", function(event) {
-            console.log("passed.");
-            const buttonHTML = '<button type="button" class="trix-button" onclick="insertCurrentTime()" title="Insert Current Time" tabindex="-1" style="font-size: 100%; width: 3.0em;"><i class="fas fa-clock" style="color: black;"></i></button>';
+            const buttonHTML = '<button type="button" class="trix-button" onclick="insertCurrentTime(this.closest(\'.form-group\').id);" title="動画の現在の時間を挿入できます。" tabindex="-1" style="font-size: 100%; width: 3.0em;"><i class="fas fa-clock" style="color: black;"></i></button>';
             event.target.toolbarElement.querySelector(".trix-button-group--file-tools").insertAdjacentHTML("beforeend", buttonHTML);
         });
 
-        document.addEventListener("trix-action-invoke", function(event) {
-            if (event.actionName === "insertCurrentTime") {
-                insertCurrentTime();
-            }
-        });
-
-        function insertCurrentTime() {
+        function insertCurrentTime(section) {
             const player = videojs('video');
             const currentTime = player.currentTime();
             const minutes = Math.floor(currentTime / 60);
             const seconds = Math.floor(currentTime % 60);
             const timeString = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            const goodField = document.getElementById('note_good');
+            const badField = document.getElementById('note_bad');
+            const nextField = document.getElementById('note_next');
             const discussField = document.getElementById('note_discuss');
-            const trixEditor = discussField.editor;
+            let field;
+            switch (section) {
+                case "good":
+                    field = goodField;
+                    break;
+                case "bad":
+                    field = badField;
+                    break;
+                case "next":
+                    field = nextField;
+                    break;
+                case "discuss":
+                    field = discussField;
+                    break;
+                default:
+                    field = discussField;
+            }
+            const trixEditor = field.editor;
             trixEditor.insertString(` ${timeString}`);
         }
     </script>

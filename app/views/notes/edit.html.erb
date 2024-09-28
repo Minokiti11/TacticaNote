@@ -1,109 +1,304 @@
 <script src="https://vjs.zencdn.net/7.20.2/video.min.js"></script>
 <link href="https://vjs.zencdn.net/7.20.2/video-js.css" rel="stylesheet" />
 <style>
-    #video {
-        width: 499px;
-        height: 281px;
+    @media (max-width: 1100px) {
+        .vjs-remaining-time {
+            display: none;
+        }
+
+        .for-pc {
+            display: none;
+        }
     }
-    @media screen and (max-width: 767px) {
-        /* ここに横幅が767pxより小さい時に発動するスタイルを記述 */
-        #video {
-            width: 100%;
-            height: 100%;
-            margin:0 auto;
-            padding-top:56.25%;/*比率調整※16:9の画面幅*/
+    .timestamp-list {
+        display: flex;
+        overflow-x: auto; /* 横スクロールを有効にする */
+        white-space: nowrap;
+        flex-direction: column;
+        list-style: none;
+        padding: 0;
+        position: relative; /* タイムラインの線を配置するため */
+        /* margin-left: 20px; */
+    }
+
+    .timestamp-list::before {
+        content: '';
+        position: absolute;
+        left: 10px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #ccc; /* 線の色 */
+    }
+
+    .timestamp-list li {
+        /* flex: 1 1 20%; */
+        box-sizing: border-box; /* パディングとボーダーを含めた幅を計算 */
+        position: relative;
+        margin-bottom: 10px;
+        /* padding-left: 20px; */
+    }
+
+    .timestamp-list li::before {
+        content: '';
+        position: absolute;
+        left: -10px;
+        top: 5px;
+        width: 10px;
+        height: 10px;
+        /* background: #fff;
+        border: 2px solid #343a40;
+        border-radius: 50%; */
+    }
+
+    .timestamp-link {
+        text-decoration: none;
+        color: #343a40;
+        display: flex;
+        flex-direction: column; /* 縦方向に配置 */
+        align-items: flex-start; /* 左揃え */
+        width: 100%; /* 幅を均等にする */
+    }
+
+    .timestamp-card {
+        margin-right: 10px;
+    }
+
+    .timestamp-time {
+        font-weight: bold;
+        margin-top: 5px; /* 説明と時間の間にスペースを追加 */
+    }
+
+    .timestamp-description {
+        flex-grow: 1;
+    }
+
+    @media (min-width: 1101px) {
+        .container-wrapper {
+            display: flex; /* 横並びにする */
+        }
+
+        #container {
+            flex: 1; /* containerを左に表示 */
+        }
+
+        .timestamp-list {
+            width: 400px; /* timestamp-listの幅を設定 */
+        }
+
+        .for-mobile {
+            display: none;
         }
     }
 </style>
+<%= form_with model: @note, local: true, html: {class: "needs-validation", novalidate: true, params: { group_id: params[:group_id] } } do |form| %>
+    <% if @note.errors.any? %>
+        <div id="error_explanation">
+            <h2><%= pluralize(@note.errors.count, "error") %> prohibited this note from being saved:</h2>
+            <ul>
+                <% @note.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                <% end %>
+            </ul>
+        </div>
+    <% end %>
+    <div class="container-wrapper">
+        <div id = "container" class="px-3 mt-3">
+            <% video = nil %>
+            <% if @with_video && @video_id %>
+                <% video = Video.find_by(id: @video_id)%>
+                <video class="video-js vjs-big-play-centered" preload="metadata" controls playsinline id="video" data-video-id="<%= @video_id%>">
+                    <source src="<%= rails_blob_path(video.video) %>" type="video/mp4">
+                </video>
 
-<%= form_with model: @note, local: true, html: {class: "needs-validation", novalidate: true} do |form| %>
-    <div class="container mt-3">
-        <% if @with_video == "true" %>
-            <% video = Video.find_by(id: @note.video_id)%>
-            <video class="video-js vjs-big-play-centered" preload="metadata" controls playsinline id="video">
-                <source src="<%= rails_blob_path(video.video) %>" type="video/mp4">
-            </video>
+                <div class="h3" style="margin-top: 40px; margin-bottom: 50px; font-weight: 700;">
+                    <%= video.title %>  : ノートの編集
+                </div>
 
-            <div class="h3" style="margin-top: 40px; margin-bottom: 50px; font-weight: 700;">
-                <%= video.title %>  : ノートを編集
+                <!-- タイムスタンプリスト -->
+                <div id="timestamp-list" class="for-mobile" style="margin-top: 10px;">
+                    <div class="d-flex justify-content-between align-items-center" style="margin-right: 10px;">
+                    <h5 style="margin-bottom: 20px;">タイムライン</h5>
+                    <%# <button class="modal-open btn btn-dark d-block rounded-circle bg-black" style="margin-bottom: 20px;">
+                        <i class="fas fa-plus"></i>
+                    </button> %>
+                    </div>
+
+                    <ul class="timestamp-list" style="max-height: 450px; overflow-y">
+                    <% video.timestamps.order(time_s: :asc).each do |timestamp| %>
+                        <li>
+                        <div class="card timestamp-card">
+                            <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <a href="#" class="timestamp-link" data-turbo="false" onclick="jumpTo(<%= timestamp.time_s %>)">
+                                    <span class="timestamp-description"><%= timestamp.description %></span>
+                                    <span class="timestamp-time"><%= "#{(timestamp.time_s / 60).to_i}:#{(timestamp.time_s % 60).to_i}" %></span>
+                                </a>
+                            </div>
+                            </div>
+                        </div>
+                        </li>
+                    <% end %>
+                    </ul>
+                    <hr style="border-top: 1px solid grey; width: 100%; margin-top: 20px; margin-bottom: 20px;">
+                </div>
+            <% else %>
+                <div class="h3" style="margin-top: 40px; margin-bottom: 50px; font-weight: 700;">
+                    ノートの編集
+                </div>
+            <% end %>
+
+            <!--
+            <script src="https://cdn.tailwindcss.com"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+            <div class="flex items-center justify-center" style="margin-top: 30px; margin-bottom: 30px;">
+                <div class="bg-white rounded-lg shadow-lg p-6 w-full lg:w-3/4">
+                    <div class="flex justify-between items-center mb-4">
+                        <h1 class="text-gray-400 text-lg">Add a title—what are you aligning on?</h1>
+                        <span class="text-gray-400">杉村実紀 voted</span>
+                    </div>
+                    <div class="relative mb-4">
+                        <div class="h-2 bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 rounded-full"></div>
+                        <div class="absolute inset-0 flex justify-between items-center px-4">
+                            <div class="h-6 w-1 bg-red-500 rounded-full" style="position: absolute; left: 0;"></div>
+                            <div class="h-6 w-1 bg-gradient-to-r from-red-500 to-yellow-500 rounded-full" style="position: absolute; left: 25%;"></div>
+                            <div class="h-6 w-1 bg-yellow-500 rounded-full" style="position: absolute; left: 50%;"></div>
+                            <div class="h-6 w-1 bg-gradient-to-r from-yellow-500 to-green-500 rounded-full" style="position: absolute; left: 75%;"></div>
+                            <div class="h-6 w-1 bg-green-500 rounded-full" style="position: absolute; right: 0;"></div>
+                        </div>
+                        <div class="absolute inset-0 flex justify-center items-center">
+                            <div class="bg-green-800 text-white rounded-full h-8 w-8 flex items-center justify-center text-sm">実紀</div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-red-500 w-1/4 text-center">Strongly<br>disagree</span>
+                        <span class="text-yellow-500 w-1/2 text-center">Neutral</span>
+                        <span class="text-green-500 w-1/4 text-center">Strongly<br>agree</span>
+                    </div>
+                    <%# <div class="flex justify-center">
+                        <button class="bg-purple-500 text-white py-2 px-4 rounded-full flex items-center">
+                            <i class="fas fa-eye mr-2"></i> Results revealed
+                        </button>
+                    </div> %>
+                </div>
             </div>
-        <% else %>
-            <div class="h3" style="margin-top: 40px; margin-bottom: 50px; font-weight: 700;">
-                ノートを編集
+            -->
+
+            <!-- タイトル入力フォーム -->
+            <div class="form-group">
+                <label id="title" for="note_title" class="form-label">タイトル</label>
+                <% if params[:note_for] == "practice" %>
+                    <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', value: "[#{Date.today}] 練習の振り返り", placeholder: "例：「#{Date.today}の振り返り」)", style: "padding: 10px;" %>
+                <% elsif video %>
+                    <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', value: "#{video.title}の振り返り", style: "padding: 10px;" %>
+                <% else %>
+                    <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', style: "padding: 10px;" %>
+                <% end %>
+            </div>
+
+
+            <!-- 上手くいった点の入力フォーム -->
+            <div class="form-group" id="good" data-group-id="<%= params[:group_id]%>">
+                <label for="note_good" class="form-label">上手くいったこと</label>
+                <%# <%= form.rich_text_area :good, class: 'mb-3', id: 'note_good', placeholder: '上手くいったことを記入'%>
+                <%= form.rich_text_area :good, class: 'form-control mb-3', id: 'note_good', placeholder: '上手くいったことを記入
+    (🕓アイコンを押して、動画の現在の時間を入力できます。)', style: "padding: 10px; max-height: 400px; height: 100px;" %>
+            </div>
+            <div id="notes_good_rate">
+            </div><br />
+
+            <div id="notes_good">
+                <!-- ここにメッセージがリアルタイムで表示される -->
+            </div><br />
+            <%= turbo_stream_from "rate_user_#{session.id}" %>
+            <%= turbo_stream_from "user_#{session.id}" %>
+            <%= turbo_stream_from "spinner" %>
+            <div id="spinner_good"></div>
+            
+            <!-- 上手くいかなかった点の入力フォーム -->
+            <div class="form-group" id="bad">
+                <label for="note_bad" class="form-label">上手くいかなかったこと</label>
+                <%= form.rich_text_area :bad, class: 'form-control mb-3', id: 'note_bad', placeholder: '上手くいかなかったことを記入
+    (🕓アイコンを押して、動画の現在の時間を入力できます。)', style: "padding: 10px; max-height: 400px; height: 100px;" %>
+            </div>
+            <div id="notes_bad_rate">
+            </div><br />
+            <div id="notes_bad">
+                <!-- ここにメッセージがリアルタイムで表示される -->
+            </div><br />
+            <div id="spinner_bad"></div>
+
+            <!-- 次のステップの入力フォーム -->
+            <div class="form-group" id="next">
+                <label for="note_next" class="form-label">次に意識すること・次に向けて取り組むこと</label>
+                <%= form.rich_text_area :next, class: 'form-control mb-3', id: 'note_next', placeholder: '次に向けて取り組むことを記入
+    (🕓アイコンを押して、動画の現在の時間を入力できます。)', style: "padding: 10px; max-height: 400px; height: 100px;" %>
+                <div id="links">
+
+                </div>
+            </div>
+            <div id="notes_next_rate">
+            </div><br />
+            <div id="notes_next">
+                <!-- ここにメッセージがリアルタイムで表示される -->
+            </div><br />
+            <div id="spinner_next"></div>
+
+            <!-- 話し合いたいこと・確認したいことの入力フォーム -->
+            <div class="form-group" id="discuss">
+                <label for="note_discuss" class="form-label">チームで話し合いたいこと・確認したいこと</label>
+                <% if params[:note_for] == "practice" %>
+                    <%= form.rich_text_area :discuss, id: 'note_discuss', placeholder: 'チームで話し合いたいこと・確認したいこと(例：練習時間が長い)
+                    @someoneのようにしてチームのメンバーをメンションできます。', style: "height: 100px;", data: { controller: "mentions", mentions_target: "field" } %>
+                <% else %>
+                    <%= form.rich_text_area :discuss, id: 'note_discuss', placeholder: 'ミーティングなどでチームで話し合いたいこと・確認したいこと
+                    @someoneのようにしてチームのメンバーをメンションできます。', style: "height: 100px;", data: { controller: "mentions", mentions_target: "field" } %>
+                <% end %>
+
+                <div id="links">
+
+                </div>
+            </div>
+            <div id="notes_discuss">
+                <!-- ここにメッセージがリアルタイムで表示される -->
+            </div><br />
+            <div id="spinner_discuss"></div>
+
+            <!-- 送信ボタン -->
+            <div class="form-group">
+                <%= form.button "更新", type: 'submit', "data-turbo": false, class: 'btn btn-outline-primary', style: "border-radius: 1;" %>
+            </div>
+            <br />
+        </div>
+        <% if !request.env['HTTP_USER_AGENT'].include?('Mobile') && video %>
+            <!-- タイムスタンプリスト -->
+            <div id="timestamp-list" class="for-pc mt-3" style="margin-top: 10px;">
+            <div class="d-flex justify-content-between align-items-center" style="margin-right: 10px;">
+                <h5 style="margin-bottom: 20px;">タイムライン</h5>
+                <%# <button class="modal-open btn btn-dark d-block rounded-circle bg-black" style="margin-bottom: 20px;">
+                    <i class="fas fa-plus"></i>
+                </button> %>
+            </div>
+
+            <ul class="timestamp-list">
+                <% video.timestamps.order(time_s: :asc).each do |timestamp| %>
+                <li>
+                    <div class="card timestamp-card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                        <a href="#" id = "timestamp-link" class="timestamp-link" data-turbo="false" onclick="jumpTo(<%= timestamp.time_s %>)">
+                            <span class="timestamp-description"><%= timestamp.description %></span>
+                            <span class="timestamp-time"><%= "#{(timestamp.time_s / 60).to_i}:#{(timestamp.time_s % 60).to_i}" %></span>
+                        </a>
+                        </div>
+                    </div>
+                    </div>
+                </li>
+                <% end %>
+            </ul>
+            <%# <hr style="border-top: 1px solid grey; width: 100%; margin-top: 20px; margin-bottom: 20px;"> %>
             </div>
         <% end %>
-
-        <!-- タイトル入力フォーム -->
-        <div class="form-group">
-            <label id="title" for="note_title" class="form-label">タイトル</label>
-            <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', placeholder: '例：「vs_〇〇の振り返り」「ビルドアップについて」)', style: "padding: 10px;" %>
-        </div>
-        <!-- 動画のトリミング範囲を指定するフォーム -->
-        <%# <div class="form-group">
-            <label for="note_trim" class="form-label">トリミング範囲</label>
-            <%= form.text_field :trim_range, class: 'form-control mb-3', id:'note_trim_range', placeholder: '動画から切り抜く範囲を指定する（例：1分40秒〜3分50秒 => 1:40~3:50）※何も入力しない場合、切り抜く範囲は指定されず、元の動画全体が読み込まれます。'%>
-        <%# </div> %>
-
-        <!-- 上手くいった点の入力フォーム -->
-        <div class="form-group" id="div_good" data-group-id="<%= params[:group_id]%>">
-            <label for="note_good" class="form-label">上手くいった点</label>
-            <%# <%= form.rich_text_area :good, class: 'mb-3', id: 'note_good', placeholder: '上手くいった点を記入'%>
-            <%= form.text_area :good, class: 'form-control mb-3', id: 'note_good', placeholder: '上手くいった点を記入
-(〇〇:〇〇のようにして、動画の指定された秒数を再生できます。　例：4:35, 07:56)', style: "padding: 10px; max-height: 400px; height: 100px;" %>
-        </div>
-
-        <div id="notes_good">
-            <!-- ここにメッセージがリアルタイムで表示される -->
-        </div><br />
-        <%= turbo_stream_from "user_#{session.id}" %>
-        <%= turbo_stream_from "spinner" %>
-        <div id="spinner_good"></div>
-        
-        
-        <!-- 上手くいかなかった点の入力フォーム -->
-        <div class="form-group">
-            <label for="note_bad" class="form-label">上手くいかなかった点</label>
-            <%= form.text_area :bad, class: 'form-control mb-3', id: 'note_bad', placeholder: '上手くいかなかった点を記入
-(〇〇:〇〇のようにして、動画の指定された秒数を再生できます。　例：4:35, 07:56)', style: "padding: 10px; max-height: 400px; height: 100px;" %>
-        </div>
-        <div id="notes_bad">
-            <!-- ここにメッセージがリアルタイムで表示される -->
-        </div><br />
-        <div id="spinner_bad"></div>
-
-        <!-- 次のステップの入力フォーム -->
-        <div class="form-group" id="div_next">
-            <label for="note_next" class="form-label">次に意識すること・次に向けて取り組むこと</label>
-            <%= form.text_area :next, class: 'form-control mb-3', id: 'note_next', placeholder: '次に向けて取り組むことを記入
-(〇〇:〇〇のようにして、動画の指定された秒数を再生できます。　例：4:35, 07:56)', style: "padding: 10px; max-height: 400px; height: 100px;" %>
-            <div id="links">
-
-            </div>
-        </div>
-        <div id="notes_next">
-            <!-- ここにメッセージがリアルタイムで表示される -->
-        </div><br />
-        <div id="spinner_next"></div>
-
-        <!-- 話し合いたいこと・確認したいことの入力フォーム -->
-        <div class="form-group" id="div_discuss">
-            <label for="note_discuss" class="form-label">チームで話し合いたいこと・確認したいこと</label>
-            <%= form.rich_text_area :discuss, id: 'note_discuss', placeholder: 'ミーティングなどでチームで話し合いたいこと・確認したいこと
-@someoneのようにしてチームのメンバーをメンションできます。', style: "max-height: 400px; height: 100px;", data: { controller: "mentions", mentions_target: "field" } %>
-            <div id="links">
-
-            </div>
-        </div>
-        <div id="notes_discuss">
-            <!-- ここにメッセージがリアルタイムで表示される -->
-        </div><br />
-        <div id="spinner_discuss"></div>
-
-        <!-- 送信ボタン -->
-        <div class="form-group">
-            <%= form.button "更新", type: 'button', onclick: 'submit();', class: 'btn btn-outline-primary', style: "border-radius: 1;" %>
-        </div>
-        <br />
     </div>
 <% end %>
 
@@ -151,10 +346,10 @@
 
     var $input_next = $('#note_next');
 
-    let timer;
+    let id;
     $input_next.on('input', function(event) {
-        clearTimeout(timer);// タイマーストップ
-        timer = setTimeout(fire,8000);// タイマーリセット（8秒）
+        clearTimeout(id);// タイマーストップ
+        id = setTimeout(fire,8000);// タイマーリセット（8秒）
     });
 
     // 実際にnotes_controllerのメソッドを呼ぶ部分
@@ -171,74 +366,127 @@
     };
 </script>
 
-<% if @with_video == "true" %>
+<% if @with_video && @video_id %>
     <script>
-    const player = videojs('video', {
-        autoplay: false, // 自動再生を無効
-        fluid: false, // 動画コンテンツを親要素いっぱいに広げる
-        loop: false, // 繰り返し再生無効
-        controls: true, // コントローラ表示
-        playbackRates: [0.5, 1, 1.3, 1.5], // 再生速度の倍率
-    });
-    var video_el = document.getElementById("video");
+        const player = videojs('video', {
+            autoplay: false, // 自動再生を無効
+            fluid: true, // 動画コンテンツを親要素いっぱいに広げる
+            loop: false, // 繰り返し再生無効
+            controls: true, // コントローラ表示
+            playbackRates: [0.5, 1, 1.3, 1.5], // 再生速度の倍率
+            controlBar: {
+                pictureInPictureToggle: false, // ピクチャーインピクチャーを無効にする
+                fullscreenToggle: true, // 全画面ボタンを有効にする
+                volumePanel: false // 音声バーを無効にする
 
-    // videojsのreadyイベントを使用して、メタデータがロードされたときの処理を設定
-    player.ready(function() {
-        var self = this;
-        self.on('loadedmetadata', () => {
+            }
+        });
+        var video_el = document.getElementById("video");
+
+        // videojsのreadyイベントを使用して、メタデータがロードされたときの処理を設定
+        player.ready(function() {
+            var self = this;
+            self.on('loadedmetadata', () => {
+            console.log('loaded meta data.');
             // コントローラに10秒戻しボタンと10秒送りボタンを追加
             const rewindButton = player.getChild('ControlBar').addChild('button');
             const forwardButton = player.getChild('ControlBar').addChild('button');
             rewindButton.controlText('10秒戻し');
-            forwardButton.controlText('10秒送り');
+            forwardButton.controlText('10秒り');
+
+            rewindButton.el().style.marginRight = '-6px';
+            forwardButton.el().style.marginLeft = '-6px';
 
             // アイコンを設定
-            player.getChild('ControlBar')
-                .el()
-                .insertBefore(
-                    rewindButton.el(),
-                    player.getChild('ControlBar').getChild('pictureInPictureToggle').el()
-                )
-                .innerHTML = `<img src=<%= asset_path 'rewind.png' %> width=20 />`;
+            const controlBar = player.getChild('ControlBar');
+            const fullscreenToggle = controlBar.getChild('fullscreenToggle');
 
-            player.getChild('ControlBar')
-                .el()
-                .insertBefore(
-                    forwardButton.el(),
-                    player.getChild('ControlBar').getChild('pictureInPictureToggle').el()
-                )
-                .innerHTML = `<img src=<%= asset_path 'forward.png' %> width=20 />`;
+            // 挿入位置を決定（PiPボタンが存在しない場合は全画面ボタンの前に挿入）
+            const insertBeforeElement = fullscreenToggle;
+
+            if (insertBeforeElement) {
+                controlBar.el().insertBefore(
+                rewindButton.el(),
+                insertBeforeElement.el()
+                ).innerHTML = `<img src="<%= asset_path 'rewind.png' %>" width="20" />`;
+                
+                controlBar.el().insertBefore(
+                forwardButton.el(),
+                insertBeforeElement.el()
+                ).innerHTML = `<img src="<%= asset_path 'forward.png' %>" width="20" />`;
+            } else {
+                // デフォルトの挿入位置（最後）に追加
+                controlBar.el().appendChild(rewindButton.el()).innerHTML = `<img src="<%= asset_path 'rewind.png' %>" width="20" />`;
+                controlBar.el().appendChild(forwardButton.el()).innerHTML = `<img src="<%= asset_path 'forward.png' %>" width="20" />`;
+            }
 
             // スキップ処理を追加
             rewindButton.el().addEventListener('click', () => {
-                var newTime = this.currentTime() - 10;
-                if (newTime < 0) newTime = 0; //現在時刻が0未満にならないように調整
-                this.currentTime(newTime);
+                var newTime = self.currentTime() - 10;
+                if (newTime < 0) newTime = 0; // 現在時刻が0未満にならないように調整
+                self.currentTime(newTime);
             });
             
             forwardButton.el().addEventListener('click', () => {
-                var newTime = this.currentTime() + 10;
-                var maxTime = this.duration(); // ビデオの長さを取得
-                if (newTime > maxTime) newTime = maxTime; //現在時刻がビデオの長さ以上にならないように調整
-                this.currentTime(newTime);
+                var newTime = self.currentTime() + 10;
+                var maxTime = self.duration(); // ビデオの長さを取得
+                if (newTime > maxTime) newTime = maxTime; // 現在時刻がビデオの長さ以上にならないように調整
+                self.currentTime(newTime);
             });
 
             document.addEventListener('keydown', function (e) {
-                if (player.paused() == false) {
-                    if (e.code == 'ArrowLeft') {
-                        var newTime = self.currentTime() - 10;
-                        if (newTime < 0) newTime = 0; //現在時刻が0未満にならないように調整
-                        self.currentTime(newTime);
-                    } else if (e.code == 'ArrowRight') {
-                        var newTime = self.currentTime() + 10;
-                        var maxTime = self.duration(); // ビデオの長さを取得
-                        if (newTime > maxTime) newTime = maxTime; //現在時刻がビデオの長さ以上にならないように調整
-                        self.currentTime(newTime);
-                    }
+                if (e.code == 'ArrowLeft') {
+                var newTime = self.currentTime() - 10;
+                if (newTime < 0) newTime = 0; // 現在時刻が0未満にならないように調
+                self.currentTime(newTime);
+                } else if (e.code == 'ArrowRight') {
+                var newTime = self.currentTime() + 10;
+                var maxTime = self.duration(); // ビデオの長さを取得
+                if (newTime > maxTime) newTime = maxTime; // 現在時刻がビデオの長さ以上にならないように調整
+                self.currentTime(newTime);
                 }
-
             })
+            });
         });
-    });
+
+        function jumpTo(time) {
+            player.currentTime(time);
+        }
+
+        document.addEventListener("trix-initialize", function(event) {
+            const buttonHTML = '<button type="button" class="trix-button" onclick="insertCurrentTime(this.closest(\'.form-group\').id);" title="動画の現在の時間を挿入できます。" tabindex="-1" style="font-size: 100%; width: 3.0em;"><i class="fas fa-clock" style="color: black;"></i></button>';
+            event.target.toolbarElement.querySelector(".trix-button-group--file-tools").insertAdjacentHTML("beforeend", buttonHTML);
+        });
+
+        function insertCurrentTime(section) {
+            const player = videojs('video');
+            const currentTime = player.currentTime();
+            const minutes = Math.floor(currentTime / 60);
+            const seconds = Math.floor(currentTime % 60);
+            const timeString = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            const goodField = document.getElementById('note_good');
+            const badField = document.getElementById('note_bad');
+            const nextField = document.getElementById('note_next');
+            const discussField = document.getElementById('note_discuss');
+            let field;
+            switch (section) {
+                case "good":
+                    field = goodField;
+                    break;
+                case "bad":
+                    field = badField;
+                    break;
+                case "next":
+                    field = nextField;
+                    break;
+                case "discuss":
+                    field = discussField;
+                    break;
+                default:
+                    field = discussField;
+            }
+            const trixEditor = field.editor;
+            trixEditor.insertString(` ${timeString}`);
+        }
     </script>
 <% end %>

@@ -37,8 +37,14 @@
       <%= @note.title %>
     </div>
     <% if @note.user_id == current_user.id %>
-      <%= link_to edit_note_path(@note, group_id: @note.group_id, with_video: @with_video, note_for: @note.note_for), class: "btn", "data-turbo": false do %>
-        <i class="fas fa-edit" style="color: black; font-size: 1.5em;"></i>
+      <% if @with_video %>
+        <%= link_to edit_note_path(@note, group_id: @note.group_id, with_video: @with_video, video_id: @note.video_id, note_for: @note.note_for), class: "btn", "data-turbo": false do %>
+          <i class="fas fa-edit" style="color: black; font-size: 1.5em;"></i>
+        <% end %>
+      <% else %>
+        <%= link_to edit_note_path(@note, group_id: @note.group_id, with_video: @with_video, note_for: @note.note_for), class: "btn", "data-turbo": false do %>
+          <i class="fas fa-edit" style="color: black; font-size: 1.5em;"></i>
+        <% end %>
       <% end %>
     <% end %>
   </div>
