@@ -58,6 +58,7 @@ class NotesController < ApplicationController
 
     def gpt_api_request_bad
         data = params.require(:data).permit(:value, :group_id)
+        p "data[:value]: ", data[:value]
 
         if data[:value].present?
             same_session_id_responses = Response.where(section_type: "bad", session_id: session.id.to_s)

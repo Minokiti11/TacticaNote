@@ -337,7 +337,7 @@
                 // CSRFトークンをmetaタグから取得して設定
                 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
-            body: JSON.stringify({data: { value: $input_good.innerHTML, group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")) }})
+            body: JSON.stringify({data: { value: event.target.innerHTML, group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")) }})
         });
     });
 
@@ -351,7 +351,7 @@
                 // CSRFトークンをmetaタグから取得して設定
                 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
-            body: JSON.stringify({data: { value: $input_bad.innerHTML, group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")) }})
+            body: JSON.stringify({data: { value: event.target.innerHTML, group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")) }})
         });
     });
 
@@ -372,7 +372,7 @@
                 // CSRFトークンをmetaタグから取得して設定
                 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
-            body: JSON.stringify({data: { value: $input_next.innerHTML, group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")) }})
+            body: JSON.stringify({data: { value: event.target.innerHTML, group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")) }})
         });
     };
 </script>
