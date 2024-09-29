@@ -329,7 +329,7 @@
 
     var $input_good = $('#note_good');
     // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
-    $input_good.on('change', function(event) {
+    $input_good.on('trix-change', function(event) {
         fetch('/notes/gpt_api_request_good', {
             method: 'POST',
             headers: {
@@ -337,13 +337,13 @@
                 // CSRFトークンをmetaタグから取得して設定
                 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
-            body: JSON.stringify({data: { value: $input_good.val(), group_id: parseInt(document.getElementById("div_good").getAttribute("data-group-id")) }})
+            body: JSON.stringify({data: { value: $input_good.innerHTML, group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")) }})
         });
     });
 
     var $input_bad = $('#note_bad');
     // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
-    $input_bad.on('change', function(event) {
+    $input_bad.on('trix-change', function(event) {
         fetch('/notes/gpt_api_request_bad', {
             method: 'POST',
             headers: {
@@ -351,7 +351,7 @@
                 // CSRFトークンをmetaタグから取得して設定
                 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
-            body: JSON.stringify({data: { value: $input_bad.val(), group_id: parseInt(document.getElementById("div_good").getAttribute("data-group-id")) }})
+            body: JSON.stringify({data: { value: $input_bad.innerHTML, group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")) }})
         });
     });
 
@@ -372,7 +372,7 @@
                 // CSRFトークンをmetaタグから取得して設定
                 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
-            body: JSON.stringify({data: { value: $input_next.val(), group_id: parseInt(document.getElementById("div_good").getAttribute("data-group-id")) }})
+            body: JSON.stringify({data: { value: $input_next.innerHTML, group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")) }})
         });
     };
 </script>
