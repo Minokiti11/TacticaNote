@@ -121,7 +121,7 @@ window.onload = function() {
     const trixEditors = document.querySelectorAll('trix-editor');
     trixEditors.forEach(editor => {
       editor.addEventListener('trix-initialize', function() {
-        const minHeight = 35; // エディタの最小の高さを設定
+        const minHeight = 100; // エディタの最小の高さを設定
         editor.style.minHeight = `${minHeight}px`;
         
         // 初期化時に高さを設定
@@ -141,7 +141,7 @@ window.onload = function() {
     const trixEditors = document.querySelectorAll('trix-editor');
     trixEditors.forEach(editor => {
       editor.addEventListener('trix-initialize', function() {
-        const minHeight = 35; // エディタの最小の高さを設定
+        const minHeight = 100; // エディタの最小の高さを設定
         editor.style.minHeight = `${minHeight}px`;
         
         // 初期化時に高さを設定
