@@ -192,7 +192,7 @@
                 <% elsif video %>
                     <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', value: "#{video.title}の振り返り", style: "padding: 10px;" %>
                 <% else %>
-                    <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', style: "padding: 10px;" %>
+                    <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', value: "[#{Date.today}] 試合の振り返り", style: "padding: 10px;" %>
                 <% end %>
             </div>
 
