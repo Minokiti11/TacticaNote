@@ -336,33 +336,56 @@
     $input_good.on('trix-change', function(event) {
         // HTML をマークダウンに変換
         const markdown = turndownService.turndown(event.target.innerHTML);
-        
-        fetch('/notes/gpt_api_request_good', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                // CSRFトークンをmetaタグから取得して設定
-                'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({data: { value: markdown, group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")) }})
-        });
+        // 変更フラグをセット
+        $input_good.data('changed', true);
+    });
+
+    $input_good.on('trix-blur', function() {
+        if ($input_good.data('changed')) {
+            const markdown = turndownService.turndown(this.innerHTML);
+            
+            fetch('/notes/gpt_api_request_good', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // CSRFトークンをmetaタグから取得して設定
+                    'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({data: { value: markdown, group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")) }})
+            }).then(response => {
+                if (response.ok) {
+                    // 成功時の処理があればここに記述
+                    $input_good.data('changed', false);
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
     });
 
     var $input_bad = $('#note_bad');
-    // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
     $input_bad.on('trix-change', function(event) {
         // HTML をマークダウンに変換
         const markdown = turndownService.turndown(event.target.innerHTML);
-        
-        fetch('/notes/gpt_api_request_bad', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                // CSRFトークンをmetaタグから取得して設定
-                'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({data: { value: markdown, group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")) }})
-        });
+        // 変更フラグをセット
+        $input_bad.data('changed', true);
+    });
+    // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
+    $input_bad.on('trix-blur', function(event) {
+        if ($input_bad.data('changed')) {
+            // HTML をマークダウンに変換
+            const markdown = turndownService.turndown(event.target.innerHTML);
+            
+            fetch('/notes/gpt_api_request_bad', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // CSRFトークンをmetaタグから取得して設定
+                    'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({data: { value: markdown, group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")) }})
+            });
+        }
     });
 
     var $input_next = $('#note_next');
