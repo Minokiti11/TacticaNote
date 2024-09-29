@@ -1,5 +1,6 @@
 <script src="https://vjs.zencdn.net/7.20.2/video.min.js"></script>
 <link href="https://vjs.zencdn.net/7.20.2/video-js.css" rel="stylesheet" />
+<script src="https://unpkg.com/turndown/dist/turndown.js"></script>
 <style>
     @media (max-width: 1100px) {
         .vjs-remaining-time {
@@ -327,9 +328,15 @@
         $("button").submit(function(){loc=true;});
     });
 
+    // Turndown インスタンスの作成
+    const turndownService = new TurndownService();
+
     var $input_good = $('#note_good');
     // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
     $input_good.on('trix-change', function(event) {
+        // HTML をマークダウンに変換
+        const markdown = turndownService.turndown(event.target.innerHTML);
+        
         fetch('/notes/gpt_api_request_good', {
             method: 'POST',
             headers: {
@@ -337,13 +344,16 @@
                 // CSRFトークンをmetaタグから取得して設定
                 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
-            body: JSON.stringify({data: { value: event.target.innerHTML, group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")) }})
+            body: JSON.stringify({data: { value: markdown, group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")) }})
         });
     });
 
     var $input_bad = $('#note_bad');
     // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
     $input_bad.on('trix-change', function(event) {
+        // HTML をマークダウンに変換
+        const markdown = turndownService.turndown(event.target.innerHTML);
+        
         fetch('/notes/gpt_api_request_bad', {
             method: 'POST',
             headers: {
@@ -351,7 +361,7 @@
                 // CSRFトークンをmetaタグから取得して設定
                 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
-            body: JSON.stringify({data: { value: event.target.innerHTML, group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")) }})
+            body: JSON.stringify({data: { value: markdown, group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")) }})
         });
     });
 
@@ -365,6 +375,9 @@
 
     // 実際にnotes_controllerのメソッドを呼ぶ部分
     var fire = function() {
+        // マークダウンに変換
+        const markdown = turndownService.turndown(document.getElementById('note_next').innerHTML);
+        
         fetch('/notes/gpt_api_request_next', {
             method: 'POST',
             headers: {
@@ -372,7 +385,7 @@
                 // CSRFトークンをmetaタグから取得して設定
                 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
-            body: JSON.stringify({data: { value: event.target.innerHTML, group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")) }})
+            body: JSON.stringify({data: { value: markdown, group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")) }})
         });
     };
 </script>
