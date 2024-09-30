@@ -123,15 +123,10 @@ window.onload = function() {
       editor.addEventListener('trix-initialize', function() {
         const minHeight = 100; // エディタの最小の高さを設定
         editor.style.minHeight = `${minHeight}px`;
-        
-        // 初期化時に高さを設定
-        editor.style.height = 'auto';
-        editor.style.height = `${Math.max(editor.scrollHeight, minHeight)}px`;
       });
       editor.addEventListener('trix-change', function() {
         editor.style.height = 'auto';
-        editor.style.height = `${Math.max(editor.scrollHeight, minHeight)}px`;
-        console.log(editor.scrollHeight);
+        editor.style.height = `${Math.max(editor.scrollHeight + 10, minHeight)}px`;
       });
     });
   });
@@ -142,15 +137,10 @@ window.onload = function() {
       editor.addEventListener('trix-initialize', function() {
         const minHeight = 100; // エディタの最小の高さを設定
         editor.style.minHeight = `${minHeight}px`;
-        
-        // 初期化時に高さを設定
+      });
+      editor.addEventListener('trix-change', function() {
         editor.style.height = 'auto';
-        editor.style.height = `${Math.max(editor.scrollHeight, minHeight)}px`;
-        
-        editor.addEventListener('trix-change', function() {
-          editor.style.height = 'auto';
-          editor.style.height = `${Math.max(editor.scrollHeight, minHeight)}px`;
-        });
+        editor.style.height = `${Math.max(editor.scrollHeight, minHeight) + 10}px`;
       });
     });
   });
