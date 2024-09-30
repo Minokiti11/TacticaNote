@@ -127,12 +127,11 @@ window.onload = function() {
         // 初期化時に高さを設定
         editor.style.height = 'auto';
         editor.style.height = `${Math.max(editor.scrollHeight, minHeight)}px`;
-        
-        editor.addEventListener('trix-change', function() {
-          editor.style.height = 'auto';
-          editor.style.height = `${Math.max(editor.scrollHeight, minHeight)}px`;
-          console.log(editor.scrollHeight);
-        });
+      });
+      editor.addEventListener('trix-change', function() {
+        editor.style.height = 'auto';
+        editor.style.height = `${Math.max(editor.scrollHeight, minHeight)}px`;
+        console.log(editor.scrollHeight);
       });
     });
   });
