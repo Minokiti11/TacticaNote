@@ -1,3 +1,6 @@
+<%= link_to '← グループのトップへ', group_path(session[:current_group_id]), class: "me-2", "data-turbo": false, style: "font-size: 1em; display: block; margin-top: 30px; margin-left: 20px;" if request.env['HTTP_USER_AGENT'].include?('Mobile') %>
+    <!-- 非モバイル端末の場合 -->
+    <%= link_to '← グループのトップへ', group_path(session[:current_group_id]), class: "me-2", "data-turbo": false, style: "font-size: 1.2em; display: block; margin: 20px;" unless request.env['HTTP_USER_AGENT'].include?('Mobile') %>
 <h1 style="margin: 20px;">試合 映像</h1>
 
 <%=link_to "Upload Video",new_video_path, class: "btn btn-outline-dark", style: "border-width: 2px; border-radius: 0; margin: 20px; font-size: 17px;"%>
