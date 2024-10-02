@@ -136,9 +136,8 @@ window.onload = function() {
     const trixEditors = document.querySelectorAll('trix-editor');
     const minHeight = 100; // エディタの最小の高さを設定
     trixEditors.forEach(editor => {
-      editor.addEventListener('trix-initialize', function() {
-        editor.style.minHeight = `${minHeight}px`;
-      });
+      editor.style.minHeight = `${minHeight}px`;
+      editor.style.height = `${Math.max(editor.scrollHeight, minHeight) + 10}px`;
       editor.addEventListener('trix-change', function() {
         editor.style.height = 'auto';
         editor.style.height = `${Math.max(editor.scrollHeight, minHeight) + 10}px`;

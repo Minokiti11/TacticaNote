@@ -14,6 +14,12 @@
             padding-top:56.25%;/*比率調整※16:9の画面幅*/
         }
     }
+
+    /* リッチテキスト内の画像を自動リサイズ */
+    .note-content img {
+        max-width: 100%;
+        height: auto;
+    }
 </style>
 
 <!-- モバイル端末の場合 -->
@@ -50,22 +56,22 @@
   </div>
   <div class="card mb-3">
     <div class="card-header">上手くいった点</div>
-    <div class="card-body note-content"><%= simple_format(@note.good, {}, sanitize: false, wrapper_tag: 'div') %></div>
+    <div class="card-body note-content"><%= safe_join([@note.good.html_safe]) %></div>
   </div>
 
   <div class="card mb-3">
     <div class="card-header">上手くいかなかった点</div>
-    <div class="card-body note-content"><%=  simple_format(@note.bad, {}, sanitize: false, wrapper_tag: 'div') %></div>
+    <div class="card-body note-content"><%= safe_join([@note.bad.html_safe]) %></div>
   </div>
 
   <div class="card mb-3">
     <div class="card-header">次に意識すること・次に向けて取り組むこと</div>
-    <div class="card-body note-content"><%= simple_format(@note.next, {}, sanitize: false, wrapper_tag: 'div') %></div>
+    <div class="card-body note-content"><%= safe_join([@note.next.html_safe]) %></div>
   </div>
 
   <div class="card mb-3">
     <div class="card-header">チームで話し合いたいこと・確認したいこと</div>
-    <div class="card-body note-content"><%= simple_format(@note.discuss, {}, sanitize: false, wrapper_tag: 'div') %></div>
+    <div class="card-body note-content"><%= safe_join([@note.discuss.html_safe]) %></div>
   </div>
 
   <% if @note.user_id == current_user.id %>

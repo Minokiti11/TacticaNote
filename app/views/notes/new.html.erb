@@ -188,6 +188,11 @@
             .note-section {
                 margin-bottom: 20px;
             }
+            /* リッチテキスト内の画像を自動リサイズ */
+            .note-content img {
+                max-width: 100%;
+                height: auto;
+            }
             </style>
 
             <div class="previous-note">
@@ -200,23 +205,23 @@
                     
                     <div class="note-section">
                         <h4>Good</h4>
-                        <p><%= simple_format(latest_note.good, {}, sanitize: false, wrapper_tag: 'div') %></p>
+                        <div class="note-content"><%= safe_join([latest_note.good.html_safe]) %></div>
                     </div>
                     
                     <div class="note-section">
                         <h4>Bad</h4>
-                        <p><%= simple_format(latest_note.bad, {}, sanitize: false, wrapper_tag: 'div') %></p>
+                        <div class="note-content"><%= safe_join([latest_note.bad.html_safe]) %></div>
                     </div>
                     
                     <div class="note-section">
                         <h4>Next</h4>
-                        <p><%= simple_format(latest_note.next, {}, sanitize: false, wrapper_tag: 'div') %></p>
+                        <div class="note-content"><%= safe_join([latest_note.next.html_safe]) %></div>
                     </div>
                     
                     <% if latest_note.discuss %>
                         <div class="note-section">
                             <h4>チームで確認したいこと:</h4>
-                            <p><%= simple_format(latest_note.discuss, {}, sanitize: false, wrapper_tag: 'div') %></p>
+                            <div class="note-content"><%= safe_join([latest_note.discuss.html_safe]) %></div>
                         </div>
                     <% end %>
                 <% else %>
