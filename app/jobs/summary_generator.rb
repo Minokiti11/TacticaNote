@@ -27,7 +27,7 @@ class SummaryGenerator include ActionView::RecordIdentifier
                 model: "gpt-4o-mini",
                 messages: [{ role: "system", content: PROMPTS_SUMMARIZE }, { role: "user", content: notes_for_summary} ],
                 temperature: 0.2,
-                max_tokens: 400,
+                max_tokens: 1000,
                 n: 1
             }
         )
