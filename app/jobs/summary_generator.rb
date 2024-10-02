@@ -5,7 +5,7 @@ class SummaryGenerator include ActionView::RecordIdentifier
     MODEL_NAME = "gpt-4o-mini"
     TEMPERATURE = 0.2
 
-    PROMPTS_SUMMARIZE = "以下のサッカーノートを箇条書きで要約してください。チームの課題と個人の課題は分けてください。チームの課題について、議論する必要があるポイントがあれば、📓アイコンでまとめてください。個人の課題はユーザーネームを添えてください。\n"
+    PROMPTS_SUMMARIZE = "以下のサッカーノートを箇条書きで要約してください。チームの課題と個人の課題は分けてください。チームの課題について議論する必要があれば、「📓 議論する必要があるポイント」という見出しでまとめてください。個人の課題はユーザーネームを添えてください。\n"
 
     def perform(channel, summary_id, date_string, group_id)
         date = Date.parse(date_string)
