@@ -164,7 +164,7 @@
                 padding: 20px;
                 margin-bottom: 30px;
             }
-            .previous-note h3 {
+            .previous-note-header {
                 color: #343a40;
                 font-size: 1.5rem;
                 margin-bottom: 15px;
@@ -184,7 +184,6 @@
             .note-date {
                 font-size: 0.9rem;
                 color: #6c757d;
-                margin-bottom: 15px;
             }
             .note-section {
                 margin-bottom: 20px;
@@ -192,9 +191,11 @@
             </style>
 
             <div class="previous-note">
-                <h3>前回のノート</h3>
                 <% if latest_note %>
-                    <div class="note-date"><%= latest_note.created_at.strftime('%Y年%m月%d日') %></div>
+                    <div class="previous-note-header d-flex justify-content-between align-items-center mb-3">
+                        <h3 class="mb-0">前回のノート</h3>
+                        <div class="note-date text-muted"><%= latest_note.created_at.strftime('%Y年%m月%d日') %></div>
+                    </div>
                     <h5><%= latest_note.title %></h5>
                     
                     <div class="note-section">
