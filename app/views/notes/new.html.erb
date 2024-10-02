@@ -149,6 +149,81 @@
                 </div>
             <% end %>
 
+            <!-- 前回のノートを取得（試合なら試合、練習なら練習のノート） -->
+            <% if params[:note_for] == "practice" %>
+                <% latest_note = Note.where(user_id: current_user.id, group_id: params[:group_id], note_for: "practice").order(created_at: :desc).first %>
+            <% else %>
+                <% latest_note = Note.where(user_id: current_user.id, group_id: params[:group_id], note_for: "match").order(created_at: :desc).first %>
+            <% end %>
+
+            <style>
+            .previous-note {
+                background-color: #f8f9fa;
+                border-radius: 8px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                margin-bottom: 30px;
+            }
+            .previous-note h3 {
+                color: #343a40;
+                font-size: 1.5rem;
+                margin-bottom: 15px;
+                border-bottom: 2px solid #007bff;
+                padding-bottom: 10px;
+            }
+            .previous-note h4 {
+                color: #495057;
+                font-size: 1.2rem;
+                margin-top: 20px;
+                margin-bottom: 10px;
+            }
+            .previous-note p {
+                color: #6c757d;
+                line-height: 1.6;
+            }
+            .note-date {
+                font-size: 0.9rem;
+                color: #6c757d;
+                margin-bottom: 15px;
+            }
+            .note-section {
+                margin-bottom: 20px;
+            }
+            </style>
+
+            <div class="previous-note">
+                <h3>前回のノート</h3>
+                <% if latest_note %>
+                    <div class="note-date"><%= latest_note.created_at.strftime('%Y年%m月%d日') %></div>
+                    <h5><%= latest_note.title %></h5>
+                    
+                    <div class="note-section">
+                        <h4>Good</h4>
+                        <p><%= simple_format(latest_note.good, {}, sanitize: false, wrapper_tag: 'div') %></p>
+                    </div>
+                    
+                    <div class="note-section">
+                        <h4>Bad</h4>
+                        <p><%= simple_format(latest_note.bad, {}, sanitize: false, wrapper_tag: 'div') %></p>
+                    </div>
+                    
+                    <div class="note-section">
+                        <h4>Next</h4>
+                        <p><%= simple_format(latest_note.next, {}, sanitize: false, wrapper_tag: 'div') %></p>
+                    </div>
+                    
+                    <% if latest_note.discuss %>
+                        <div class="note-section">
+                            <h4>チームで確認したいこと:</h4>
+                            <p><%= simple_format(latest_note.discuss, {}, sanitize: false, wrapper_tag: 'div') %></p>
+                        </div>
+                    <% end %>
+                <% else %>
+                    <p>前回のノートはありません。</p>
+                <% end %>
+            </div>
+
+
             <!--
             <script src="https://cdn.tailwindcss.com"></script>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
