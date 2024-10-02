@@ -5,7 +5,7 @@ class SummaryGenerator include ActionView::RecordIdentifier
     MODEL_NAME = "gpt-4o-mini"
     TEMPERATURE = 0.2
 
-    PROMPTS_SUMMARIZE = "以下のサッカーノートを箇条書きで要約してください。\n"
+    PROMPTS_SUMMARIZE = "以下のサッカーノートを箇条書きで要約してください。チームの課題と個人の課題は分けてください。チームの課題について、議論する必要があるポイントがあれば、📓アイコンでまとめてください。個人の課題はユーザーネームを添えてください。\n"
 
     def perform(channel, summary_id, date_string, group_id)
         date = Date.parse(date_string)
@@ -13,28 +13,14 @@ class SummaryGenerator include ActionView::RecordIdentifier
         group = Group.find(group_id)
 
         notes = group.notes.where("DATE(created_at) = ?", date).order(created_at: :desc)
-        good_for_summary = notes.map do |note|
-            note.good
-        end.join("\n")
-
-        bad_for_summary = notes.map do |note|
-            note.bad
-        end.join("\n")
-
-        next_for_summary = notes.map do |note|
-            note.next
-        end.join("\n")
-
-        discuss_for_summary = notes.map do |note|
-            note.discuss
-        end.join("\n")
-
-        print("上手くいったところ: \n" + good_for_summary)
-        print("上手くいかなかったところ: \n" + bad_for_summary)
-        print("次に意識すること: \n" + next_for_summary)
-        print("チームで確認したいこと: \n" + discuss_for_summary)
-
-        notes_for_summary = "上手くいったところ:\n" + good_for_summary + "上手くいかなかったところ:\n" + bad_for_summary + "次に意識すること:\n" + next_for_summary + "チームで話し合いたいこと:\n" + discuss_for_summary
+        notes_for_summary = ""
+        notes.each do |note|
+            notes_for_summary += "#{User.find(note.user_id).username}\n"
+            notes_for_summary += "上手くいったこと:\n#{note.good}\n"
+            notes_for_summary += "上手くいかなかったこと:\n#{note.bad}\n"
+            notes_for_summary += "次に意識すること・次までに取り組むこと:\n#{note.next}\n"
+            notes_for_summary += "チームで話し合いたいこと:\n#{note.discuss}\n"
+        end
 
         response_from_gpt4o_mini = OpenAI::Client.new.chat(
             parameters: {
