@@ -287,7 +287,7 @@
                 <% else %>
                     <% placeholder_text = '上手くいったことを記入' %>
                 <% end %>
-                <%= form.rich_text_area :good, class: 'form-control mb-3', id: 'note_good', placeholder: placeholder_text, style: "padding: 10px; max-height: 400px; height: 100px;" %>
+                <%= form.rich_text_area :good, class: 'form-control mb-3', id: 'note_good', placeholder: placeholder_text, style: "padding: 10px; max-height: 1200px; height: 100px;" %>
             </div>
             <div id="notes_good_rate">
             </div><br />
@@ -308,7 +308,7 @@
                 <% else %>
                     <% placeholder_text = '上手くいかなかったことを記入' %>
                 <% end %>
-                <%= form.rich_text_area :bad, class: 'form-control mb-3', id: 'note_bad', placeholder: placeholder_text, style: "padding: 10px; max-height: 400px; height: 100px;" %>
+                <%= form.rich_text_area :bad, class: 'form-control mb-3', id: 'note_bad', placeholder: placeholder_text, style: "padding: 10px; max-height: 1200px; height: 100px;" %>
             </div>
             <div id="notes_bad_rate">
             </div><br />
@@ -325,7 +325,7 @@
                 <% else %>
                     <% placeholder_text = '次に向けて取り組むことを記入' %>
                 <% end %>
-                <%= form.rich_text_area :next, class: 'form-control mb-3', id: 'note_next', placeholder: placeholder_text, style: "padding: 10px; max-height: 400px; height: 100px;" %>
+                <%= form.rich_text_area :next, class: 'form-control mb-3', id: 'note_next', placeholder: placeholder_text, style: "padding: 10px; max-height: 1200px; height: 100px;" %>
                 <div id="links">
 
                 </div>
@@ -450,10 +450,12 @@
         const markdown = turndownService.turndown(event.target.innerHTML);
         // 変更フラグをセット
         $input_bad.data('changed', true);
+        console.log("changed....");
     });
     // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
     $input_bad.on('trix-blur', function(event) {
         if ($input_bad.data('changed')) {
+            console.log("We'll request api...")
             // HTML をマークダウンに変換
             const markdown = turndownService.turndown(event.target.innerHTML);
             
