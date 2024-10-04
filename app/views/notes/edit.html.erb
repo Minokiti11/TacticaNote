@@ -200,7 +200,7 @@
 
             <!-- 上手くいった点の入力フォーム -->
             <div class="form-group" id="good" data-group-id="<%= params[:group_id]%>">
-                <label for="note_good" class="form-label">上手くいったこと</label>
+                <label class="form-label">上手くいったこと</label>
                 <%# <%= form.rich_text_area :good, class: 'mb-3', id: 'note_good', placeholder: '上手くいったことを記入'%>
                 <%= form.rich_text_area :good, class: 'form-control mb-3', id: 'note_good', placeholder: '上手くいったことを記入
     (🕓アイコンを押して、動画の現在の時間を入力できます。)', style: "padding: 10px; height: 100px;" %>
@@ -218,7 +218,7 @@
             
             <!-- 上手くいかなかった点の入力フォーム -->
             <div class="form-group" id="bad">
-                <label for="note_bad" class="form-label">上手くいかなかったこと</label>
+                <label class="form-label">上手くいかなかったこと</label>
                 <%= form.rich_text_area :bad, class: 'form-control mb-3', id: 'note_bad', placeholder: '上手くいかなかったことを記入
     (🕓アイコンを押して、動画の現在の時間を入力できます。)', style: "padding: 10px; height: 100px;" %>
             </div>
@@ -231,7 +231,7 @@
 
             <!-- 次のステップの入力フォーム -->
             <div class="form-group" id="next">
-                <label for="note_next" class="form-label">次に意識すること・次に向けて取り組むこと</label>
+                <label class="form-label">次に意識すること・次に向けて取り組むこと</label>
                 <%= form.rich_text_area :next, class: 'form-control mb-3', id: 'note_next', placeholder: '次に向けて取り組むことを記入
     (🕓アイコンを押して、動画の現在の時間を入力できます。)', style: "padding: 10px; height: 100px;" %>
                 <div id="links">
@@ -247,7 +247,7 @@
 
             <!-- 話し合いたいこと・確認したいことの入力フォーム -->
             <div class="form-group" id="discuss">
-                <label for="note_discuss" class="form-label">チームで話し合いたいこと・確認したいこと</label>
+                <label class="form-label">チームで話し合いたいこと・確認したいこと</label>
                 <% if params[:note_for] == "practice" %>
                     <%= form.rich_text_area :discuss, id: 'note_discuss', placeholder: 'チームで話し合いたいこと・確認したいこと(例：練習時間が長い)
                     @someoneのようにしてチームのメンバーをメンションできます。', style: "height: 100px;", data: { controller: "mentions", mentions_target: "field" } %>
