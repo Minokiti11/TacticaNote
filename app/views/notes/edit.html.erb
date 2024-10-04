@@ -202,7 +202,7 @@
                 <label for="note_good" class="form-label">上手くいったこと</label>
                 <%# <%= form.rich_text_area :good, class: 'mb-3', id: 'note_good', placeholder: '上手くいったことを記入'%>
                 <%= form.rich_text_area :good, class: 'form-control mb-3', id: 'note_good', placeholder: '上手くいったことを記入
-    (🕓アイコンを押して、動画の現在の時間を入力できます。)', style: "padding: 10px; max-height: 400px; height: 100px;" %>
+    (🕓アイコンを押して、動画の現在の時間を入力できます。)', style: "padding: 10px; height: 100px;" %>
             </div>
             <div id="notes_good_rate">
             </div><br />
@@ -219,7 +219,7 @@
             <div class="form-group" id="bad">
                 <label for="note_bad" class="form-label">上手くいかなかったこと</label>
                 <%= form.rich_text_area :bad, class: 'form-control mb-3', id: 'note_bad', placeholder: '上手くいかなかったことを記入
-    (🕓アイコンを押して、動画の現在の時間を入力できます。)', style: "padding: 10px; max-height: 400px; height: 100px;" %>
+    (🕓アイコンを押して、動画の現在の時間を入力できます。)', style: "padding: 10px; height: 100px;" %>
             </div>
             <div id="notes_bad_rate">
             </div><br />
@@ -232,7 +232,7 @@
             <div class="form-group" id="next">
                 <label for="note_next" class="form-label">次に意識すること・次に向けて取り組むこと</label>
                 <%= form.rich_text_area :next, class: 'form-control mb-3', id: 'note_next', placeholder: '次に向けて取り組むことを記入
-    (🕓アイコンを押して、動画の現在の時間を入力できます。)', style: "padding: 10px; max-height: 400px; height: 100px;" %>
+    (🕓アイコンを押して、動画の現在の時間を入力できます。)', style: "padding: 10px; height: 100px;" %>
                 <div id="links">
 
                 </div>
@@ -316,32 +316,66 @@
         $("button").submit(function(){loc=true;});
     });
 
+    // Turndown インスタンスの作成
+    const turndownService = new TurndownService();
+
     var $input_good = $('#note_good');
     // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
-    $input_good.on('change', function(event) {
-        fetch('/notes/gpt_api_request_good', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                // CSRFトークンをmetaタグから取得して設定
-                'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({data: { value: $input_good.val(), group_id: parseInt(document.getElementById("div_good").getAttribute("data-group-id")) }})
-        });
+    $input_good.on('trix-change', function(event) {
+        // HTML をマークダウンに変換
+        const markdown = turndownService.turndown(event.target.innerHTML);
+        // 変更フラグをセット
+        $input_good.data('changed', true);
+    });
+
+    $input_good.on('trix-blur', function() {
+        if ($input_good.data('changed')) {
+            const markdown = turndownService.turndown(this.innerHTML);
+            
+            fetch('/notes/gpt_api_request_good', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // CSRFトークンをmetaタグから取得して設定
+                    'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({data: { value: markdown, group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")) }})
+            }).then(response => {
+                if (response.ok) {
+                    // 成功時の処理があればここに記述
+                    $input_good.data('changed', false);
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
     });
 
     var $input_bad = $('#note_bad');
+    $input_bad.on('trix-change', function(event) {
+        // HTML をマークダウンに変換
+        const markdown = turndownService.turndown(event.target.innerHTML);
+        // 変更フラグをセット
+        $input_bad.data('changed', true);
+        console.log("changed....");
+    });
     // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
-    $input_bad.on('change', function(event) {
-        fetch('/notes/gpt_api_request_bad', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                // CSRFトークンをmetaタグから取得して設定
-                'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({data: { value: $input_bad.val(), group_id: parseInt(document.getElementById("div_good").getAttribute("data-group-id")) }})
-        });
+    $input_bad.on('trix-blur', function(event) {
+        if ($input_bad.data('changed')) {
+            console.log("We'll request api...")
+            // HTML をマークダウンに変換
+            const markdown = turndownService.turndown(event.target.innerHTML);
+            
+            fetch('/notes/gpt_api_request_bad', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // CSRFトークンをmetaタグから取得して設定
+                    'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({data: { value: markdown, group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")) }})
+            });
+        }
     });
 
     var $input_next = $('#note_next');
@@ -354,6 +388,9 @@
 
     // 実際にnotes_controllerのメソッドを呼ぶ部分
     var fire = function() {
+        // マークダウンに変換
+        const markdown = turndownService.turndown(document.getElementById('note_next').innerHTML);
+        
         fetch('/notes/gpt_api_request_next', {
             method: 'POST',
             headers: {
@@ -361,7 +398,7 @@
                 // CSRFトークンをmetaタグから取得して設定
                 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
-            body: JSON.stringify({data: { value: $input_next.val(), group_id: parseInt(document.getElementById("div_good").getAttribute("data-group-id")) }})
+            body: JSON.stringify({data: { value: markdown, group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")) }})
         });
     };
 </script>
