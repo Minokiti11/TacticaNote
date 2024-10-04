@@ -5,8 +5,8 @@ module ApplicationHelper
             title: 'TacticaNote',
             reverse: true,
             charset: 'utf-8',
-            description: '従来のサッカーノートとは異なる、共有型でインタラクティブなサッカーノート。',
-            keywords: 'サッカーノート, 育成年代, ユース年代, LLM, AI, Webアプリ, Webサービス',
+            description: 'LLMで選手の思考を深堀る、映像同期型&共有型のサッカーノート。',
+            keywords: 'サッカーノート, 言語化, 育成年代, ユース年代, LLM, AI, Webアプリ, Webサービス',
             canonical: request.original_url,
             separator: '|',
             icon: [
