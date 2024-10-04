@@ -518,6 +518,7 @@ select#practice-select {
               <% if Summary.find_by(date_for: date, group_id: @group.id) %>
                 <% summary = Summary.find_by(date_for: date, group_id: @group.id) %>
                 <div class="h5 fw-bold mb-2">🤖 AIによる要約 🤖</div>
+                <hr style="border-top: 1px solid grey; width: 100%; margin-top: 20px; margin-bottom: 20px;">
                 <div style="margin-bottom: 30px;">
                   <%= markdown(summary.content) %>
                 </div>
