@@ -516,11 +516,16 @@ select#practice-select {
                 <% end %>
               <% end %>
               <% if Summary.find_by(date_for: date, group_id: @group.id) %>
-                <% summary = Summary.find_by(date_for: date, group_id: @group.id) %>
-                <div class="h5 fw-bold mb-2">🤖 AIによる要約 🤖</div>
-                <hr style="border-top: 1px solid grey; width: 100%; margin-top: 20px; margin-bottom: 20px;">
-                <div style="margin-bottom: 30px;">
-                  <%= markdown(summary.content) %>
+                <button class="btn btn-outline-primary" style="border-radius: 0px; margin-bottom: 30px;" onclick="createSummary('<%= date %>', <%= @group.id %>)">AIで要約する</button>
+                <div id="summary_for_<%= date %>"></div>
+                <div id="spinner_<%= date %>"></div>
+                <div id="current_summary">
+                  <% summary = Summary.find_by(date_for: date, group_id: @group.id) %>
+                  <div class="h5 fw-bold mb-2">🤖 AIによる要約 🤖</div>
+                  <hr style="border-top: 1px solid grey; width: 100%; margin-top: 20px; margin-bottom: 20px;">
+                  <div style="margin-bottom: 30px;">
+                    <%= markdown(summary.content) %>
+                  </div>
                 </div>
               <% else %>
                 <button class="btn btn-outline-primary" style="border-radius: 0px; margin-bottom: 30px;" onclick="createSummary('<%= date %>', <%= @group.id %>)">AIで要約する</button>
@@ -777,6 +782,12 @@ select#practice-select {
   }
 
   function createSummary(date, group_id) {
+    // #current_summaryを非表示にする
+    const currentSummary = document.getElementById('current_summary');
+    if (currentSummary) {
+      currentSummary.style.display = 'none';
+    }
+
     fetch('/summaries', {
       method: 'POST',
       headers: {
