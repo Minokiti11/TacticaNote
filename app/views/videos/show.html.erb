@@ -262,7 +262,7 @@
     if (evt.target.closest('.vjs-control')) {
       return;
     }
-    
+
     // タッチイベントが動画要素から発生した場合のみ処理を実行
     if (!evt.target.closest('video')) {
       return;
@@ -322,8 +322,6 @@
           zoomPlugin.zoom(ratio);
         }
       } else if (currentDistance < initialDistance) {
-        console.log(`Pinch In (縮小), ratio: ${currentDistance / initialDistance}`);
-
         if (typeof ratio !== 'undefined' && ratio !== null) {
           ratio -= (initialDistance - currentDistance) / initialDistance * 0.2;
           ratio = Math.max(ratio, 1);
@@ -336,7 +334,7 @@
       previousDistance = currentDistance;
     } else if (ongoingTouches.length === 1) {
       let currentPoint = ongoingTouches[0];
-      $('#distance').text(`${currentPoint}`);
+      $('#distance').text(`${currentPoint.pageX}, ${currentPoint.pageY}`);
     }
   }
 
@@ -421,6 +419,8 @@
       // コントローラに10秒戻しボタンと10秒送りボタンを追加
       const rewindButton = player.getChild('ControlBar').addChild('button');
       const forwardButton = player.getChild('ControlBar').addChild('button');
+      rewindButton.addClass('vjs-control'); // 追加
+      forwardButton.addClass('vjs-control');
       rewindButton.controlText('10秒戻し');
       forwardButton.controlText('10秒り');
 
@@ -442,16 +442,16 @@
         controlBar.el().insertBefore(
           rewindButton.el(),
           insertBeforeElement.el()
-        ).innerHTML = `<img src="<%= asset_path 'rewind.png' %>" width="20" style="pointer-events: none;" />`;
+        ).innerHTML = `<img src="<%= asset_path 'rewind.png' %>" width="20" />`;
         
         controlBar.el().insertBefore(
           forwardButton.el(),
           insertBeforeElement.el()
-        ).innerHTML = `<img src="<%= asset_path 'forward.png' %>" width="20" style="pointer-events: none;" />`;
+        ).innerHTML = `<img src="<%= asset_path 'forward.png' %>" width="20" />`;
       } else {
         // デフォルトの挿入位置（最後）に追加
-        controlBar.el().appendChild(rewindButton.el()).innerHTML = `<img src="<%= asset_path 'rewind.png' %>" width="20" style="pointer-events: none;" />`;
-        controlBar.el().appendChild(forwardButton.el()).innerHTML = `<img src="<%= asset_path 'forward.png' %>" width="20" style="pointer-events: none;" />`;
+        controlBar.el().appendChild(rewindButton.el()).innerHTML = `<img src="<%= asset_path 'rewind.png' %>" width="20"/>`;
+        controlBar.el().appendChild(forwardButton.el()).innerHTML = `<img src="<%= asset_path 'forward.png' %>" width="20" />`;
       }
 
       // スキップ処理を追加
