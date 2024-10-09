@@ -1,6 +1,9 @@
 <script src="https://vjs.zencdn.net/7.20.2/video.min.js"></script>
 <link href="https://vjs.zencdn.net/7.20.2/video-js.css" rel="stylesheet" />
 
+<link rel="stylesheet" type="text/css" href="/dist/videojs-zoom.css">
+<script src="/dist/videojs-zoom.js"></script>
+
 <style>
   @media (max-width: 1100px) {
     .vjs-remaining-time {
@@ -91,6 +94,10 @@
       display: none;
     }
   }
+
+  video {
+    -webkit-playsinline: true;
+  }
 </style>
 <div class="container-wrapper">
   <div id="container" class="px-3 mt-5">
@@ -101,6 +108,8 @@
       <h3 style="margin-top: 15px;">
         <%= @video.title %>
       </h3>
+      <div id="distance"></div>
+      <div id="ratio"></div>
       <hr style="border-top: 1px solid grey; width: 100%; margin-top: 20px; margin-bottom: 20px;">
       <!-- タイムスタンプリスト -->
       <div id="timestamp-list" class="for-mobile" style="margin-top: 10px;">
@@ -233,15 +242,139 @@
         pictureInPictureToggle: false, // ピクチャーインピクチャーを無効にする
         fullscreenToggle: true, // 全画面ボタンを有効にする
         volumePanel: false // 音声バーを無効にする
-
+      },
+      fullscreen: {
+        enterOnRotate: true,
+        exitOnRotate: true,
+        alwaysInFullScreen: true
       }
   });
+
+  const zoomPlugin = player.zoomPlugin();
+
+  let initialDistance = 0;
+
+  let ongoingTouches = [];
+
+  function handleTouchStart(evt) {
+    evt.preventDefault();
+    const touches = evt.changedTouches;
+
+    for (let i = 0; i < touches.length; i++) {
+      ongoingTouches.push(copyTouch(touches[i]));
+    }
+
+    if (ongoingTouches.length === 2) {
+      initialDistance = getDistance(ongoingTouches[0], ongoingTouches[1]);
+      console.log("2本の指でタッチ開始");
+    }
+  }
+
+  let ratio = 1;
+  let previousDistance = 0;
+
+  function handleTouchMove(evt) {
+    evt.preventDefault();
+    const touches = evt.changedTouches;
+
+    for (let i = 0; i < touches.length; i++) {
+      const idx = ongoingTouchIndexById(touches[i].identifier);
+      if (idx >= 0) {
+        ongoingTouches.splice(idx, 1, copyTouch(touches[i]));
+      }
+    }
+
+    if (ongoingTouches.length === 2) {
+      const currentDistance = getDistance(ongoingTouches[0], ongoingTouches[1]);
+      $('#distance').text(`CurrentDistance: ${currentDistance}
+                              InitialDistance: ${initialDistance}`);
+      if (currentDistance > initialDistance) {
+        console.log(`Pinch Out (拡大), ratio: ${currentDistance / initialDistance}`);
+        if (typeof ratio !== 'undefined' && ratio !== null) {
+          if (currentDistance < previousDistance) {
+            ratio -= (currentDistance - initialDistance) / initialDistance * 0.1;
+          } else {
+            ratio += (currentDistance - initialDistance) / initialDistance * 0.1;
+          }
+          
+          $('#ratio').text(`増加中の比率: ${ratio.toFixed(2)}`);
+        }
+        
+        if (ratio > 1) {
+          zoomPlugin.zoom(ratio);
+        }
+      } else if (currentDistance < initialDistance) {
+        console.log(`Pinch In (縮小), ratio: ${currentDistance / initialDistance}`);
+
+        if (typeof ratio !== 'undefined' && ratio !== null) {
+          ratio -= (initialDistance - currentDistance) / initialDistance * 0.2;
+          ratio = Math.max(ratio, 1);
+          $('#ratio').text(`比率: ${ratio.toFixed(2)}`);
+        }
+        if (ratio > 1) {
+          zoomPlugin.zoom(ratio);
+        }
+      }
+      previousDistance = currentDistance;
+    }
+  }
+
+
+  function handleTouchEnd(evt) {
+    evt.preventDefault();
+    const touches = evt.changedTouches;
+
+    for (let i = 0; i < touches.length; i++) {
+      const idx = ongoingTouchIndexById(touches[i].identifier);
+      if (idx >= 0) {
+        ongoingTouches.splice(idx, 1);
+      }
+    }
+  }
+
+  function handleTouchCancel(evt) {
+    evt.preventDefault();
+    ongoingTouches = [];
+  }
+
+  function copyTouch(touch) {
+    return { identifier: touch.identifier, pageX: touch.pageX, pageY: touch.pageY };
+  }
+
+  function ongoingTouchIndexById(idToFind) {
+    for (let i = 0; i < ongoingTouches.length; i++) {
+      const id = ongoingTouches[i].identifier;
+
+      if (id === idToFind) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  function getDistance(touch1, touch2) {
+    const dx = touch2.pageX - touch1.pageX;
+    const dy = touch2.pageY - touch1.pageY;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  document.addEventListener('touchstart', handleTouchStart, { passive: false });
+  document.addEventListener('touchmove', handleTouchMove, { passive: false });
+  document.addEventListener('touchend', handleTouchEnd, { passive: false });
+  document.addEventListener('touchcancel', handleTouchCancel, { passive: false });
+
   var video_el = document.getElementById("video");
 
   player.on('error', function() {
     const error = player.error();
-    alert('セッションが切断されました。リロードしてみてください。');
+    alert('セッションが切断されました。リロードします・・');
+    location.reload();
   });
+
+  // fullScreenElement = document.getElementsByClassName("vjs-fullscreen-control")[0];
+	// if (videojs.browser.IS_IOS ) {
+	// 	fullScreenElement.parentNode.removeChild(fullScreenElement);
+	// }
 
   // videojsのreadyイベントを使用して、メタデータがロードされたときの処理を設定
   player.ready(function() {
@@ -305,8 +438,41 @@
           if (newTime > maxTime) newTime = maxTime; // 現在時刻がビデオの長さ以上にならないように調整
           self.currentTime(newTime);
         }
-      })
+      });
     });
+  });
+
+  player.on('fullscreenchange', function() {
+    if (player.isFullscreen()) {
+      // フルスクリーンモードに入ったときの処理
+      console.log('フルスクリーンモードに入りました');
+      
+      // プレイヤーのサイズを画面いっぱいに設定
+      player.width(window.innerWidth);
+      player.height(window.innerHeight);
+      
+      // コントロールバーを常に表示
+      player.controls(true);
+      
+      // 自動再生を開始（オプション）
+      player.play();
+      
+      // カスタムクラスを追加してスタイルを変更
+      player.el().classList.add('my-fullscreen-class');
+    } else {
+      // フルスクリーンモードを終了したときの処理
+      console.log('フルスクリーンモードを終了しました');
+      
+      // プレイヤーのサイズを元に戻す
+      player.width('100%');
+      player.height('auto');
+      
+      // コントロールバーの表示を元の設定に戻す
+      player.controls(player.options_.controls);
+      
+      // カスタムクラスを削除
+      player.el().classList.remove('my-fullscreen-class');
+    }
   });
 
   function jumpTo(time) {
@@ -354,8 +520,9 @@
   //タイムスタンプを追加するボタン
   function addTimestamp(video_id) {
     const name = document.getElementById('timestamp_name').value;
-    const minutes = parseInt(document.getElementById('timestamp_minutes').value) || 0;
-    const seconds = parseInt(document.getElementById('timestamp_seconds').value) || 0;
+    const currentTime = player.currentTime();
+    const minutes = parseInt(document.getElementById('timestamp_minutes').value) || Math.int(currentTime / 60);
+    const seconds = parseInt(document.getElementById('timestamp_seconds').value) || Math.int(currentTime % 60);
     const totalSeconds = minutes * 60 + seconds;
     console.log(video_id);
 
