@@ -286,10 +286,7 @@
 
     if (ongoingTouches.length === 2) {
       const currentDistance = getDistance(ongoingTouches[0], ongoingTouches[1]);
-      $('#distance').text(`CurrentDistance: ${currentDistance}
-                              InitialDistance: ${initialDistance}`);
       if (currentDistance > initialDistance) {
-        console.log(`Pinch Out (拡大), ratio: ${currentDistance / initialDistance}`);
         if (typeof ratio !== 'undefined' && ratio !== null) {
           if (currentDistance < previousDistance) {
             ratio -= (currentDistance - initialDistance) / initialDistance * 0.1;
