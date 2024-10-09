@@ -257,6 +257,11 @@
   let ongoingTouches = [];
 
   function handleTouchStart(evt) {
+    // タッチイベントが動画要素から発生した場合のみ処理を実行
+    if (!evt.target.closest('video')) {
+      return;
+    }
+
     evt.preventDefault();
     const touches = evt.changedTouches;
 
@@ -294,7 +299,7 @@
             ratio = Math.min(6, ratio + (currentDistance - initialDistance) / initialDistance * 0.1);
           }
           
-          $('#ratio').text(`増加中の比率: ${ratio.toFixed(2)}`);
+          $('#ratio').text(`${ratio.toFixed(1)}倍`);
         }
         
         if (ratio > 1) {
@@ -306,7 +311,7 @@
         if (typeof ratio !== 'undefined' && ratio !== null) {
           ratio -= (initialDistance - currentDistance) / initialDistance * 0.2;
           ratio = Math.max(ratio, 1);
-          $('#ratio').text(`比率: ${ratio.toFixed(2)}`);
+          $('#ratio').text(`${ratio.toFixed(1)}倍`);
         }
         if (ratio > 1) {
           zoomPlugin.zoom(ratio);
