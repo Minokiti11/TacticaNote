@@ -253,6 +253,7 @@
   const zoomPlugin = player.zoomPlugin();
 
   let initialDistance = 0;
+  let initialPoint;
 
   let ongoingTouches = [];
 
@@ -271,7 +272,8 @@
 
     if (ongoingTouches.length === 2) {
       initialDistance = getDistance(ongoingTouches[0], ongoingTouches[1]);
-      console.log("2本の指でタッチ開始");
+    } else if (ongoingTouches.length === 1) {
+      initialPoint = ongoingTouches[0];
     }
   }
 
@@ -318,6 +320,9 @@
         }
       }
       previousDistance = currentDistance;
+    } else if (ongoingTouches.length === 1) {
+      let currentPoint = ongoingTouches[0];
+      $('#distance').text(`${currentPoint}`);
     }
   }
 
@@ -360,12 +365,14 @@
     return Math.sqrt(dx * dx + dy * dy);
   }
 
-  document.addEventListener('touchstart', handleTouchStart, { passive: false });
-  document.addEventListener('touchmove', handleTouchMove, { passive: false });
-  document.addEventListener('touchend', handleTouchEnd, { passive: false });
-  document.addEventListener('touchcancel', handleTouchCancel, { passive: false });
-
   var video_el = document.getElementById("video");
+
+  video_el.addEventListener('touchstart', handleTouchStart, { passive: false });
+  video_el.addEventListener('touchmove', handleTouchMove, { passive: false });
+  video_el.addEventListener('touchend', handleTouchEnd, { passive: false });
+  video_el.addEventListener('touchcancel', handleTouchCancel, { passive: false });
+
+  
 
   player.on('error', function() {
     const error = player.error();
