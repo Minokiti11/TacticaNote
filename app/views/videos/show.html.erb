@@ -258,6 +258,11 @@
   let ongoingTouches = [];
 
   function handleTouchStart(evt) {
+    // タッチがコントロールバー内のボタンから発生した場合は処理を中断
+    if (evt.target.closest('.vjs-control')) {
+      return;
+    }
+    
     // タッチイベントが動画要素から発生した場合のみ処理を実行
     if (!evt.target.closest('video')) {
       return;
@@ -281,6 +286,11 @@
   let previousDistance = 0;
 
   function handleTouchMove(evt) {
+    // タッチがコントロールバー内のボタンから発生した場合は処理を中断
+    if (evt.target.closest('.vjs-control')) {
+      return;
+    }
+
     if (!evt.target.closest('video')) {
       return;
     }
@@ -332,6 +342,11 @@
 
 
   function handleTouchEnd(evt) {
+    // タッチがコントロールバー内のボタンから発生した場合は処理を中断
+    if (evt.target.closest('.vjs-control')) {
+      return;
+    }
+
     if (!evt.target.closest('video')) {
       return;
     }
@@ -427,16 +442,16 @@
         controlBar.el().insertBefore(
           rewindButton.el(),
           insertBeforeElement.el()
-        ).innerHTML = `<img src="<%= asset_path 'rewind.png' %>" width="20" />`;
+        ).innerHTML = `<img src="<%= asset_path 'rewind.png' %>" width="20" style="pointer-events: none;" />`;
         
         controlBar.el().insertBefore(
           forwardButton.el(),
           insertBeforeElement.el()
-        ).innerHTML = `<img src="<%= asset_path 'forward.png' %>" width="20" />`;
+        ).innerHTML = `<img src="<%= asset_path 'forward.png' %>" width="20" style="pointer-events: none;" />`;
       } else {
         // デフォルトの挿入位置（最後）に追加
-        controlBar.el().appendChild(rewindButton.el()).innerHTML = `<img src="<%= asset_path 'rewind.png' %>" width="20" />`;
-        controlBar.el().appendChild(forwardButton.el()).innerHTML = `<img src="<%= asset_path 'forward.png' %>" width="20" />`;
+        controlBar.el().appendChild(rewindButton.el()).innerHTML = `<img src="<%= asset_path 'rewind.png' %>" width="20" style="pointer-events: none;" />`;
+        controlBar.el().appendChild(forwardButton.el()).innerHTML = `<img src="<%= asset_path 'forward.png' %>" width="20" style="pointer-events: none;" />`;
       }
 
       // スキップ処理を追加
@@ -620,9 +635,3 @@
       });
   }
 </script>
-
-<style>
-  .rewind-button img, .forward-button img {
-    pointer-events: none; /* 画像自体がイベントをキャッチしないように */
-  }
-</style>
