@@ -443,6 +443,7 @@
       });
       
       forwardButton.el().addEventListener('click', () => {
+        $("#distance").text("forward...");
         var newTime = self.currentTime() + 10;
         var maxTime = self.duration(); // ビデオの長さを取得
         if (newTime > maxTime) newTime = maxTime; // 現在時刻がビデオの長さ以上にならないように調整
