@@ -319,16 +319,15 @@
     }
   }).ready(function() {
     const player = this;
-
     // フルスクリーン切り替え後にボタンを追加
     player.on('loadedmetadata', () => {
-      // リワインドボタンの追加
-      const rewindButton = player.controlBar.addChild('RewindButton', {});
-      rewindButton.el().innerHTML = `<i class="fas fa-undo" style="color: white; font-size: 16px;"></i>`;
+      // // リワインドボタンの追加
+      // const rewindButton = player.controlBar.addChild('RewindButton', {});
+      // rewindButton.el().innerHTML = `<i class="fas fa-undo" style="color: white; font-size: 16px;"></i>`;
 
-      // フォワードボタンの追加
-      const forwardButton = player.controlBar.addChild('ForwardButton', {});
-      forwardButton.el().innerHTML = `<i class="fas fa-redo" style="color: white; font-size: 16px;"></i>`;
+      // // フォワードボタンの追加
+      // const forwardButton = player.controlBar.addChild('ForwardButton', {});
+      // forwardButton.el().innerHTML = `<i class="fas fa-redo" style="color: white; font-size: 16px;"></i>`;
     });
   });
 
