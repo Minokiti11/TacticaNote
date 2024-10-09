@@ -294,7 +294,7 @@
           if (currentDistance < previousDistance) {
             ratio -= (currentDistance - initialDistance) / initialDistance * 0.1;
           } else {
-            ratio += (currentDistance - initialDistance) / initialDistance * 0.1;
+            ratio = Math.min(6, ratio + (currentDistance - initialDistance) / initialDistance * 0.1);
           }
           
           $('#ratio').text(`増加中の比率: ${ratio.toFixed(2)}`);
