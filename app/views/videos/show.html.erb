@@ -98,10 +98,6 @@
   video {
     -webkit-playsinline: true;
   }
-
-  .timestamp-list button {
-    z-index: 1000; /* 必要に応じて調整 */
-  }
 </style>
 <div class="container-wrapper">
   <div id="container" class="px-3 mt-5">
@@ -624,3 +620,9 @@
       });
   }
 </script>
+
+<style>
+  .rewind-button img, .forward-button img {
+    pointer-events: none; /* 画像自体がイベントをキャッチしないように */
+  }
+</style>
