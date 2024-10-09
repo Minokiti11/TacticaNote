@@ -321,13 +321,69 @@
     const player = this;
     // フルスクリーン切り替え後にボタンを追加
     player.on('loadedmetadata', () => {
-      // // リワインドボタンの追加
-      // const rewindButton = player.controlBar.addChild('RewindButton', {});
-      // rewindButton.el().innerHTML = `<i class="fas fa-undo" style="color: white; font-size: 16px;"></i>`;
+      const controlBar = player.getChild('ControlBar');
+      const fullscreenToggle = controlBar.getChild('fullscreenToggle');
+      const insertBeforeElement = fullscreenToggle;
 
-      // // フォワードボタンの追加
-      // const forwardButton = player.controlBar.addChild('ForwardButton', {});
-      // forwardButton.el().innerHTML = `<i class="fas fa-redo" style="color: white; font-size: 16px;"></i>`;
+      // リワインドボタンの追加
+      const rewindButton = player.controlBar.addChild('RewindButton', {});
+
+      // フォワードボタンの追加
+      const forwardButton = player.controlBar.addChild('ForwardButton', {});
+
+      if (insertBeforeElement) {
+        controlBar.el().insertBefore(
+          rewindButton.el(),
+          insertBeforeElement.el()
+        ).innerHTML = `<img src="<%= asset_path 'rewind.png' %>" width="20" />`;
+        
+        controlBar.el().insertBefore(
+          forwardButton.el(),
+          insertBeforeElement.el()
+        ).innerHTML = `<img src="<%= asset_path 'forward.png' %>" width="20" />`;
+      } else {
+        // デフォルトの挿入位置（最後）に追加
+        controlBar.el().appendChild(rewindButton.el()).innerHTML = `<img src="<%= asset_path 'rewind.png' %>" width="20"/>`;
+        controlBar.el().appendChild(forwardButton.el()).innerHTML = `<img src="<%= asset_path 'forward.png' %>" width="20" />`;
+      }
+
+      // // コントローラに10秒戻しボタンと10秒送りボタンを追加
+      // const rewindButton = player.getChild('ControlBar').addChild('button');
+      // const forwardButton = player.getChild('ControlBar').addChild('button');
+      // rewindButton.addClass('vjs-control'); // 追加
+      // forwardButton.addClass('vjs-control');
+      // rewindButton.controlText('10秒戻し');
+      // forwardButton.controlText('10秒り');
+
+      // rewindButton.el().style.marginRight = '-6px';
+      // forwardButton.el().style.marginLeft = '-6px';
+
+      // // z-indexを10に設定
+      // rewindButton.el().style.zIndex = '10';
+      // forwardButton.el().style.zIndex = '10';
+
+      // // アイコンを設定
+      // const controlBar = player.getChild('ControlBar');
+      // const fullscreenToggle = controlBar.getChild('fullscreenToggle');
+
+      // // 挿入位置を決定（PiPボタンが存在しない場合は全画面ボタンの前に挿入）
+      // const insertBeforeElement = fullscreenToggle;
+
+      // if (insertBeforeElement) {
+      //   controlBar.el().insertBefore(
+      //     rewindButton.el(),
+      //     insertBeforeElement.el()
+      //   ).innerHTML = `<img src="<%= asset_path 'rewind.png' %>" width="20" />`;
+        
+      //   controlBar.el().insertBefore(
+      //     forwardButton.el(),
+      //     insertBeforeElement.el()
+      //   ).innerHTML = `<img src="<%= asset_path 'forward.png' %>" width="20" />`;
+      // } else {
+      //   // デフォルトの挿入位置（最後）に追加
+      //   controlBar.el().appendChild(rewindButton.el()).innerHTML = `<img src="<%= asset_path 'rewind.png' %>" width="20"/>`;
+      //   controlBar.el().appendChild(forwardButton.el()).innerHTML = `<img src="<%= asset_path 'forward.png' %>" width="20" />`;
+      // }
     });
   });
 
@@ -497,44 +553,6 @@
   player.ready(function() {
     var self = this;
     self.on('loadedmetadata', () => {
-      // console.log('loaded meta data.');
-      // // コントローラに10秒戻しボタンと10秒送りボタンを追加
-      // const rewindButton = player.getChild('ControlBar').addChild('button');
-      // const forwardButton = player.getChild('ControlBar').addChild('button');
-      // rewindButton.addClass('vjs-control'); // 追加
-      // forwardButton.addClass('vjs-control');
-      // rewindButton.controlText('10秒戻し');
-      // forwardButton.controlText('10秒り');
-
-      // rewindButton.el().style.marginRight = '-6px';
-      // forwardButton.el().style.marginLeft = '-6px';
-
-      // // z-indexを10に設定
-      // rewindButton.el().style.zIndex = '10';
-      // forwardButton.el().style.zIndex = '10';
-
-      // // アイコンを設定
-      // const controlBar = player.getChild('ControlBar');
-      // const fullscreenToggle = controlBar.getChild('fullscreenToggle');
-
-      // // 挿入位置を決定（PiPボタンが存在しない場合は全画面ボタンの前に挿入）
-      // const insertBeforeElement = fullscreenToggle;
-
-      // if (insertBeforeElement) {
-      //   controlBar.el().insertBefore(
-      //     rewindButton.el(),
-      //     insertBeforeElement.el()
-      //   ).innerHTML = `<img src="<%= asset_path 'rewind.png' %>" width="20" />`;
-        
-      //   controlBar.el().insertBefore(
-      //     forwardButton.el(),
-      //     insertBeforeElement.el()
-      //   ).innerHTML = `<img src="<%= asset_path 'forward.png' %>" width="20" />`;
-      // } else {
-      //   // デフォルトの挿入位置（最後）に追加
-      //   controlBar.el().appendChild(rewindButton.el()).innerHTML = `<img src="<%= asset_path 'rewind.png' %>" width="20"/>`;
-      //   controlBar.el().appendChild(forwardButton.el()).innerHTML = `<img src="<%= asset_path 'forward.png' %>" width="20" />`;
-      // }
 
       document.addEventListener('keydown', function (e) {
         if (e.code == 'ArrowLeft') {
