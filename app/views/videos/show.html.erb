@@ -342,10 +342,14 @@
     });
   });
 
+  var video_el = document.getElementById("video");
+
   const zoomPlugin = player.zoomPlugin();
 
   let initialDistance = 0;
   let initialPoint;
+  let initialPointX;
+  let initialPointY;
 
   let ongoingTouches = [];
 
@@ -370,6 +374,8 @@
 
     if (ongoingTouches.length === 2) {
       initialDistance = getDistance(ongoingTouches[0], ongoingTouches[1]);
+      initialPointX = (ongoingTouches[0].pageX + ongoingTouches[1].pageX) / 2;
+      initialPointY = (ongoingTouches[0].pageY + ongoingTouches[1].pageY) / 2;
     } else if (ongoingTouches.length === 1) {
       initialPoint = ongoingTouches[0];
     }
@@ -378,17 +384,6 @@
   let ratio = 1;
   let previousDistance = 0;
   var Pos = { x: 0, y: 0 };
-
-  // ビデオプレイヤー内の相対座標を計算する関数
-  function getRelativeCoordinates(clientX, clientY) {
-    // プレイヤー要素の位置とサイズ情報を取得
-    // player.el()はプレイヤーのDOM要素を返し、getBoundingClientRect()はその要素の位置とサイズ情報を含むオブジェクトを返します
-    // これにより、ビデオプレイヤーの画面上での正確な位置を知ることができます
-    var rect = player.el().getBoundingClientRect();
-    var x = clientX - rect.left;
-    var y = clientY - rect.top;
-    return { x: x, y: y };
-  }
 
   function handleTouchMove(evt) {
     // タッチがコントロールバー内のボタンから発生した場合は処理を中断
@@ -425,6 +420,30 @@
         
         if (ratio > 1) {
           zoomPlugin.zoom(ratio);
+
+          $("#distance").text(`(${initialPointX}, ${initialPointY})`);
+
+          // ズームの中心をinitialPointX, initialPointYに設定
+          // ビデオの中心座標を計算
+          const videoCenterX = video_el.clientWidth / 2;
+          const videoCenterY = video_el.clientHeight / 2;
+
+          // 初期ポイントを中心に移動させるオフセットを計算
+          const offsetX = initialPointX - videoCenterX;
+          const offsetY = initialPointY - videoCenterY;
+
+          // Pos.x と Pos.y をズーム率に基づいて調整
+          Pos.x = (offsetX * (1 - ratio)) + Pos.x;
+          Pos.y = (offsetY * (1 - ratio)) + Pos.y;
+
+          // Pos.x と Pos.y を指定された範囲内に制限
+          Pos.x = Math.max(-(video_el.clientWidth * ratio / 2) + (video_el.clientWidth / 2),
+                           Math.min(Pos.x, (video_el.clientWidth * ratio / 2) - (video_el.clientWidth / 2)));
+          Pos.y = Math.max(-(video_el.clientHeight * ratio / 2) + (video_el.clientHeight / 2),
+                           Math.min(Pos.y, (video_el.clientHeight * ratio / 2) - (video_el.clientHeight / 2)));
+
+          $("#ratio").text(`(${Pos.x}, ${Pos.y})`);
+          zoomPlugin.move(Pos.x, Pos.y);
         }
       } else if (currentDistance < initialDistance) {
         if (typeof ratio !== 'undefined' && ratio !== null) {
@@ -434,6 +453,12 @@
         }
         if (ratio > 1) {
           zoomPlugin.zoom(ratio);
+
+          Pos.x = Math.max(-(video_el.clientWidth * ratio / 2) + (video_el.clientWidth / 2), Math.min((video_el.clientWidth * ratio / 2) - (video_el.clientWidth / 2), Pos.x));
+          Pos.y = Math.max(-(video_el.clientHeight * ratio / 2) + (video_el.clientHeight / 2), Math.min((video_el.clientHeight * ratio / 2) - (video_el.clientHeight / 2), Pos.y));
+
+          // 相対座標で移動
+          zoomPlugin.move(Pos.x, Pos.y);
         }
       }
       previousDistance = currentDistance;
@@ -447,12 +472,19 @@
       initialPoint = { ...currentPoint };
 
       // 現在の位置に移動量を加算
-      Pos.x += deltaX;
-      Pos.y += deltaY;
+      if (initialPoint.pageX > currentPoint.pageX){
+        Pos.x -= deltaX;
+      } else {
+        Pos.x += deltaX;
+      }
 
-      // 座標をクランプ
-      Pos.x = Math.max(0, Math.min(player.videoWidth() - player.videoWidth() / ratio, Pos.x));
-      Pos.y = Math.max(0, Math.min(player.videoHeight() - player.videoHeight() / ratio, Pos.y));
+      if (initialPoint.pageY > currentPoint.pageY){
+        Pos.y -= deltaY;
+      } else {
+        Pos.y += deltaY;
+      }
+      Pos.x = Math.max(-(video_el.clientWidth * ratio / 2) + (video_el.clientWidth / 2), Math.min((video_el.clientWidth * ratio / 2) - (video_el.clientWidth / 2), Pos.x));
+      Pos.y = Math.max(-(video_el.clientHeight * ratio / 2) + (video_el.clientHeight / 2), Math.min((video_el.clientHeight * ratio / 2) - (video_el.clientHeight / 2), Pos.y));
 
       // 相対座標で移動
       zoomPlugin.move(Pos.x, Pos.y);
@@ -511,8 +543,6 @@
     return Math.sqrt(dx * dx + dy * dy);
   }
 
-  var video_el = document.getElementById("video");
-
   video_el.addEventListener('touchstart', handleTouchStart, { passive: false });
   video_el.addEventListener('touchmove', handleTouchMove, { passive: false });
   video_el.addEventListener('touchend', handleTouchEnd, { passive: false });
@@ -525,45 +555,6 @@
     alert('セッションが切断されました。リロードします・・');
     location.reload();
   });
-
-  // fullScreenElement = document.getElementsByClassName("vjs-fullscreen-control")[0];
-	// if (videojs.browser.IS_IOS ) {
-	// 	fullScreenElement.parentNode.removeChild(fullScreenElement);
-	// }
-
-
-  // player.on('fullscreenchange', function() {
-  //   if (player.isFullscreen()) {
-  //     // フルスクリーンモードに入ったときの処理
-  //     console.log('フルスクリーンモードに入りました');
-      
-  //     // プレイヤーのサイズを画面いっぱいに設定
-  //     player.width(window.innerWidth);
-  //     player.height(window.innerHeight);
-      
-  //     // コントロールバーを常に表示
-  //     player.controls(true);
-      
-  //     // 自動再生を開始（オプション）
-  //     player.play();
-      
-  //     // カスタムクラスを追加してスタイルを変更
-  //     player.el().classList.add('my-fullscreen-class');
-  //   } else {
-  //     // フルスクリーンモードを終了したときの処理
-  //     console.log('フルスクリーンモードを終了しました');
-      
-  //     // プレイヤーのサイズを元に戻す
-  //     player.width('100%');
-  //     player.height('auto');
-      
-  //     // コントロールバーの表示を元の設定に戻す
-  //     player.controls(player.options_.controls);
-      
-  //     // カスタムクラスを削除
-  //     player.el().classList.remove('my-fullscreen-class');
-  //   }
-  // });
 
   function jumpTo(time) {
     player.currentTime(time);
