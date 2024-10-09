@@ -281,6 +281,10 @@
   let previousDistance = 0;
 
   function handleTouchMove(evt) {
+    if (!evt.target.closest('video')) {
+      return;
+    }
+
     evt.preventDefault();
     const touches = evt.changedTouches;
 
@@ -328,6 +332,10 @@
 
 
   function handleTouchEnd(evt) {
+    if (!evt.target.closest('video')) {
+      return;
+    }
+
     evt.preventDefault();
     const touches = evt.changedTouches;
 
@@ -340,6 +348,10 @@
   }
 
   function handleTouchCancel(evt) {
+    if (!evt.target.closest('video')) {
+      return;
+    }
+
     evt.preventDefault();
     ongoingTouches = [];
   }
