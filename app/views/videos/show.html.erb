@@ -377,9 +377,13 @@
 
   let ratio = 1;
   let previousDistance = 0;
+  var Pos = { x: 0, y: 0 };
 
   // ビデオプレイヤー内の相対座標を計算する関数
   function getRelativeCoordinates(clientX, clientY) {
+    // プレイヤー要素の位置とサイズ情報を取得
+    // player.el()はプレイヤーのDOM要素を返し、getBoundingClientRect()はその要素の位置とサイズ情報を含むオブジェクトを返します
+    // これにより、ビデオプレイヤーの画面上での正確な位置を知ることができます
     var rect = player.el().getBoundingClientRect();
     var x = clientX - rect.left;
     var y = clientY - rect.top;
@@ -435,9 +439,23 @@
       previousDistance = currentDistance;
     } else if (ongoingTouches.length === 1) {
       let currentPoint = ongoingTouches[0];
-      $('#distance').text(`${currentPoint.pageX}, ${currentPoint.pageY}`);
-      var coords = getRelativeCoordinates(currentPoint.pageX, currentPoint.pageY);
-      zoomPlugin.move(coords.x, coords.y);
+      // 相対移動量を計算
+      let deltaX = currentPoint.pageX - initialPoint.pageX;
+      let deltaY = currentPoint.pageY - initialPoint.pageY;
+
+      // 初期ポイントを更新
+      initialPoint = { ...currentPoint };
+
+      // 現在の位置に移動量を加算
+      Pos.x += deltaX;
+      Pos.y += deltaY;
+
+      // 座標をクランプ
+      Pos.x = Math.max(0, Math.min(player.videoWidth() - player.videoWidth() / ratio, Pos.x));
+      Pos.y = Math.max(0, Math.min(player.videoHeight() - player.videoHeight() / ratio, Pos.y));
+
+      // 相対座標で移動
+      zoomPlugin.move(Pos.x, Pos.y);
     }
   }
 
