@@ -401,6 +401,7 @@
   player.ready(function() {
     var self = this;
     self.on('loadedmetadata', () => {
+      $('#distance').text("Loaded meta data.");
       console.log('loaded meta data.');
       // コントローラに10秒戻しボタンと10秒送りボタンを追加
       const rewindButton = player.getChild('ControlBar').addChild('button');
