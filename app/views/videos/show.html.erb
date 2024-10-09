@@ -301,7 +301,7 @@
   videojs.registerComponent('ForwardButton', ForwardButton);
 
   // プレイヤーの初期化とボタンの追加
-  videojs('video', {
+  player = videojs('video', {
     autoplay: false,
     fluid: true,
     loop: false,
@@ -317,8 +317,8 @@
       exitOnRotate: true,
       alwaysInFullScreen: true
     }
-  }).ready(function() {
-    const player = this;
+  });
+  player.ready(function() {
     // フルスクリーン切り替え後にボタンを追加
     player.on('loadedmetadata', () => {
       const controlBar = player.getChild('ControlBar');
@@ -360,7 +360,7 @@
           self.currentTime(newTime);
         }
       });
-      
+
       // // コントローラに10秒戻しボタンと10秒送りボタンを追加
       // const rewindButton = player.getChild('ControlBar').addChild('button');
       // const forwardButton = player.getChild('ControlBar').addChild('button');
