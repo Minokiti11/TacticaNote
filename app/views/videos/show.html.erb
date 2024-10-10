@@ -421,29 +421,23 @@
         if (ratio > 1) {
           zoomPlugin.zoom(ratio);
 
-          $("#distance").text(`(${initialPointX}, ${initialPointY})`);
+          // $("#ratio").text(`(${initialPointX}, ${initialPointY})`);
 
-          // ズームの中心をinitialPointX, initialPointYに設定
-          // ビデオの中心座標を計算
-          const videoCenterX = video_el.clientWidth / 2;
-          const videoCenterY = video_el.clientHeight / 2;
+          // // ズームの中心をinitialPointX, initialPointYに設定
+          // // ビデオの中心座標を計算
+          // const videoCenterX = video_el.clientWidth / 2;
+          // const videoCenterY = video_el.clientHeight / 2;
 
-          // 初期ポイントを中心に移動させるオフセットを計算
-          const offsetX = initialPointX - videoCenterX;
-          const offsetY = initialPointY - videoCenterY;
+          // $("#distance").text(`(${-(video_el.clientWidth * ratio / 2) + (video_el.clientWidth / 2)} < Pos.x < ${(video_el.clientWidth * ratio / 2) - (video_el.clientWidth / 2)})`);
 
-          // Pos.x と Pos.y をズーム率に基づいて調整
-          Pos.x = (offsetX * (1 - ratio)) + Pos.x;
-          Pos.y = (offsetY * (1 - ratio)) + Pos.y;
+          // // Pos.x と Pos.y を指定された範囲内に制限
+          // Pos.x = Math.max(-(video_el.clientWidth * ratio / 2) + (video_el.clientWidth / 2),
+          //                  Math.min(initialPointX - (video_el.clientWidth / 2), (video_el.clientWidth * ratio / 2) - (video_el.clientWidth / 2)));
+          // Pos.y = Math.max(-(video_el.clientHeight * ratio / 2) + (video_el.clientHeight / 2),
+          //                  Math.min((video_el.clientHeight, (video_el.clientHeight * ratio / 2) - (video_el.clientHeight / 2))));
 
-          // Pos.x と Pos.y を指定された範囲内に制限
-          Pos.x = Math.max(-(video_el.clientWidth * ratio / 2) + (video_el.clientWidth / 2),
-                           Math.min(Pos.x, (video_el.clientWidth * ratio / 2) - (video_el.clientWidth / 2)));
-          Pos.y = Math.max(-(video_el.clientHeight * ratio / 2) + (video_el.clientHeight / 2),
-                           Math.min(Pos.y, (video_el.clientHeight * ratio / 2) - (video_el.clientHeight / 2)));
-
-          $("#ratio").text(`(${Pos.x}, ${Pos.y})`);
-          zoomPlugin.move(Pos.x, Pos.y);
+          
+          // zoomPlugin.move(Pos.x, Pos.y);
         }
       } else if (currentDistance < initialDistance) {
         if (typeof ratio !== 'undefined' && ratio !== null) {
