@@ -280,14 +280,14 @@
 
 
             <!-- 上手くいった点の入力フォーム -->
-            <div class="form-group" id="good" data-group-id="<%= params[:group_id]%>">
+            <div class="form-group" id="good" data-note-for="<%= @note_for %>" data-user-id="<%= current_user.id %>" data-token="<%= @unique_token %>" data-group-id="<%= params[:group_id]%>">
                 <label class="form-label">上手くいったこと</label>
                 <% if @with_video == "true" %>
                     <% placeholder_text = '上手くいったことを記入 (🕓アイコンを押して、動画の現在の時間を入力できます。)' %>
                 <% else %>
                     <% placeholder_text = '上手くいったことを記入' %>
                 <% end %>
-                <%= form.rich_text_area :good, class: 'form-control mb-3', id: 'note_good', placeholder: placeholder_text, style: "padding: 10px; max-height: 1200px; height: 100px;" %>
+                <%= form.rich_text_area :good, class: 'form-control mb-3', id: 'note_good', "data-controller": "diff-content", placeholder: placeholder_text, style: "padding: 10px; max-height: 1200px; height: 100px;" %>
             </div>
             <div id="notes_good_rate">
             </div><br />
@@ -413,34 +413,65 @@
     const turndownService = new TurndownService();
 
     var $input_good = $('#note_good');
+    // trixのイベントをリッスンしてsuggestion-changedを初期化
+    $input_good.on('trix-initialize', function() {
+        $(this).data('suggestion-changed', false);
+    });
+
+    // 手動フォーカスを検出するフラグを追加
+    var isManualFocus = false;
+
+    // マウスダウンまたはタッチスタート時にフラグをセット
+    $input_good.on('mousedown touchstart', function() {
+        isManualFocus = true;
+    });
+
+    $input_good.on('trix-focus', function() {
+        if (isManualFocus) {
+            console.log("focus...");
+            $input_good.find('*').removeClass();
+            $input_good.data('suggestion-changed', false);
+        }
+
+    });
+
     // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
     $input_good.on('trix-change', function(event) {
         // HTML をマークダウンに変換
         const markdown = turndownService.turndown(event.target.innerHTML);
+        // console.log("changed...");
         // 変更フラグをセット
-        $input_good.data('changed', true);
+        $('#note_good').data('changed', true);
     });
 
     $input_good.on('trix-blur', function() {
+        isManualFocus = false;
+        $input_good = $('#note_good');
+        console.log("changed: ", $input_good.data('changed'));
+        console.log("suggestion-changed: ", $input_good.data('suggestion-changed'));
         if ($input_good.data('changed')) {
-            const markdown = turndownService.turndown(this.innerHTML);
+            if ($input_good.data('suggestion-changed') === false) {
+                const markdown = turndownService.turndown(this.innerHTML);
+                
+                fetch('/notes/gpt_api_request_good', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // CSRFトークンをmetaタグから取得して設定
+                        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({data: { value: markdown, user_id: parseInt(document.getElementById("good").getAttribute("data-user-id")), token: document.getElementById("good").getAttribute("data-token"), group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")), note_for: document.getElementById("good").getAttribute("data-note-for") }})
+                }).then(response => {
+                    if (response.ok) {
+                        $('#note_good').data('changed', false);
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
+            } else {
+                $('#note_good').data('changed', false);
+            }
             
-            fetch('/notes/gpt_api_request_good', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // CSRFトークンをmetaタグから取得して設定
-                    'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({data: { value: markdown, group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")) }})
-            }).then(response => {
-                if (response.ok) {
-                    // 成功時の処理があればここに記述
-                    $input_good.data('changed', false);
-                }
-            }).catch(error => {
-                console.error('Error:', error);
-            });
         }
     });
 
@@ -466,34 +497,37 @@
                     // CSRFトークンをmetaタグから取得して設定
                     'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 },
-                body: JSON.stringify({data: { value: markdown, group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")) }})
+                body: JSON.stringify({data: { value: markdown, user_id: parseInt(document.getElementById("good").getAttribute("data-user-id")), token: document.getElementById("good").getAttribute("data-token"), group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")), note_for: document.getElementById("good").getAttribute("data-note-for") }})
             });
         }
     });
 
     var $input_next = $('#note_next');
-
-    let id;
-    $input_next.on('input', function(event) {
-        clearTimeout(id);// タイマーストップ
-        id = setTimeout(fire,8000);// タイマーリセット（8秒）
+    $input_next.on('trix-change', function(event) {
+        // HTML をマークダウンに変換
+        const markdown = turndownService.turndown(event.target.innerHTML);
+        // 変更フラグをセット
+        $input_next.data('changed', true);
+        console.log("changed....");
     });
-
-    // 実際にnotes_controllerのメソッドを呼ぶ部分
-    var fire = function() {
-        // マークダウンに変換
-        const markdown = turndownService.turndown(document.getElementById('note_next').innerHTML);
-        
-        fetch('/notes/gpt_api_request_next', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                // CSRFトークンをmetaタグから取得して設定
-                'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({data: { value: markdown, group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")) }})
-        });
-    };
+    // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
+    $input_next.on('trix-blur', function(event) {
+        if ($input_next.data('changed')) {
+            console.log("We'll request api...")
+            // HTML をマークダウンに変換
+            const markdown = turndownService.turndown(event.target.innerHTML);
+            
+            fetch('/notes/gpt_api_request_next', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // CSRFトークンをmetaタグから取得して設定
+                    'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({data: { value: markdown, user_id: parseInt(document.getElementById("good").getAttribute("data-user-id")), token: document.getElementById("good").getAttribute("data-token"), group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")), note_for: document.getElementById("good").getAttribute("data-note-for") }})
+            });
+        }
+    });
 </script>
 
 <% if @with_video && @video_id %>

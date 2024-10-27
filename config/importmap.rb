@@ -15,6 +15,6 @@ pin "popper", to: 'popper.js', preload: true
 pin "bootstrap", to: 'bootstrap.min.js', preload: true
 pin "@rails/activestorage", to: "https://ga.jspm.io/npm:@rails/activestorage@7.1.3-2/app/assets/javascripts/activestorage.esm.js"
 pin "@rails/request.js", to: "https://ga.jspm.io/npm:@rails/request.js@0.0.9/src/index.js"
-pin "trix", to: "https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js", preload: true
+pin "trix", to: "https://unpkg.com/trix@2.1.7/dist/trix.umd.min.js", preload: true
 pin "@rails/actiontext", to: "actiontext.js"
 pin "tribute", to: "https://ga.jspm.io/npm:tributejs@5.1.3/dist/tribute.min.js"

@@ -1,5 +1,26 @@
 <div id="<%= target %>">
-    <div style="color: green;">
+    <div style="color: green;" data-diff-content="<%= h(diff_content) %>">
         <%= markdown(message) %>
+    </div>
+
+    <% suggestions = suggestion.split(/1\. /).last.split(/2\. |3\. /).reject(&:empty?) %>
+    <% suggestion_title = suggestion.split('1.').first.strip %>
+    <% option1, option2, option3 = suggestions %>
+    <div class="custom-radio-group w-100">
+    <label class="custom-radio-container">
+        <input type="radio" name="custom-radio" value="option1" />
+        <span class="custom-radio-checkmark"></span>
+        <%= option1 %>
+    </label>
+    <label class="custom-radio-container">
+        <input type="radio" name="custom-radio" value="option2" />
+        <span class="custom-radio-checkmark"></span>
+        <%= option2 %>
+    </label>
+    <label class="custom-radio-container">
+        <input type="radio" name="custom-radio" value="option3" />
+        <span class="custom-radio-checkmark"></span>
+        <%= option3 %>
+    </label>
     </div>
 </div>

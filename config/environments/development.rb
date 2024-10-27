@@ -63,6 +63,8 @@ Rails.application.configure do
 
   config.hosts << "localhost:3000"
 
+  config.hosts << "172.23.203.224"
+
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
 
@@ -72,4 +74,16 @@ Rails.application.configure do
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
   config.action_cable.url = "ws://localhost:3000/cable"
+
+  config.assets.compile = true
+
+  config.log_level = :warn
+  
+  config.action_cable.logger = Logger.new(STDOUT)
+  config.action_cable.logger.level = :error
+
+  config.active_storage.urls_expire_in = 2.hours
+
+  # config.assets.debug = true
+  # config.assets.digest = false
 end

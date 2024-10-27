@@ -15414,8 +15414,13 @@ textarea {
   /*ユーザによるリサイズを不可にし、右下に///が出ないようにする*/
 }
 
+/* line 27, app/assets/stylesheets/application.scss */
+.highlight-green {
+  background-color: rgba(0, 187, 0, 0.5);
+}
+
 /*モーダル本体の指定 + モーダル外側の背景の指定*/
-/* line 28, app/assets/stylesheets/application.scss */
+/* line 32, app/assets/stylesheets/application.scss */
 .modal-container {
   position: fixed;
   top: 0;
@@ -15434,7 +15439,7 @@ textarea {
 }
 
 /*モーダル本体の擬似要素の指定*/
-/* line 45, app/assets/stylesheets/application.scss */
+/* line 49, app/assets/stylesheets/application.scss */
 .modal-container:before {
   content: "";
   display: inline-block;
@@ -15443,14 +15448,14 @@ textarea {
 }
 
 /*モーダル本体に「active」クラス付与した時のスタイル*/
-/* line 52, app/assets/stylesheets/application.scss */
+/* line 56, app/assets/stylesheets/application.scss */
 .modal-container.active {
   opacity: 1;
   visibility: visible;
 }
 
 /*モーダル枠の指定*/
-/* line 57, app/assets/stylesheets/application.scss */
+/* line 61, app/assets/stylesheets/application.scss */
 .modal-body {
   position: relative;
   display: inline-block;
@@ -15460,7 +15465,7 @@ textarea {
 }
 
 /*モーダルを閉じるボタンの指定*/
-/* line 66, app/assets/stylesheets/application.scss */
+/* line 70, app/assets/stylesheets/application.scss */
 .modal-close {
   position: absolute;
   display: flex;
@@ -15476,7 +15481,7 @@ textarea {
 }
 
 /*モーダル内のコンテンツの指定*/
-/* line 80, app/assets/stylesheets/application.scss */
+/* line 84, app/assets/stylesheets/application.scss */
 .modal-content {
   background: #272737;
   text-align: left;
@@ -15484,7 +15489,7 @@ textarea {
   border-radius: 10px;
 }
 
-/* line 88, app/assets/stylesheets/application.scss */
+/* line 92, app/assets/stylesheets/application.scss */
 .gsi-material-button {
   -moz-user-select: none;
   -webkit-user-select: none;
@@ -15515,7 +15520,107 @@ textarea {
   min-width: min-content;
 }
 
-/* line 120, app/assets/stylesheets/application.scss */
+/* From Uiverse.io by kyle1dev */
+/* line 126, app/assets/stylesheets/application.scss */
+.custom-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 320px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.15);
+  padding: 16px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* line 136, app/assets/stylesheets/application.scss */
+.custom-radio-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 12px 20px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.2);
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  font-size: 16px;
+  color: #333333;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* line 153, app/assets/stylesheets/application.scss */
+.custom-radio-container:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.01);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* line 158, app/assets/stylesheets/application.scss */
+.custom-radio-container input[type="radio"] {
+  opacity: 0;
+  position: absolute;
+}
+
+/* line 162, app/assets/stylesheets/application.scss */
+.custom-radio-checkmark {
+  position: relative;
+  height: 12px;
+  width: 12px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.3);
+  transition: background-color 0.4s ease, transform 0.4s ease;
+  margin-right: 12px;
+  display: inline-block;
+  vertical-align: middle;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* line 177, app/assets/stylesheets/application.scss */
+.custom-radio-container input[type="radio"]:checked + .custom-radio-checkmark {
+  background-color: #ffffff;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+  animation: pulse 0.3s forwards;
+}
+
+/* line 183, app/assets/stylesheets/application.scss */
+.custom-radio-checkmark::after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* line 188, app/assets/stylesheets/application.scss */
+.custom-radio-container
+input[type="radio"]:checked
++ .custom-radio-checkmark::after {
+  display: block;
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #007bff;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1.2);
+  }
+  50% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(1.2);
+  }
+}
+
+/* line 213, app/assets/stylesheets/application.scss */
 .gsi-material-button .gsi-material-button-icon {
   height: 20px;
   margin-right: 12px;
@@ -15523,7 +15628,7 @@ textarea {
   width: 20px;
 }
 
-/* line 127, app/assets/stylesheets/application.scss */
+/* line 220, app/assets/stylesheets/application.scss */
 .gsi-material-button .gsi-material-button-content-wrapper {
   align-items: center;
   display: flex;
@@ -15535,7 +15640,7 @@ textarea {
   width: 100%;
 }
 
-/* line 141, app/assets/stylesheets/application.scss */
+/* line 234, app/assets/stylesheets/application.scss */
 .gsi-material-button .gsi-material-button-contents {
   flex-grow: 1;
   font-family: 'Roboto', arial, sans-serif;
@@ -15545,7 +15650,7 @@ textarea {
   vertical-align: top;
 }
 
-/* line 151, app/assets/stylesheets/application.scss */
+/* line 244, app/assets/stylesheets/application.scss */
 .gsi-material-button .gsi-material-button-state {
   transition: opacity .218s;
   bottom: 0;
@@ -15556,42 +15661,42 @@ textarea {
   top: 0;
 }
 
-/* line 162, app/assets/stylesheets/application.scss */
+/* line 255, app/assets/stylesheets/application.scss */
 .gsi-material-button:disabled {
   cursor: default;
   background-color: #ffffff61;
   border-color: #1f1f1f1f;
 }
 
-/* line 168, app/assets/stylesheets/application.scss */
+/* line 261, app/assets/stylesheets/application.scss */
 .gsi-material-button:disabled .gsi-material-button-contents {
   opacity: 38%;
 }
 
-/* line 172, app/assets/stylesheets/application.scss */
+/* line 265, app/assets/stylesheets/application.scss */
 .gsi-material-button:disabled .gsi-material-button-icon {
   opacity: 38%;
 }
 
-/* line 176, app/assets/stylesheets/application.scss */
+/* line 269, app/assets/stylesheets/application.scss */
 .gsi-material-button:not(:disabled):active .gsi-material-button-state,
 .gsi-material-button:not(:disabled):focus .gsi-material-button-state {
   background-color: #303030;
   opacity: 12%;
 }
 
-/* line 182, app/assets/stylesheets/application.scss */
+/* line 275, app/assets/stylesheets/application.scss */
 .gsi-material-button:not(:disabled):hover {
   box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
 }
 
-/* line 187, app/assets/stylesheets/application.scss */
+/* line 280, app/assets/stylesheets/application.scss */
 .gsi-material-button:not(:disabled):hover .gsi-material-button-state {
   background-color: #444444;
   opacity: 8%;
 }
 
-/* line 192, app/assets/stylesheets/application.scss */
+/* line 285, app/assets/stylesheets/application.scss */
 .dot-spinner {
   --uib-size: 2.8rem;
   --uib-speed: .9s;
@@ -15604,7 +15709,7 @@ textarea {
   width: var(--uib-size);
 }
 
-/* line 204, app/assets/stylesheets/application.scss */
+/* line 297, app/assets/stylesheets/application.scss */
 .dot-spinner__dot {
   position: absolute;
   top: 0;
@@ -15616,7 +15721,7 @@ textarea {
   width: 100%;
 }
 
-/* line 215, app/assets/stylesheets/application.scss */
+/* line 308, app/assets/stylesheets/application.scss */
 .dot-spinner__dot::before {
   content: '';
   height: 20%;
@@ -15629,72 +15734,72 @@ textarea {
   box-shadow: 0 0 20px rgba(18, 31, 53, 0.3);
 }
 
-/* line 227, app/assets/stylesheets/application.scss */
+/* line 320, app/assets/stylesheets/application.scss */
 .dot-spinner__dot:nth-child(2) {
   transform: rotate(45deg);
 }
 
-/* line 231, app/assets/stylesheets/application.scss */
+/* line 324, app/assets/stylesheets/application.scss */
 .dot-spinner__dot:nth-child(2)::before {
   animation-delay: calc(var(--uib-speed) * -0.875);
 }
 
-/* line 235, app/assets/stylesheets/application.scss */
+/* line 328, app/assets/stylesheets/application.scss */
 .dot-spinner__dot:nth-child(3) {
   transform: rotate(90deg);
 }
 
-/* line 239, app/assets/stylesheets/application.scss */
+/* line 332, app/assets/stylesheets/application.scss */
 .dot-spinner__dot:nth-child(3)::before {
   animation-delay: calc(var(--uib-speed) * -0.75);
 }
 
-/* line 243, app/assets/stylesheets/application.scss */
+/* line 336, app/assets/stylesheets/application.scss */
 .dot-spinner__dot:nth-child(4) {
   transform: rotate(135deg);
 }
 
-/* line 247, app/assets/stylesheets/application.scss */
+/* line 340, app/assets/stylesheets/application.scss */
 .dot-spinner__dot:nth-child(4)::before {
   animation-delay: calc(var(--uib-speed) * -0.625);
 }
 
-/* line 251, app/assets/stylesheets/application.scss */
+/* line 344, app/assets/stylesheets/application.scss */
 .dot-spinner__dot:nth-child(5) {
   transform: rotate(180deg);
 }
 
-/* line 255, app/assets/stylesheets/application.scss */
+/* line 348, app/assets/stylesheets/application.scss */
 .dot-spinner__dot:nth-child(5)::before {
   animation-delay: calc(var(--uib-speed) * -0.5);
 }
 
-/* line 259, app/assets/stylesheets/application.scss */
+/* line 352, app/assets/stylesheets/application.scss */
 .dot-spinner__dot:nth-child(6) {
   transform: rotate(225deg);
 }
 
-/* line 263, app/assets/stylesheets/application.scss */
+/* line 356, app/assets/stylesheets/application.scss */
 .dot-spinner__dot:nth-child(6)::before {
   animation-delay: calc(var(--uib-speed) * -0.375);
 }
 
-/* line 267, app/assets/stylesheets/application.scss */
+/* line 360, app/assets/stylesheets/application.scss */
 .dot-spinner__dot:nth-child(7) {
   transform: rotate(270deg);
 }
 
-/* line 271, app/assets/stylesheets/application.scss */
+/* line 364, app/assets/stylesheets/application.scss */
 .dot-spinner__dot:nth-child(7)::before {
   animation-delay: calc(var(--uib-speed) * -0.25);
 }
 
-/* line 275, app/assets/stylesheets/application.scss */
+/* line 368, app/assets/stylesheets/application.scss */
 .dot-spinner__dot:nth-child(8) {
   transform: rotate(315deg);
 }
 
-/* line 279, app/assets/stylesheets/application.scss */
+/* line 372, app/assets/stylesheets/application.scss */
 .dot-spinner__dot:nth-child(8)::before {
   animation-delay: calc(var(--uib-speed) * -0.125);
 }
@@ -15711,21 +15816,21 @@ textarea {
   }
 }
 
-/* line 297, app/assets/stylesheets/application.scss */
+/* line 390, app/assets/stylesheets/application.scss */
 .tribute-container {
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 4px rgba(0, 0, 0, 0.1), 0 5px 20px rgba(0, 0, 0, 0.05);
 }
 
-/* line 302, app/assets/stylesheets/application.scss */
+/* line 395, app/assets/stylesheets/application.scss */
 .tribute-container ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
 
-/* line 308, app/assets/stylesheets/application.scss */
+/* line 401, app/assets/stylesheets/application.scss */
 .tribute-container li {
   background: #fff;
   padding: 0.2em 1em;
@@ -15733,24 +15838,24 @@ textarea {
   max-width: 100%;
 }
 
-/* line 315, app/assets/stylesheets/application.scss */
+/* line 408, app/assets/stylesheets/application.scss */
 .tribute-container .highlight {
   background: #1b6ac9;
   color: #fff;
 }
 
-/* line 319, app/assets/stylesheets/application.scss */
+/* line 412, app/assets/stylesheets/application.scss */
 .tribute-container .highlight span {
   font-weight: bold;
 }
 
 /* From Uiverse.io by ahmed150up */
-/* line 326, app/assets/stylesheets/application.scss */
+/* line 419, app/assets/stylesheets/application.scss */
 .star_rating {
   display: none;
 }
 
-/* line 330, app/assets/stylesheets/application.scss */
+/* line 423, app/assets/stylesheets/application.scss */
 label svg {
   width: 30px;
   height: 30px;
@@ -15761,7 +15866,7 @@ label svg {
   stroke-width: 1.5px;
 }
 
-/* line 340, app/assets/stylesheets/application.scss */
+/* line 433, app/assets/stylesheets/application.scss */
 .star_rating:checked + label svg {
   fill: #FFC107;
   animation: pop_42 0.5s ease-out;
@@ -15779,7 +15884,7 @@ label svg {
   }
 }
 
-/* line 359, app/assets/stylesheets/application.scss */
+/* line 452, app/assets/stylesheets/application.scss */
 figcaption {
   display: none;
 }

@@ -8,5 +8,5 @@ import { application } from "controllers/application"
 import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading"
 eagerLoadControllersFrom("controllers", application)
 
-// import HelloController from "./hello_controller"
-// application.register("hello", HelloController);
+import DiffContentController from "./diff_content_controller"
+application.register("diff-content", DiffContentController);

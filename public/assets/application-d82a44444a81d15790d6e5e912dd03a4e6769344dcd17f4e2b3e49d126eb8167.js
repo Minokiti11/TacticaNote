@@ -28,7 +28,7 @@ document.addEventListener("trix-before-initialize", () => {
 document.addEventListener("trix-paste", function(event) {
     // ペーストされた内容をHTML形式で取得
     const clipboardData = event.clipboardData || window.clipboardData;
-    console.log("clipboardData: ", clipboardData);
+    console.log(getPastedHTMLUsingHiddenElement(event));
     const html = clipboardData.getData("text/html");
 
     if (html) {

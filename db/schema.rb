@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_22_054434) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_08_121859) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -151,6 +151,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_22_054434) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "session_id"
+    t.string "token"
     t.index ["group_id"], name: "index_responses_on_group_id"
     t.index ["user_id"], name: "index_responses_on_user_id"
     t.index ["video_id"], name: "index_responses_on_video_id"

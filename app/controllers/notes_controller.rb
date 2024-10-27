@@ -15,37 +15,48 @@ class NotesController < ApplicationController
         @@with_video = params[:with_video]
         @with_video = params[:with_video]
         @@note_for = params[:note_for]
+        @note_for = params[:note_for]
         if @@with_video
             @@video_id = params[:video_id]
             @video_id = params[:video_id]
         end
+        ##ランダムなトークンを生成
+        @unique_token = SecureRandom.uuid
+        p :@unique_token, @unique_token
     end
 
     def gpt_api_request_good
-        data = params.require(:data).permit(:value, :group_id)
+        data = params.require(:data).permit(:value, :user_id, :token, :group_id, :note_for)
+        p "data[:value]", data[:value]
+        p "token: ", data[:token]
+        p :notefor, data[:note_for]
 
-        if data[:value].present?
-            same_session_id_responses = Response.where(section_type: "good", session_id: session.id.to_s)
+        if data[:value]
+            same_session_id_responses = Response.where(section_type: "good", token: data[:token])
+
             if same_session_id_responses.length != 0 && same_session_id_responses
                 previous_data = same_session_id_responses.last.input
                 if previous_data.present?
                     similar = check_content_similarity(previous_data, data[:value])
+                    p "previous: ", previous_data
+                    p "present: ", data[:value]
+                    p :similar, similar
                     return if similar
                 end
             end
         end
         
         if !@@debug && !(data == nil) && !(data[:value] == "")
-            response = Response.create(section_type: "good", input: data["value"], session_id: session.id.to_s)
+            response = Response.create(section_type: "good", input: data["value"], user_id: data[:user_id], token: data[:token], session_id: session.id.to_s)
 
             Turbo::StreamsChannel.broadcast_replace_later_to(
                 "user_#{session.id}",
                 target: "notes_good",
                 partial: "notes/message",
-                locals: { message: "", target: "notes_good" }
+                locals: { message: "", diff_content: "", target: "notes_good" }
             )
             
-            GetAiResponse.perform_async(@@note_for, "user_#{session.id}", data[:value], "good", current_user.id, data[:group_id], response.id)
+            GetAiResponse.perform_async(data[:note_for], "user_#{session.id}", data[:value], "good", data[:token], current_user.id, data[:group_id], response.id)
             # スピナーを開始
             Turbo::StreamsChannel.broadcast_replace_later_to(
                 "spinner",
@@ -57,11 +68,11 @@ class NotesController < ApplicationController
     end
 
     def gpt_api_request_bad
-        data = params.require(:data).permit(:value, :group_id)
+        data = params.require(:data).permit(:value, :user_id, :token, :group_id, :note_for)
         p "data[:value]: ", data[:value]
 
         if data[:value].present?
-            same_session_id_responses = Response.where(section_type: "bad", session_id: session.id.to_s)
+            same_session_id_responses = Response.where(section_type: "bad", token: data[:token])
             if same_session_id_responses.length != 0 && same_session_id_responses
                 previous_data = same_session_id_responses.last.input
                 if previous_data.present?
@@ -72,7 +83,7 @@ class NotesController < ApplicationController
         end
 
         if !@@debug && !(data == nil) && !(data[:value] == "")
-            response = Response.create(section_type: "bad", input: data["value"], session_id: session.id.to_s)
+            response = Response.create(section_type: "bad", input: data["value"], user_id: data[:user_id], token: data[:token], session_id: session.id.to_s)
 
             Turbo::StreamsChannel.broadcast_replace_later_to(
                 "user_#{session.id}",
@@ -81,7 +92,7 @@ class NotesController < ApplicationController
                 locals: { message: "", target: "notes_bad" }
             )
 
-            GetAiResponse.perform_async(@@note_for, "user_#{session.id}", data[:value], "bad", current_user.id, data[:group_id], response.id)
+            GetAiResponse.perform_async(data[:note_for], "user_#{session.id}", data[:value], "bad", data[:token], current_user.id, data[:group_id], response.id)
 
             # スピナーを開始
             Turbo::StreamsChannel.broadcast_replace_later_to(
@@ -94,12 +105,12 @@ class NotesController < ApplicationController
     end
 
     def gpt_api_request_next
-        data = params.require(:data).permit(:value, :group_id)
+        data = params.require(:data).permit(:value, :user_id, :token, :group_id, :note_for)
 
         if data[:value].present?
-            same_session_id_responses = Response.where(section_type: "next", session_id: session.id.to_s)
-            if same_session_id_responses.length != 0 && same_session_id_responses
-                previous_data = same_session_id_responses.last.input
+            same_token_responses = Response.where(section_type: "next", token: data[:token])
+            if same_token_responses.length != 0 && same_token_responses
+                previous_data = same_token_responses.last.input
                 if previous_data.present?
                     similar = check_content_similarity(previous_data, data[:value])
                     return if similar
@@ -108,7 +119,7 @@ class NotesController < ApplicationController
         end
 
         if !@@debug && !(data == nil) && !(data[:value] == "")
-            response = Response.create(section_type: "next", input: data["value"], session_id: session.id.to_s)
+            response = Response.create(section_type: "next", input: data["value"], user_id: data[:user_id], token: data[:token], session_id: session.id.to_s)
 
             Turbo::StreamsChannel.broadcast_replace_later_to(
                 "user_#{session.id}",
@@ -117,7 +128,7 @@ class NotesController < ApplicationController
                 locals: { message: "", target: "notes_next" }
             )
 
-            GetAiResponse.perform_async(@@note_for, "user_#{session.id}", data[:value], "next", current_user.id, data[:group_id], response.id)
+            GetAiResponse.perform_async(data[:note_for], "user_#{session.id}", data[:value], "next", data[:token], current_user.id, data[:group_id], response.id)
             # スピナーを開始
             Turbo::StreamsChannel.broadcast_replace_later_to(
                 "spinner",
@@ -225,7 +236,14 @@ class NotesController < ApplicationController
             parameters: {
                 model: "gpt-4o-mini",
                 messages: [
-                    { role: "system", content: "テキスト1はユーザーの前の文章、テキスト2はユーザーが編集した文章です。テキスト2に大きな内容の変更がなければ'true'を、変更があれば'false'を出力してください。" },
+                    { role: "system", content: "
+                        テキスト1はユーザーの前の文章、テキスト2はユーザーが編集した文章です。
+                        テキスト2に新たなトピックの追加があれば'true'を、なければ'false'を出力してください。
+                        以下の例を参考にすること。
+                        user:
+                            テキスト1: 'ゴール前でのフィニッシュのアイデアがよかった。'
+                            テキスト2: 'ゴール前でのフィニッシュのアイデアがよかった。\n理由: 1. インナーラップでポケットを取りにいけた 2. 3. '
+                        you: false"},
                     { role: "user", content: "テキスト1: #{text1}\nテキスト2: #{text2}" }
                 ],
                 temperature: 0.2
@@ -233,7 +251,9 @@ class NotesController < ApplicationController
         )
         #　response is 'true' or 'false'
         similarity = response.dig("choices", 0, "message", "content")
+
+        p :is_changed, similarity
         
-        return similarity == "true"
+        return similarity == 'false' || similarity == "false"
     end
 end
