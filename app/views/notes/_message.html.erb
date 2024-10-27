@@ -6,6 +6,9 @@
     <% suggestions = suggestion.split(/1\. /).last.split(/2\. |3\. /).reject(&:empty?) %>
     <% suggestion_title = suggestion.split('1.').first.strip %>
     <% option1, option2, option3 = suggestions %>
+
+    <h5 class="fw-bold">変更提案:</h5><br/>
+    <h5 style="font-size: 1.2rem;">「<%= suggestion_title %>」 →</h5>
     <div class="custom-radio-group w-100">
     <label class="custom-radio-container">
         <input type="radio" name="custom-radio" value="option1" />

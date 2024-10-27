@@ -161,8 +161,10 @@ textarea{
 }
 .custom-radio-checkmark {
     position: relative;
-    height: 12px;
-    width: 12px;
+    width: 3vw; /* 相対単位に変更 */
+    height: 3vw; /* 相対単位に変更 */
+    max-width: 12px; /* 最大サイズを設定 */
+    max-height: 12px; /* 最大サイズを設定 */
     border: 2px solid #ffffff;
     border-radius: 50%;
     background-color: rgba(0, 0, 0, 0.3);
@@ -173,6 +175,7 @@ textarea{
     display: inline-block;
     vertical-align: middle;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    aspect-ratio: 1 / 1; /* アスペクト比を1:1に設定 */
 }
 .custom-radio-container input[type="radio"]:checked + .custom-radio-checkmark {
     background-color: #ffffff;
