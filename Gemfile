@@ -114,3 +114,5 @@ gem 'whenever', require: false
 gem 'sassc-rails'
 
 gem 'redcarpet'
+
+gem 'mini_racer'
