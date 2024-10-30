@@ -8,4 +8,4 @@ import ClipboardController from "./clipboard_controller"
 application.register("clipboard", ClipboardController)
 
 import DiffContentController from "./diff_content_controller"
-application.register("diff-content", DiffContentController)
+application.register("diff-content", DiffContentController);
