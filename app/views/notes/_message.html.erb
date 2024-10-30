@@ -10,20 +10,21 @@
     <h5 class="fw-bold">変更提案:</h5><br/>
     <h6 style="font-size: 1.2rem;">「<%= suggestion_title %>」 →</h5>
     <div class="custom-radio-group w-100">
-    <label class="custom-radio-container">
-        <input type="radio" name="custom-radio" value="option1" />
-        <span class="custom-radio-checkmark"></span>
-        <%= option1 %>
-    </label>
-    <label class="custom-radio-container">
-        <input type="radio" name="custom-radio" value="option2" />
-        <span class="custom-radio-checkmark"></span>
-        <%= option2 %>
-    </label>
-    <label class="custom-radio-container">
-        <input type="radio" name="custom-radio" value="option3" />
-        <span class="custom-radio-checkmark"></span>
-        <%= option3 %>
-    </label>
+        <label class="custom-radio-container">
+            <input type="radio" name="custom-radio" value="option1" />
+            <span class="custom-radio-checkmark"></span>
+            <%= option1 %>
+        </label>
+        <label class="custom-radio-container">
+            <input type="radio" name="custom-radio" value="option2" />
+            <span class="custom-radio-checkmark"></span>
+            <%= option2 %>
+        </label>
+        <label class="custom-radio-container">
+            <input type="radio" name="custom-radio" value="option3" />
+            <span class="custom-radio-checkmark"></span>
+            <%= option3 %>
+        </label>
     </div>
+    <button type="button" class="btn btn-primary mt-3" onclick="replaceWith('<%= trix_target %>', '<%= suggestion_title %>');">変更する</button>
 </div>

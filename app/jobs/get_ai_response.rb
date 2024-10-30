@@ -239,6 +239,7 @@ class GetAiResponse include ActionView::RecordIdentifier
             フィードバックを反映するために、ユーザーの文章を部分的に変更してください。
             以下のフォーマットに従って現象に対して3つずつ提案してください。
             ですます調ではなく、だ調で出力して。
+            <置き換えるユーザーの文章>には、ユーザーの文章で変更する部分を抽出し、挿入してください。(「#AIのフィードバック」から抽出してこないこと。)
 
             #変更提案のフォーマット
             <ユーザーが言及する現象1>
@@ -252,8 +253,8 @@ class GetAiResponse include ActionView::RecordIdentifier
             3. <変更提案3>
 
             #出力例
-            ビルドアップで上手く前進できた
-            1. 中盤を経由したサイドチェンジでスペースを広く使えた(12:45)
+            ビルドアップで上手く前進できた。
+            1. 中盤を経由したサイドチェンジでスペースを広く使えた(12:45)。
             2. 一人一人が早く準備して、良い位置にポジショニングしていた。
             3. 相手のプレスの強度が低く、スペースが広く使えたため、ボールを安全に回せた。
             ---
@@ -262,6 +263,8 @@ class GetAiResponse include ActionView::RecordIdentifier
             今から入力する文章は育成年代のサッカー選手が練習を振り返って、サッカーノートの「上手くいかなかったこと」の欄に書いた文章とAIによるフィードバックの文章です。
             フィードバックを反映するために、ユーザーの文章を部分的に変更してください。
             以下のフォーマットに従って現象に対して3つずつ提案してください。
+            ですます調ではなく、だ調で出力して。
+            <置き換えるユーザーの文章>には、ユーザーの文章の変更する部分を抽出し、挿入してください。(「#AIのフィードバック」から抽出してこないこと。)
             #変更提案のフォーマット
             <置き換えるユーザーの文章1>
             1. <変更提案1>
@@ -461,7 +464,7 @@ class GetAiResponse include ActionView::RecordIdentifier
             suggestion_response = OpenAI::Client.new.chat(
                 parameters: {
                     model: MODEL_NAME,
-                    messages: [{ role: "system", content: PROMPTS_CHANGE_SUGGESTION[type.to_sym] }, { role: "user", content: input + "AIによるフィードバック:\n" + message}],
+                    messages: [{ role: "system", content: PROMPTS_CHANGE_SUGGESTION[type.to_sym] }, { role: "user", content: input + "#AIによるフィードバック:\n" + message}],
                     temperature: TEMPERATURE,
                     max_tokens: 1000,
                     n: RESPONSES_PER_MESSAGE
@@ -476,7 +479,7 @@ class GetAiResponse include ActionView::RecordIdentifier
                 channel,
                 target: "notes_#{type}",
                 partial: "notes/message",
-                locals: { message: message, target: target, diff_content: auto_addiction, suggestion: suggestions[0] }
+                locals: { message: message, target: target, diff_content: auto_addiction, suggestion: suggestions[0], trix_target: "note_#{type}" }
             )
 
             # スピナーを停止

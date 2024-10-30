@@ -528,6 +528,28 @@
             });
         }
     });
+
+    function replaceWith(type, suggestion_title) {
+        console.log("type: ", type);
+        // 選択されているラジオボタンを取得
+        const selectedRadio = document.querySelector('input[name="custom-radio"]:checked');
+        if (selectedRadio) {
+            // ラジオボタンの親要素からテキストを取得
+            const selectedText = selectedRadio.parentElement.textContent.trim();
+            console.log(selectedText);
+            console.log(`${type}`);
+            const trix_editor = document.getElementById(`${type}`).editor;
+            const documentText = trix_editor.getDocument().toString();
+            const index = documentText.indexOf(suggestion_title);
+            if (index != -1) {
+                trix_editor.setSelectedRange([index, suggestion_title.length])
+                trix_editor.deleteInDirection("forward")
+            }
+            trix_editor.insertHTML(`<span class='highlight-green'>${selectedText}</span>`);
+        } else {
+            alert('オプションからテキストを選択してください。');
+        }
+    }
 </script>
 
 <% if @with_video && @video_id %>
