@@ -14,7 +14,6 @@ import * as ActiveStorage from "@rails/activestorage"
 ActiveStorage.start()
 import "trix"
 import "@rails/actiontext"
-import "controllers/diff_content_controller"
 
 
 document.addEventListener("trix-before-initialize", () => {
