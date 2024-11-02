@@ -64,6 +64,7 @@ export default class extends Controller {
                 }
             }
         } else if (target == "notes_bad") {
+            console.log("target is notes_bad");
             const notesBadElement = template.content.querySelector('#notes_bad');
             const diffElement = notesBadElement.children[0];
             if (diffElement) {
