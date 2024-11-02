@@ -21,6 +21,9 @@ export default class extends Controller {
             const diffElement = notesGoodElement.children[0];
             if (diffElement) {
                 const diffContent = diffElement.getAttribute('data-diff-content');
+                if (diffContent == "") {
+                    return
+                }
                 const noteGood = document.getElementById('note_good');
                 // noteGoodのdata-suggestion-changedをtrueに設定
                 $('#note_good').data('suggestion-changed', true);
@@ -69,6 +72,9 @@ export default class extends Controller {
             const diffElement = notesBadElement.children[0];
             if (diffElement) {
                 const diffContent = diffElement.getAttribute('data-diff-content');
+                if (diffContent == "") {
+                    return
+                }
                 const noteBad = document.getElementById('note_bad');
                 // noteGoodのdata-suggestion-changedをtrueに設定
                 $('#note_bad').data('suggestion-changed', true);

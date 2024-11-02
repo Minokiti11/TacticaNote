@@ -438,7 +438,7 @@
     $input_good.on('trix-change', function(event) {
         // HTML をマークダウンに変換
         const markdown = turndownService.turndown(event.target.innerHTML);
-        // console.log("changed...");
+        $input_good.find('*').removeClass();
         // 変更フラグをセット
         $('#note_good').data('changed', true);
     });
@@ -502,6 +502,7 @@
         // 変更フラグをセット
         $input_bad.data('changed', true);
         console.log("changed....");
+        $input_bad.find('*').removeClass();
     });
     // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
     $input_bad.on('trix-blur', function(event) {
@@ -559,13 +560,13 @@
             // ラジオボタンの親要素からテキストを取得
             const selectedText = selectedRadio.parentElement.textContent.trim();
             console.log(selectedText);
-            console.log(`${type}`);
             const trix_editor = document.getElementById(`${type}`).editor;
             const documentText = trix_editor.getDocument().toString();
             const index = documentText.indexOf(suggestion_title);
             if (index != -1) {
                 trix_editor.setSelectedRange([index, suggestion_title.length])
-                trix_editor.deleteInDirection("forward")
+                console.log(`${[index, suggestion_title.length]}`);
+                trix_editor.deleteInDirection("backward")
             }
             trix_editor.insertHTML(`<span class='highlight-green'>${selectedText}</span>`);
         } else {

@@ -53,7 +53,7 @@ class NotesController < ApplicationController
                 "user_#{session.id}",
                 target: "notes_good",
                 partial: "notes/message",
-                locals: { message: "", diff_content: "", target: "notes_good" }
+                locals: { message: "", diff_content: "", target: "notes_good", suggestion: nil }
             )
             
             GetAiResponse.perform_async(data[:note_for], "user_#{session.id}", data[:value], "good", data[:token], current_user.id, data[:group_id], response.id)
@@ -89,7 +89,7 @@ class NotesController < ApplicationController
                 "user_#{session.id}",
                 target: "notes_bad",
                 partial: "notes/message",
-                locals: { message: "", target: "notes_bad" }
+                locals: { message: "", target: "notes_bad", diff_content: "" }
             )
 
             GetAiResponse.perform_async(data[:note_for], "user_#{session.id}", data[:value], "bad", data[:token], current_user.id, data[:group_id], response.id)
