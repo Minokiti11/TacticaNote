@@ -444,7 +444,7 @@
     });
 
     $input_good.on('trix-blur', function() {
-        isManualFocus = false;
+        isManualFocus_Good = false;
         $input_good = $('#note_good');
         console.log("changed: ", $input_good.data('changed'));
         console.log("suggestion-changed: ", $input_good.data('suggestion-changed'));
@@ -505,6 +505,7 @@
     });
     // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
     $input_bad.on('trix-blur', function(event) {
+        isManualFocus_Bad = false;
         if ($input_bad.data('changed')) {
             console.log("We'll request api...")
             // HTML をマークダウンに変換
