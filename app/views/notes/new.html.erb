@@ -419,20 +419,19 @@
     });
 
     // 手動フォーカスを検出するフラグを追加
-    var isManualFocus = false;
+    var isManualFocus_Good = false;
 
     // マウスダウンまたはタッチスタート時にフラグをセット
     $input_good.on('mousedown touchstart', function() {
-        isManualFocus = true;
+        isManualFocus_Good = true;
     });
 
     $input_good.on('trix-focus', function() {
-        if (isManualFocus) {
+        if (isManualFocus_Good) {
             console.log("focus...");
             $input_good.find('*').removeClass();
             $input_good.data('suggestion-changed', false);
         }
-
     });
 
     // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
@@ -476,6 +475,27 @@
     });
 
     var $input_bad = $('#note_bad');
+    // trixのイベントをリッスンしてsuggestion-changedを初期化
+    $input_bad.on('trix-initialize', function() {
+        $(this).data('suggestion-changed', false);
+    });
+
+    // 手動フォーカスを検出するフラグを追加
+    var isManualFocus_Bad = false;
+
+    // マウスダウンまたはタッチスタート時にフラグをセット
+    $input_bad.on('mousedown touchstart', function() {
+        isManualFocus_Bad = true;
+    });
+
+    $input_bad.on('trix-focus', function() {
+        if (isManualFocus_Bad) {
+            console.log("focus...");
+            $input_bad.find('*').removeClass();
+            $input_bad.data('suggestion-changed', false);
+        }
+    });
+
     $input_bad.on('trix-change', function(event) {
         // HTML をマークダウンに変換
         const markdown = turndownService.turndown(event.target.innerHTML);
