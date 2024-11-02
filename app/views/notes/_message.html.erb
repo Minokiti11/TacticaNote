@@ -2,7 +2,7 @@
     <div style="color: green;" data-diff-content="<%= h(diff_content) %>">
         <%= markdown(message) %>
     </div>
-    <% if suggestions %>
+    <% if suggestion %>
         <% suggestions = suggestion.split(/1\. /).last.split(/2\. |3\. /).reject(&:empty?) %>
         <% suggestion_title = suggestion.split('1.').first.strip.gsub(/\n/, '') %>
         <% option1, option2, option3 = suggestions %>
