@@ -21,50 +21,50 @@ export default class extends Controller {
             const diffElement = notesGoodElement.children[0];
             if (diffElement) {
                 const diffContent = diffElement.getAttribute('data-diff-content');
-                if (diffContent == "") {
-                    return
-                }
-                const noteGood = document.getElementById('note_good');
-                // noteGoodのdata-suggestion-changedをtrueに設定
-                $('#note_good').data('suggestion-changed', true);
-                if (noteGood && noteGood.editor) {
-                    // let attachment = new Trix.Attachment({
-                    //     content: `${diffContent}`
-                    // })
-                    // noteGood.editor.insertAttachment(attachment);
-
-                    // "理由: "の位置を特定
-                    const splitPosition = diffContent.indexOf("理由:");
-
-                    // "理由: "が見つからない場合の処理
-                    if (splitPosition === -1) {
-                        return [diffContent, ""];
+                if (diffContent != "") {
+                    const noteGood = document.getElementById('note_good');
+                    // noteGoodのdata-suggestion-changedをtrueに設定
+                    $('#note_good').data('suggestion-changed', true);
+                    if (noteGood && noteGood.editor) {
+                        // let attachment = new Trix.Attachment({
+                        //     content: `${diffContent}`
+                        // })
+                        // noteGood.editor.insertAttachment(attachment);
+    
+                        // "理由: "の位置を特定
+                        const splitPosition = diffContent.indexOf("理由:");
+    
+                        // "理由: "が見つからない場合の処理
+                        if (splitPosition === -1) {
+                            return [diffContent, ""];
+                        }
+    
+                        // "理由: "以降の文字列を取得
+                        const originalText = diffContent.slice(0, splitPosition);
+                        const addedText = diffContent.slice(splitPosition);
+                        console.log("originalText: ", originalText);
+                        console.log("addedText: ", addedText);
+    
+                        const cleanedOriginalText = originalText.replace(/\n/g, '');
+    
+                        // originalTextをエディタから探し、その末尾にaddedTextを追加する
+                        const documentText = noteGood.editor.getDocument().toString();
+                        const index = documentText.indexOf(cleanedOriginalText.toString());
+                        console.log(index);
+                        if (index == -1) {
+                            console.warn("originalTextが見つかりませんでした。");
+                        } else {
+                            const insertPosition = index + cleanedOriginalText.length;
+                            console.log(insertPosition);
+                            console.log("selected Range: ", noteGood.editor.getSelectedRange());
+                            noteGood.editor.setSelectedRange([insertPosition, insertPosition]);
+                            
+                            noteGood.editor.insertHTML(`<div><span class="highlight-green">${addedText.replace(/\n/g, '<br>')}</span></div>`);
+                            noteGood.editor.setSelectedRange([insertPosition + addedText.replace(/\n/g, '').length + 1, insertPosition + addedText.replace(/\n/g, '').length + 1]);
+                        }
                     }
-
-                    // "理由: "以降の文字列を取得
-                    const originalText = diffContent.slice(0, splitPosition);
-                    const addedText = diffContent.slice(splitPosition);
-                    console.log("originalText: ", originalText);
-                    console.log("addedText: ", addedText);
-
-                    const cleanedOriginalText = originalText.replace(/\n/g, '');
-
-                    // originalTextをエディタから探し、その末尾にaddedTextを追加する
-                    const documentText = noteGood.editor.getDocument().toString();
-                    const index = documentText.indexOf(cleanedOriginalText.toString());
-                    console.log(index);
-                    if (index == -1) {
-                        console.warn("originalTextが見つかりませんでした。");
-                    } else {
-                        const insertPosition = index + cleanedOriginalText.length;
-                        console.log(insertPosition);
-                        console.log("selected Range: ", noteGood.editor.getSelectedRange());
-                        noteGood.editor.setSelectedRange([insertPosition, insertPosition]);
-                        
-                        noteGood.editor.insertHTML(`<div><span class="highlight-green">${addedText.replace(/\n/g, '<br>')}</span></div>`);
-                        noteGood.editor.setSelectedRange([insertPosition + addedText.replace(/\n/g, '').length + 1, insertPosition + addedText.replace(/\n/g, '').length + 1]);
-                    }
                 }
+
             }
         } else if (target == "notes_bad") {
             console.log("target is notes_bad");
@@ -72,46 +72,46 @@ export default class extends Controller {
             const diffElement = notesBadElement.children[0];
             if (diffElement) {
                 const diffContent = diffElement.getAttribute('data-diff-content');
-                if (diffContent == "") {
-                    return
-                }
-                const noteBad = document.getElementById('note_bad');
-                // noteGoodのdata-suggestion-changedをtrueに設定
-                $('#note_bad').data('suggestion-changed', true);
-                if (noteBad && noteBad.editor) {
-
-                    // "理由: "の位置を特定
-                    const splitPosition = diffContent.indexOf("理由:");
-
-                    // "理由: "が見つからない場合の処理
-                    if (splitPosition === -1) {
-                        return [diffContent, ""];
+                if (diffContent != "") {
+                    const noteBad = document.getElementById('note_bad');
+                    // noteGoodのdata-suggestion-changedをtrueに設定
+                    $('#note_bad').data('suggestion-changed', true);
+                    if (noteBad && noteBad.editor) {
+    
+                        // "理由: "の位置を特定
+                        const splitPosition = diffContent.indexOf("理由:");
+    
+                        // "理由: "が見つからない場合の処理
+                        if (splitPosition === -1) {
+                            return [diffContent, ""];
+                        }
+    
+                        // "理由: "以降の文字列を取得
+                        const originalText = diffContent.slice(0, splitPosition);
+                        const addedText = diffContent.slice(splitPosition);
+                        console.log("originalText: ", originalText);
+                        console.log("addedText: ", addedText);
+    
+                        const cleanedOriginalText = originalText.replace(/\n/g, '');
+    
+                        // originalTextをエディタから探し、その末尾にaddedTextを追加する
+                        const documentText = noteBad.editor.getDocument().toString();
+                        const index = documentText.indexOf(cleanedOriginalText.toString());
+                        console.log(index);
+                        if (index == -1) {
+                            console.warn("originalTextが見つかりませんでした。");
+                        } else {
+                            const insertPosition = index + cleanedOriginalText.length;
+                            console.log(insertPosition);
+                            console.log("selected Range: ", noteBad.editor.getSelectedRange());
+                            noteBad.editor.setSelectedRange([insertPosition, insertPosition]);
+                            
+                            noteBad.editor.insertHTML(`<div><span class="highlight-green">${addedText.replace(/\n/g, '<br>')}</span></div>`);
+                            noteBad.editor.setSelectedRange([insertPosition + addedText.replace(/\n/g, '').length + 1, insertPosition + addedText.replace(/\n/g, '').length + 1]);
+                        }
                     }
-
-                    // "理由: "以降の文字列を取得
-                    const originalText = diffContent.slice(0, splitPosition);
-                    const addedText = diffContent.slice(splitPosition);
-                    console.log("originalText: ", originalText);
-                    console.log("addedText: ", addedText);
-
-                    const cleanedOriginalText = originalText.replace(/\n/g, '');
-
-                    // originalTextをエディタから探し、その末尾にaddedTextを追加する
-                    const documentText = noteBad.editor.getDocument().toString();
-                    const index = documentText.indexOf(cleanedOriginalText.toString());
-                    console.log(index);
-                    if (index == -1) {
-                        console.warn("originalTextが見つかりませんでした。");
-                    } else {
-                        const insertPosition = index + cleanedOriginalText.length;
-                        console.log(insertPosition);
-                        console.log("selected Range: ", noteBad.editor.getSelectedRange());
-                        noteBad.editor.setSelectedRange([insertPosition, insertPosition]);
-                        
-                        noteBad.editor.insertHTML(`<div><span class="highlight-green">${addedText.replace(/\n/g, '<br>')}</span></div>`);
-                        noteBad.editor.setSelectedRange([insertPosition + addedText.replace(/\n/g, '').length + 1, insertPosition + addedText.replace(/\n/g, '').length + 1]);
-                    }
                 }
+
             }
         }
     }
