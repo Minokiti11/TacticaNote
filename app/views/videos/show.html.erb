@@ -596,8 +596,8 @@
   function addTimestamp(video_id) {
     const name = document.getElementById('timestamp_name').value;
     const currentTime = player.currentTime();
-    const minutes = parseInt(document.getElementById('timestamp_minutes').value) || Math.int(currentTime / 60);
-    const seconds = parseInt(document.getElementById('timestamp_seconds').value) || Math.int(currentTime % 60);
+    const minutes = parseInt(document.getElementById('timestamp_minutes').value) || Math.floor(currentTime / 60);
+    const seconds = parseInt(document.getElementById('timestamp_seconds').value) || Math.floor(currentTime % 60);
     const totalSeconds = minutes * 60 + seconds;
     console.log(video_id);
 
