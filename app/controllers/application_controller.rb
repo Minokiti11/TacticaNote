@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
     def configurepermitted_parameters
         devise_parameter_sanitizer.permit(:sign_up, keys: [:username, :email])
         devise_parameter_sanitizer.permit(:sign_in, keys: [:username, :email])
-        devise_parameter_sanitizer.permit(:account_update, keys: [:username])
+        devise_parameter_sanitizer.permit(:account_update, keys: [:username, :position])
     end
 
     # Deviseの authenticate_user! メソッドをオーバーライド

@@ -19,6 +19,28 @@
           <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
             <div class="mb-3">Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
           <% end %>
+
+          <div class="mb-3">
+            <%= f.label :position, class: "form-label small font-weight-medium text-muted mb-1" %>
+            <%= f.select :position,
+              [
+                ['GK'],
+                ['CB'],
+                ['RSB'],
+                ['LSB'],
+                ['DMF'],
+                ['CMF'],
+                ['RMF'],
+                ['LMF'],
+                ['OMF'],
+                ['RWG'],
+                ['LWG'],
+                ['CF']
+              ],
+              { include_blank: 'ポジションを選択してください' },
+              { class: 'form-control' }
+            %>
+          </div>
           
           <!--
           <div class="mb-3">
