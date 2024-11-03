@@ -428,17 +428,15 @@
 
     $input_good.on('trix-focus', function() {
         if (isManualFocus_Good) {
-            console.log("focus...");
-            $input_good.find('*').removeClass();
+            $input_good.find('*').removeClass('highlight-green');
             $input_good.data('suggestion-changed', false);
         }
     });
 
-    // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
     $input_good.on('trix-change', function(event) {
         // HTML をマークダウンに変換
         const markdown = turndownService.turndown(event.target.innerHTML);
-        $input_good.find('*').removeClass();
+        $input_good.find('*').removeClass('highlight-green');
         // 変更フラグをセット
         $('#note_good').data('changed', true);
     });
@@ -491,7 +489,7 @@
     $input_bad.on('trix-focus', function() {
         if (isManualFocus_Bad) {
             console.log("focus...");
-            $input_bad.find('*').removeClass();
+            $input_bad.find('*').removeClass('highlight-green');
             $input_bad.data('suggestion-changed', false);
         }
     });
@@ -501,8 +499,7 @@
         const markdown = turndownService.turndown(event.target.innerHTML);
         // 変更フラグをセット
         $input_bad.data('changed', true);
-        console.log("changed....");
-        $input_bad.find('*').removeClass();
+        $input_bad.find('*').removeClass('highlight-green');
     });
     // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
     $input_bad.on('trix-blur', function(event) {
@@ -530,7 +527,6 @@
         const markdown = turndownService.turndown(event.target.innerHTML);
         // 変更フラグをセット
         $input_next.data('changed', true);
-        console.log("changed....");
     });
     // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
     $input_next.on('trix-blur', function(event) {
