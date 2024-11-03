@@ -725,11 +725,6 @@ select#practice-select {
     }
   });
 
-  document.getElementById('show-more-groups').addEventListener('click', function(event) {
-    event.preventDefault();
-    showMoreGroups();
-  });
-
   function showMoreGroups() {
     const button = document.getElementById('show-more-groups');
     const groupId = button.getAttribute('data-group-id');
