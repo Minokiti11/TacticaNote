@@ -505,19 +505,23 @@
     $input_bad.on('trix-blur', function(event) {
         isManualFocus_Bad = false;
         if ($input_bad.data('changed')) {
-            console.log("We'll request api...")
-            // HTML をマークダウンに変換
-            const markdown = turndownService.turndown(event.target.innerHTML);
-            
-            fetch('/notes/gpt_api_request_bad', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // CSRFトークンをmetaタグから取得して設定
-                    'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({data: { value: markdown, user_id: parseInt(document.getElementById("good").getAttribute("data-user-id")), token: document.getElementById("good").getAttribute("data-token"), group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")), note_for: document.getElementById("good").getAttribute("data-note-for") }})
-            });
+            if ($input_bad.data('suggestion-changed') === false) {
+                console.log("We'll request api...")
+                // HTML をマークダウンに変換
+                const markdown = turndownService.turndown(event.target.innerHTML);
+                
+                fetch('/notes/gpt_api_request_bad', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // CSRFトークンをmetaタグから取得して設定
+                        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({data: { value: markdown, user_id: parseInt(document.getElementById("good").getAttribute("data-user-id")), token: document.getElementById("good").getAttribute("data-token"), group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")), note_for: document.getElementById("good").getAttribute("data-note-for") }})
+                });
+            } else {
+                $input_bad.data('changed', false);
+            }
         }
     });
 
@@ -528,6 +532,7 @@
         // 変更フラグをセット
         $input_next.data('changed', true);
     });
+
     // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
     $input_next.on('trix-blur', function(event) {
         if ($input_next.data('changed')) {
@@ -544,6 +549,7 @@
                 },
                 body: JSON.stringify({data: { value: markdown, user_id: parseInt(document.getElementById("good").getAttribute("data-user-id")), token: document.getElementById("good").getAttribute("data-token"), group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")), note_for: document.getElementById("good").getAttribute("data-note-for") }})
             });
+            $input_next.data('changed', false);
         }
     });
 

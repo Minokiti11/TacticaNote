@@ -484,7 +484,7 @@ class GetAiResponse include ActionView::RecordIdentifier
             if note_for == "match"
                 previous_messages = []
                 previous_note = "#前回のノート\n"
-                latest_note = Note.where(user_id: user_id, group_id: group_id, note_for: "match").order(created_at: :desc).first
+                latest_note = Note.where(user_id: user_id, group_id: group_id, note_for: "match").order(created_at: :desc)[1]
                 if latest_note
                     previous_note += "上手くいったこと: \n"
                     previous_note += "#{latest_note.good}\n"
