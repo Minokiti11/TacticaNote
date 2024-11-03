@@ -10,6 +10,7 @@ class SummaryGenerator include ActionView::RecordIdentifier
     チームの課題と個人の課題はそれぞれのユーザーのポジションで判断し、分けてください。
     チームの課題について、議論する必要があるポイントがあれば、📓アイコンでまとめてください。
     個人の課題はユーザーネームとポジションを添えてください。
+    "
 
     def perform(channel, summary_id, date_string, group_id)
         date = Date.parse(date_string)
