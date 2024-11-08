@@ -317,27 +317,32 @@ select#practice-select {
                   // すべてのリストアイテムのoutlineと文字色をリセット
                   document.querySelectorAll('.list-group-item').forEach(item => {
                     item.style.outline = '';
+                    item.style.backgroundColor = '#202030';
                     item.style.color = 'white';
                     item.style.boxShadow = '';
                     item.style.zIndex = '';
                   });
                   // クリックされたアイテムのoutlineと文字色を設定
 
-                  if (element.getAttribute('data-video-id') == selectedVideoId) {
+                  if (parseInt(element.getAttribute('data-video-id')) == selectedVideoId) {
                     selectedVideoId = null;
                     element.style.outline = '';
+                    element.style.backgroundColor = '#202030';
                     element.style.color = 'white';
                     element.style.boxShadow = '';
                     element.style.zIndex = '';
                     $('#create-note-btn').addClass("disabled");
                   } else {
                     selectedVideoId = element.getAttribute('data-video-id');
-                    element.style.outline = '2px solid #435dd8'; // 青色のoutline
+                    element.style.backgroundColor = '#435dd8';
+                    element.style.outline = '#435dd8'; // 青色のoutline
                     element.style.color = 'white';
                     element.style.boxShadow = '0 4px 8px 0 rgba(0, 0, 0, 0.2)';
                     element.style.zIndex = '2'; // 最前面に表示
                     $("#create-note-btn").removeClass("disabled");
                   }
+
+                  console.log("selectedVideoId: ", selectedVideoId);
                 }
 
                 // セレクトボックス全体の四角を丸くする
