@@ -616,7 +616,7 @@ class GetAiResponse include ActionView::RecordIdentifier
                 channel,
                 target: "notes_#{type}",
                 partial: "notes/message",
-                locals: { message: message, target: target, diff_content: auto_addiction, suggestion: suggestions[0], trix_target: "note_#{type}" }
+                locals: { message: message, target: target, suggestion: suggestions[0], trix_target: "note_#{type}" }
             )
 
             # スピナーを停止
