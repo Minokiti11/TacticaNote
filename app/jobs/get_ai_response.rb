@@ -40,7 +40,7 @@ class GetAiResponse include ActionView::RecordIdentifier
                 you: - 狭い中でもパスを通せた理由は何だったと思いますか？相手のプレスの強度や掛け方、それによってどこにスペースが生まれていたかなど、具体的な原因を考えてみましょう。
                      - 動画の中でそれが起きた秒数を指定すると他のメンバーが理解しやすくなるでしょう。〇〇:〇〇のように書くと指定された秒数を再生するリンクが作成されます。
                      - 前回の試合では次に意識することとして「<#前回のノートの'次に意識すること・次に向けて取り組むこと'を参照>」と挙げていましたが、今回の試合を通して意識できていましたか？
-                     - また、上手くいかなかったこととして「<#前回のノートの'上手くいかなかったこと'を参照>」とありますが、今回はどうでしたか？\n",
+                     - また、上手くいかなかったこととして「<#前回のノートの'上手くいかなかったこと'>」とありますが、今回はどうでしたか？\n",
         bad: "今から入力する文章は育成年代のサッカー選手が試合を振り返って、サッカーノートの「上手くいかなかったこと」の欄に書いた文章です。
                 以下の#Mermaid Diagramに厳密に従って、それぞれの現象についてマークダウン形式の箇条書きでフィードバックしてください。#注意事項を必ず守ること。
 
@@ -577,25 +577,25 @@ class GetAiResponse include ActionView::RecordIdentifier
             p :message, message
             response.update(response: message)
 
-            automatic_addiction_response = OpenAI::Client.new.chat(
-                parameters: {
-                    model: MODEL_NAME,
-                    messages: [{ role: "system", content: PROMPTS_AUTOMATIC_ADDICTION[type.to_sym] }, { role: "user", content: input}],
-                    temperature: TEMPERATURE,
-                    max_tokens: 500,
-                    n: RESPONSES_PER_MESSAGE
-                }
-            )
+            # automatic_addiction_response = OpenAI::Client.new.chat(
+            #     parameters: {
+            #         model: MODEL_NAME,
+            #         messages: [{ role: "system", content: PROMPTS_AUTOMATIC_ADDICTION[type.to_sym] }, { role: "user", content: input}],
+            #         temperature: TEMPERATURE,
+            #         max_tokens: 500,
+            #         n: RESPONSES_PER_MESSAGE
+            #     }
+            # )
 
-            auto_addiction = automatic_addiction_response.dig("choices", 0, "message", "content")
-            p :auto_addiction, auto_addiction
+            # auto_addiction = automatic_addiction_response.dig("choices", 0, "message", "content")
+            # p :auto_addiction, auto_addiction
 
-            if auto_addiction.include?("Nil")
-                auto_addiction = ""
-            else
-                #自動補完から始まって末尾が"---"で終わる文字列を抽出
-                auto_addiction = extract_suggestion(auto_addiction)
-            end
+            # if auto_addiction.include?("Nil")
+            #     auto_addiction = ""
+            # else
+            #     #自動補完から始まって末尾が"---"で終わる文字列を抽出
+            #     auto_addiction = extract_suggestion(auto_addiction)
+            # end
 
 
             suggestion_response = OpenAI::Client.new.chat(
