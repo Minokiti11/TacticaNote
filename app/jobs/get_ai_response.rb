@@ -601,7 +601,7 @@ class GetAiResponse include ActionView::RecordIdentifier
             suggestion_response = OpenAI::Client.new.chat(
                 parameters: {
                     model: MODEL_NAME,
-                    messages: [{ role: "system", content: PROMPTS_CHANGE_SUGGESTION[type.to_sym] }, { role: "user", content: input + auto_addiction + "\n#AIによるフィードバック:\n" + message}],
+                    messages: [{ role: "system", content: PROMPTS_CHANGE_SUGGESTION[type.to_sym] }, { role: "user", content: input + "\n#AIによるフィードバック:\n" + message}],
                     temperature: TEMPERATURE,
                     max_tokens: 1000,
                     n: RESPONSES_PER_MESSAGE
