@@ -100,10 +100,6 @@ Rails.application.configure do
   # Do not fallback to assets pipeline if a precompiled asset is missed.
   config.assets.compile = false
 
-
-  # config.session_store :redis_store, servers: 'redis://localhost:6379/0', expire_in: 1.day
-  config.active_record.sqlite3_production_warning=false
-
   # config.hosts.clear
   config.hosts << 'tactica-note.com'
 
