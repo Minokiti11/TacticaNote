@@ -26,7 +26,7 @@ proxy:
   response_timeout: 300
   healthcheck:
     interval: 3
-    path: /health
+    path: /up
     timeout: 20
 
 sshkit:
