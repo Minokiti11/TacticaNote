@@ -22,7 +22,7 @@ proxy:
   ssl: true
   host: tactica-note.com
   # Proxy connects to your container on port 80 by default.
-  app_port: 8080
+  app_port: 3000
 
 # Credentials for your image host.
 registry:
