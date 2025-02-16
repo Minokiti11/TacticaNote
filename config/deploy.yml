@@ -23,6 +23,11 @@ proxy:
   host: tactica-note.com
   # Proxy connects to your container on port 80 by default.
   app_port: 3000
+  response_timeout: 120
+  healthcheck:
+    interval: 3
+    path: /health
+    timeout: 10
 
 sshkit:
   max_concurrent_starts: 90
@@ -61,8 +66,7 @@ env:
 #   shell: app exec --interactive --reuse "bash"
 
 # Use a different ssh user than root
-#
-# ssh:
+#ssh:
 #   user: app
 
 # Use a persistent storage volume.
@@ -105,3 +109,5 @@ asset_path: /rails/public/assets
 #     port: 6379
 #     directories:
 #       - data:/data
+
+deploy_timeout: 120
