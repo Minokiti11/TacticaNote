@@ -7,8 +7,7 @@ image: minorex15/tacticanote
 # Deploy to these servers.
 servers:
   web:
-    hosts:
-      - 163.43.106.77
+    - 163.43.106.77
   # job:
   #   hosts:
   #     - 192.168.0.1
@@ -19,10 +18,9 @@ servers:
 #
 # Note: If using Cloudflare, set encryption mode in SSL/TLS setting to "Full" to enable CF-to-app encryption.
 proxy:
-  ssl: false
+  ssl: true
   host: tactica-note.com
   # Proxy connects to your container on port 80 by default.
-  app_port: 8080
 
 # Credentials for your image host.
 registry:
