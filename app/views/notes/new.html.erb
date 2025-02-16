@@ -91,6 +91,64 @@
             display: none;
         }
     }
+
+    .form-control {
+        height: 120px;
+    }
+
+    .progress-container {
+        width: 100%;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        display: flex; /* 横並びにする */
+    }
+    .progress-step {
+        flex: 1; /* 各ステップを均等に分ける */
+        height: 7px;
+        background-color: #007bff; /* 完了したステップの色 */
+        transition: background-color 0.3s;
+        border-radius: 5px;
+        margin-right: 5px; /* 各ステップ間の間隔 */
+    }
+    .progress-step:last-child {
+        margin-right: 0; /* 最後のステップの右マージンを削除 */
+    }
+    .progress-step.inactive {
+        background-color: #e0e0e0; /* 未完了のステップの色 */
+    }
+    .progress-background {
+        flex: 1; /* 各ステップの背景を均等に分ける */
+        background-color: #f8f9fa; /* 背景色 */
+        border-radius: 5px;
+        margin-right: 5px; /* 各ステップ間の間隔 */
+    }
+    .progress-background:last-child {
+        margin-right: 0; /* 最後の背景の右マージンを削除 */
+    }
+
+    .custom-button {
+        margin-bottom: 20px;
+        background-color: black; /* 背景色を黒に設定 */
+        color: white; /* 文字色を白に設定 */
+        border: none; /* ボーダーをなしに設定 */
+        cursor: pointer; /* カーソルをポインターに設定 */
+        transition: background-color 0.3s; /* 背景色の変化にアニメーションを追加 */
+        font-size: 16px; /* フォントサイズを設定 */
+        border-radius: 5px; /* 角を丸くする */
+        width: 60%;
+        height: 38px;
+    }
+
+    .custom-button:hover {
+        background-color: #333; /* ホバー時の背景色を少し明るくする */
+    }
+
+    .custom-button:active,
+    .custom-button:focus {
+        background-color: black; /* 押したときの背景色を黒に保つ */
+        color: white; /* 文字色を白に保つ */
+        box-shadow: none; /* ボックスシャドウを無効にする */
+    }
 </style>
 <%= form_with model: @note, local: true, html: {class: "needs-validation", novalidate: true, params: { group_id: params[:group_id] } } do |form| %>
     <% if @note.errors.any? %>
@@ -105,6 +163,23 @@
     <% end %>
     <div class="container-wrapper">
         <div id = "container" class="px-3 mt-3">
+            <!-- プログレスバー -->
+            <div class="progress-container">
+                <div class="progress-background">
+                    <div class="progress-step" id="progress-step-1"></div>
+                </div>
+                <div class="progress-background">
+                    <div class="progress-step" id="progress-step-2"></div>
+                </div>
+                <div class="progress-background">
+                    <div class="progress-step" id="progress-step-3"></div>
+                </div>
+                <div class="progress-background">
+                    <div class="progress-step" id="progress-step-4"></div>
+                </div>
+            </div>
+            <p class="text-center fw-bold" id="progress-text">0/4 ステップ完了</p>
+
             <% video = nil %>
             <% if @with_video == "true" && @video_id %>
                 <% video = Video.find_by(id: @video_id)%>
@@ -112,14 +187,9 @@
                     <source src="<%= rails_blob_path(video.video) %>" type="video/mp4">
                 </video>
 
-                <div class="h3" style="margin-top: 40px; margin-bottom: 50px; font-weight: 700;">
-                    <%= video.title %>  : ノートの作成
-                </div>
-
                 <!-- タイムスタンプリスト -->
                 <div id="timestamp-list" class="for-mobile" style="margin-top: 10px;">
                     <div class="d-flex justify-content-between align-items-center" style="margin-right: 10px;">
-                    <h5 style="margin-bottom: 20px;">タイムライン</h5>
                     <%# <button class="modal-open btn btn-dark d-block rounded-circle bg-black" style="margin-bottom: 20px;">
                         <i class="fas fa-plus"></i>
                     </button> %>
@@ -143,10 +213,6 @@
                     </ul>
                     <hr style="border-top: 1px solid grey; width: 100%; margin-top: 20px; margin-bottom: 20px;">
                 </div>
-            <% else %>
-                <div class="h3" style="margin-top: 40px; margin-bottom: 50px; font-weight: 700;">
-                    ノートの作成
-                </div>
             <% end %>
 
             <!-- 前回のノートを取得（試合なら試合、練習なら練習のノート） -->
@@ -162,6 +228,7 @@
                 border-radius: 8px;
                 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
                 padding: 20px;
+                margin-top: 10px; 
                 margin-bottom: 30px;
             }
             .previous-note-header {
@@ -193,8 +260,35 @@
                 max-width: 100%;
                 height: auto;
             }
+
+            .feedback-button {
+                width: 60%;
+                background-color:rgb(37, 37, 37);
+                color: white;  
+                margin-bottom: 20px;
+            }
+            .feedback-button:hover {
+                background-color: #333; /* ホバー時の背景色を少し明るくする */
+            }
+            .feedback-button:active,
+            .feedback-button:focus {
+                background-color: black; /* 押したときの背景色を黒に保つ */
+                color: white; /* 文字色を白に保つ */
+                box-shadow: none; /* ボックスシャドウを無効にする */
+            }
+
+            .next-button {
+                width: 60%;
+                margin-bottom: 20px;
+            }
+
+            .back-button {
+                width: 30%;
+                margin-bottom: 20px;
+            }
             </style>
 
+            <!-- 前回のノート
             <div class="previous-note">
                 <% if latest_note %>
                     <div class="previous-note-header d-flex justify-content-between align-items-center mb-3">
@@ -228,146 +322,64 @@
                     <p>前回のノートはありません。</p>
                 <% end %>
             </div>
-
-
-            <!--
-            <script src="https://cdn.tailwindcss.com"></script>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
-            <div class="flex items-center justify-center" style="margin-top: 30px; margin-bottom: 30px;">
-                <div class="bg-white rounded-lg shadow-lg p-6 w-full lg:w-3/4">
-                    <div class="flex justify-between items-center mb-4">
-                        <h1 class="text-gray-400 text-lg">Add a title—what are you aligning on?</h1>
-                        <span class="text-gray-400">杉村実紀 voted</span>
-                    </div>
-                    <div class="relative mb-4">
-                        <div class="h-2 bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 rounded-full"></div>
-                        <div class="absolute inset-0 flex justify-between items-center px-4">
-                            <div class="h-6 w-1 bg-red-500 rounded-full" style="position: absolute; left: 0;"></div>
-                            <div class="h-6 w-1 bg-gradient-to-r from-red-500 to-yellow-500 rounded-full" style="position: absolute; left: 25%;"></div>
-                            <div class="h-6 w-1 bg-yellow-500 rounded-full" style="position: absolute; left: 50%;"></div>
-                            <div class="h-6 w-1 bg-gradient-to-r from-yellow-500 to-green-500 rounded-full" style="position: absolute; left: 75%;"></div>
-                            <div class="h-6 w-1 bg-green-500 rounded-full" style="position: absolute; right: 0;"></div>
-                        </div>
-                        <div class="absolute inset-0 flex justify-center items-center">
-                            <div class="bg-green-800 text-white rounded-full h-8 w-8 flex items-center justify-center text-sm">実紀</div>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center mb-4">
-                        <span class="text-red-500 w-1/4 text-center">Strongly<br>disagree</span>
-                        <span class="text-yellow-500 w-1/2 text-center">Neutral</span>
-                        <span class="text-green-500 w-1/4 text-center">Strongly<br>agree</span>
-                    </div>
-                    <%# <div class="flex justify-center">
-                        <button class="bg-purple-500 text-white py-2 px-4 rounded-full flex items-center">
-                            <i class="fas fa-eye mr-2"></i> Results revealed
-                        </button>
-                    </div> %>
-                </div>
-            </div>
             -->
 
-            <!-- タイトル入力フォーム -->
-            <div class="form-group">
-                <label id="title" for="note_title" class="form-label">タイトル</label>
-                <% if params[:note_for] == "practice" %>
-                    <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', value: "[#{Date.today}] 練習の振り返り", placeholder: "例：「#{Date.today}の振り返り」)", style: "padding: 10px;" %>
-                <% elsif video %>
-                    <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', value: "#{video.title}の振り返り", style: "padding: 10px;" %>
-                <% else %>
-                    <%= form.text_field :title, class: 'form-control mb-3', id: 'note_title', value: "[#{Date.today}] 試合の振り返り", style: "padding: 10px;" %>
-                <% end %>
-            </div>
-
-
-            <!-- 上手くいった点の入力フォーム -->
-            <div class="form-group" id="good" data-note-for="<%= @note_for %>" data-user-id="<%= current_user.id %>" data-token="<%= @unique_token %>" data-group-id="<%= params[:group_id]%>">
-                <label class="form-label">上手くいったこと</label>
-                <% if @with_video == "true" %>
-                    <% placeholder_text = '上手くいったことを記入 (🕓アイコンを押して、動画の現在の時間を入力できます。)' %>
-                <% else %>
-                    <% placeholder_text = '上手くいったことを記入' %>
-                <% end %>
-                <%= form.rich_text_area :good, class: 'form-control mb-3', id: 'note_good', "data-controller": "diff-content", placeholder: placeholder_text, style: "padding: 10px; max-height: 1200px; height: 100px;" %>
-            </div>
-            <div id="notes_good_rate">
-            </div><br />
-
-            <div id="notes_good">
-                <!-- ここにメッセージがリアルタイムで表示される -->
-            </div><br />
-            <%= turbo_stream_from "rate_user_#{session.id}" %>
-            <%= turbo_stream_from "user_#{session.id}" %>
-            <%= turbo_stream_from "spinner" %>
-            <div id="spinner_good"></div>
-            
-            <!-- 上手くいかなかった点の入力フォーム -->
-            <div class="form-group" id="bad">
-                <label class="form-label">上手くいかなかったこと</label>
-                <% if @with_video == "true" %>
-                    <% placeholder_text = '上手くいかなかったことを記入 (🕓アイコンを押して、動画の現在の時間を入力できます。)' %>
-                <% else %>
-                    <% placeholder_text = '上手くいかなかったことを記入' %>
-                <% end %>
-                <%= form.rich_text_area :bad, class: 'form-control mb-3', id: 'note_bad', placeholder: placeholder_text, style: "padding: 10px; max-height: 1200px; height: 100px;" %>
-            </div>
-            <div id="notes_bad_rate">
-            </div><br />
-            <div id="notes_bad">
-                <!-- ここにメッセージがリアルタイムで表示される -->
-            </div><br />
-            <div id="spinner_bad"></div>
-
-            <!-- 次のステップの入力フォーム -->
-            <div class="form-group" id="next">
-                <label class="form-label">次に意識すること・次に向けて取り組むこと</label>
-                <% if @with_video == "true" %>
-                    <% placeholder_text = '次に向けて取り組むことを記入 (🕓アイコンを押して、動画の現在の時間を入力できます。)' %>
-                <% else %>
-                    <% placeholder_text = '次に向けて取り組むことを記入' %>
-                <% end %>
-                <%= form.rich_text_area :next, class: 'form-control mb-3', id: 'note_next', placeholder: placeholder_text, style: "padding: 10px; max-height: 1200px; height: 100px;" %>
-                <div id="links">
-
+            <div id="step-1" class="step">
+                <div class="form-group">
+                    <label class="form-label">上手くいったこと</label>
+                    <div contenteditable="true" class="form-control mb-3" id="note_good"></div>
+                    
+                    <%= form.hidden_field :good, id: 'hidden_note_good' %>
+                </div>
+                <div class="text-center">
+                    <button type="button" class="custom-button">フィードバックをもらう</button>
+                    <button type="button" class="btn btn-primary next-button" data-next="step-2">次に進む</button>
                 </div>
             </div>
-            <div id="notes_next_rate">
-            </div><br />
-            <div id="notes_next">
-                <!-- ここにメッセージがリアルタイムで表示される -->
-            </div><br />
-            <div id="spinner_next"></div>
 
-            <!-- 話し合いたいこと・確認したいことの入力フォーム -->
-            <div class="form-group" id="discuss">
-                <label  class="form-label">チームで話し合いたいこと・確認したいこと</label>
-                <% if params[:note_for] == "practice" %>
-                    <%= form.rich_text_area :discuss, id: 'note_discuss', placeholder: 'チームで話し合いたいこと・確認したいこと(例：練習時間が長い)
-                    @someoneのようにしてチームのメンバーをメンションできます。', style: "height: 100px;", data: { controller: "mentions", mentions_target: "field" } %>
-                <% else %>
-                    <%= form.rich_text_area :discuss, id: 'note_discuss', placeholder: 'ミーティングなどでチームで話し合いたいこと・確認したいこと
-                    @someoneのようにしてチームのメンバーをメンションできます。', style: "height: 100px;", data: { controller: "mentions", mentions_target: "field" } %>
-                <% end %>
-
-                <div id="links">
-
+            <div id="step-2" class="step d-none">
+                <div class="form-group">
+                    <label class="form-label">上手くいかなかったこと</label>
+                    <div contenteditable="true" class="form-control mb-3" id="note_bad"></div>
+                    <%= form.hidden_field :bad, id: 'hidden_note_bad' %>
+                </div>
+                
+                <div class="text-center d-flex justify-content-between">
+                    <button type="button" class="btn btn-secondary back-button" data-back="step-1">戻る</button>
+                    <button type="button" class="btn btn-primary next-button" data-next="step-3">次に進む</button>
                 </div>
             </div>
-            <div id="notes_discuss">
-                <!-- ここにメッセージがリアルタイムで表示される -->
-            </div><br />
-            <div id="spinner_discuss"></div>
 
-            <!-- 送信ボタン -->
-            <div class="form-group">
-                <%= form.button "作成", type: 'submit', "data-turbo": false, class: 'btn btn-outline-primary', style: "border-radius: 1;" %>
+            <div id="step-3" class="step d-none">
+                <div class="form-group">
+                    <label class="form-label">次に意識すること・次に向けて取り組むこと</label>
+                    <%# <div class="placeholder" id="placeholder_next">次に意識することを記入</div> %>
+                    <div contenteditable="true" class="form-control mb-3" id="note_next"></div>
+                    <%= form.hidden_field :next, id: 'hidden_note_next' %>
+                </div>
+                <div class="text-center d-flex justify-content-between">
+                    <button type="button" class="btn btn-secondary back-button" data-back="step-2">戻る</button>
+                    <button type="button" class="btn btn-primary next-button" data-next="step-4">次に進む</button>
+                </div>
             </div>
-            <br />
+
+            <div id="step-4" class="step d-none">
+                <div class="form-group">
+                    <label class="form-label">チームで話し合いたいこと・確認したいこと</label>
+                    <%# <div class="placeholder" id="placeholder_discuss">ミーティングなどでチームで話し合いたいこと・確認したいことを記入</div> %>
+                    <div contenteditable="true" class="form-control mb-3" id="note_discuss"></div>
+                    <%= form.hidden_field :discuss, id: 'hidden_note_discuss' %>
+                </div>
+                <div class="text-center d-flex justify-content-between">
+                <button type="button" class="btn btn-secondary back-button" data-back="step-3">戻る</button>
+                <%= form.submit "完了", class: 'btn btn-success next-button', onclick: "saveContent()" %>
+                </div>
+            </div>
         </div>
         <% if !request.env['HTTP_USER_AGENT'].include?('Mobile') && video %>
             <!-- タイムスタンプリスト -->
             <div id="timestamp-list" class="for-pc mt-3" style="margin-top: 10px;">
             <div class="d-flex justify-content-between align-items-center" style="margin-right: 10px;">
-                <h5 style="margin-bottom: 20px;">タイムライン</h5>
                 <%# <button class="modal-open btn btn-dark d-block rounded-circle bg-black" style="margin-bottom: 20px;">
                     <i class="fas fa-plus"></i>
                 </button> %>
@@ -412,146 +424,172 @@
     // Turndown インスタンスの作成
     const turndownService = new TurndownService();
 
-    var $input_good = $('#note_good');
-    // trixのイベントをリッスンしてsuggestion-changedを初期化
-    $input_good.on('trix-initialize', function() {
-        $(this).data('suggestion-changed', false);
-    });
-
-    // 手動フォーカスを検出するフラグを追加
-    var isManualFocus_Good = false;
-
-    // マウスダウンまたはタッチスタート時にフラグをセット
-    $input_good.on('mousedown touchstart', function() {
-        isManualFocus_Good = true;
-    });
-
-    $input_good.on('trix-focus', function() {
-        if (isManualFocus_Good) {
-            $input_good.find('*').removeClass('highlight-green');
-            $input_good.data('suggestion-changed', false);
-        }
-    });
-
-    $input_good.on('trix-change', function(event) {
-        // HTML をマークダウンに変換
-        const markdown = turndownService.turndown(event.target.innerHTML);
-        $input_good.find('*').removeClass('highlight-green');
-        // 変更フラグをセット
-        $('#note_good').data('changed', true);
-    });
-
-    $input_good.on('trix-blur', function() {
-        isManualFocus_Good = false;
-        $input_good = $('#note_good');
-        console.log("changed: ", $input_good.data('changed'));
-        console.log("suggestion-changed: ", $input_good.data('suggestion-changed'));
-        if ($input_good.data('changed')) {
-            if ($input_good.data('suggestion-changed') === false) {
-                const markdown = turndownService.turndown(this.innerHTML);
-                
-                fetch('/notes/gpt_api_request_good', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        // CSRFトークンをmetaタグから取得して設定
-                        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({data: { value: markdown, user_id: parseInt(document.getElementById("good").getAttribute("data-user-id")), token: document.getElementById("good").getAttribute("data-token"), group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")), note_for: document.getElementById("good").getAttribute("data-note-for") }})
-                }).then(response => {
-                    if (response.ok) {
-                        $('#note_good').data('changed', false);
-                    }
-                }).catch(error => {
-                    console.error('Error:', error);
-                });
-            } else {
-                $('#note_good').data('changed', false);
-            }
+    document.addEventListener("turbo:load", function() {
+    document.querySelectorAll(".next-button").forEach(button => {
+        button.addEventListener("click", function() {
+            let nextStep = document.getElementById(this.dataset.next);
+            let currentStep = this.closest(".step");
             
-        }
-    });
-
-    var $input_bad = $('#note_bad');
-    // trixのイベントをリッスンしてsuggestion-changedを初期化
-    $input_bad.on('trix-initialize', function() {
-        $(this).data('suggestion-changed', false);
-    });
-
-    // 手動フォーカスを検出するフラグを追加
-    var isManualFocus_Bad = false;
-
-    // マウスダウンまたはタッチスタート時にフラグをセット
-    $input_bad.on('mousedown touchstart', function() {
-        isManualFocus_Bad = true;
-    });
-
-    $input_bad.on('trix-focus', function() {
-        if (isManualFocus_Bad) {
-            console.log("focus...");
-            $input_bad.find('*').removeClass('highlight-green');
-            $input_bad.data('suggestion-changed', false);
-        }
-    });
-
-    $input_bad.on('trix-change', function(event) {
-        // HTML をマークダウンに変換
-        const markdown = turndownService.turndown(event.target.innerHTML);
-        // 変更フラグをセット
-        $input_bad.data('changed', true);
-        $input_bad.find('*').removeClass('highlight-green');
-    });
-    // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
-    $input_bad.on('trix-blur', function(event) {
-        isManualFocus_Bad = false;
-        if ($input_bad.data('changed')) {
-            if ($input_bad.data('suggestion-changed') === false) {
-                console.log("We'll request api...")
-                // HTML をマークダウンに変換
-                const markdown = turndownService.turndown(event.target.innerHTML);
-                
-                fetch('/notes/gpt_api_request_bad', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        // CSRFトークンをmetaタグから取得して設定
-                        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({data: { value: markdown, user_id: parseInt(document.getElementById("good").getAttribute("data-user-id")), token: document.getElementById("good").getAttribute("data-token"), group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")), note_for: document.getElementById("good").getAttribute("data-note-for") }})
-                });
-            } else {
-                $input_bad.data('changed', false);
+            if (nextStep) {
+                currentStep.classList.add("d-none");
+                nextStep.classList.remove("d-none");
             }
-        }
+        });
     });
 
-    var $input_next = $('#note_next');
-    $input_next.on('trix-change', function(event) {
-        // HTML をマークダウンに変換
-        const markdown = turndownService.turndown(event.target.innerHTML);
-        // 変更フラグをセット
-        $input_next.data('changed', true);
-    });
-
-    // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
-    $input_next.on('trix-blur', function(event) {
-        if ($input_next.data('changed')) {
-            console.log("We'll request api...")
-            // HTML をマークダウンに変換
-            const markdown = turndownService.turndown(event.target.innerHTML);
+    document.querySelectorAll(".back-button").forEach(button => {
+        button.addEventListener("click", function() {
+            let backStep = document.getElementById(this.dataset.back);
+            let currentStep = this.closest(".step");
             
-            fetch('/notes/gpt_api_request_next', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // CSRFトークンをmetaタグから取得して設定
-                    'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({data: { value: markdown, user_id: parseInt(document.getElementById("good").getAttribute("data-user-id")), token: document.getElementById("good").getAttribute("data-token"), group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")), note_for: document.getElementById("good").getAttribute("data-note-for") }})
-            });
-            $input_next.data('changed', false);
-        }
+            if (backStep) {
+                currentStep.classList.add("d-none");
+                backStep.classList.remove("d-none");
+            }
+        });
     });
+    });
+
+    // var $input_good = $('#note_good');
+    // // trixのイベントをリッスンしてsuggestion-changedを初期化
+    // $input_good.on('trix-initialize', function() {
+    //     $(this).data('suggestion-changed', false);
+    // });
+
+    // // 手動フォーカスを検出するフラグを追加
+    // var isManualFocus_Good = false;
+
+    // // マウスダウンまたはタッチスタート時にフラグをセット
+    // $input_good.on('mousedown touchstart', function() {
+    //     isManualFocus_Good = true;
+    // });
+
+    // $input_good.on('trix-focus', function() {
+    //     if (isManualFocus_Good) {
+    //         $input_good.find('*').removeClass('highlight-green');
+    //         $input_good.data('suggestion-changed', false);
+    //     }
+    // });
+
+    // $input_good.on('trix-change', function(event) {
+    //     // HTML をマークダウンに変換
+    //     const markdown = turndownService.turndown(event.target.innerHTML);
+    //     $input_good.find('*').removeClass('highlight-green');
+    //     // 変更フラグをセット
+    //     $('#note_good').data('changed', true);
+    // });
+
+    // $input_good.on('trix-blur', function() {
+    //     isManualFocus_Good = false;
+    //     $input_good = $('#note_good');
+    //     console.log("changed: ", $input_good.data('changed'));
+    //     console.log("suggestion-changed: ", $input_good.data('suggestion-changed'));
+    //     if ($input_good.data('changed')) {
+    //         if ($input_good.data('suggestion-changed') === false) {
+    //             const markdown = turndownService.turndown(this.innerHTML);
+                
+    //             fetch('/notes/gpt_api_request_good', {
+    //                 method: 'POST',
+    //                 headers: {
+    //                     'Content-Type': 'application/json',
+    //                     // CSRFトークンをmetaタグから取得して設定
+    //                     'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    //                 },
+    //                 body: JSON.stringify({data: { value: markdown, user_id: parseInt(document.getElementById("good").getAttribute("data-user-id")), token: document.getElementById("good").getAttribute("data-token"), group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")), note_for: document.getElementById("good").getAttribute("data-note-for") }})
+    //             }).then(response => {
+    //                 if (response.ok) {
+    //                     $('#note_good').data('changed', false);
+    //                 }
+    //             }).catch(error => {
+    //                 console.error('Error:', error);
+    //             });
+    //         } else {
+    //             $('#note_good').data('changed', false);
+    //         }
+            
+    //     }
+    // });
+
+    // var $input_bad = $('#note_bad');
+    // // trixのイベントをリッスンしてsuggestion-changedを初期化
+    // $input_bad.on('trix-initialize', function() {
+    //     $(this).data('suggestion-changed', false);
+    // });
+
+    // // 手動フォーカスを検出するフラグを追加
+    // var isManualFocus_Bad = false;
+
+    // // マウスダウンまたはタッチスタート時にフラグをセット
+    // $input_bad.on('mousedown touchstart', function() {
+    //     isManualFocus_Bad = true;
+    // });
+
+    // $input_bad.on('trix-focus', function() {
+    //     if (isManualFocus_Bad) {
+    //         console.log("focus...");
+    //         $input_bad.find('*').removeClass('highlight-green');
+    //         $input_bad.data('suggestion-changed', false);
+    //     }
+    // });
+
+    // $input_bad.on('trix-change', function(event) {
+    //     // HTML をマークダウンに変換
+    //     const markdown = turndownService.turndown(event.target.innerHTML);
+    //     // 変更フラグをセット
+    //     $input_bad.data('changed', true);
+    //     $input_bad.find('*').removeClass('highlight-green');
+    // });
+    // // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
+    // $input_bad.on('trix-blur', function(event) {
+    //     isManualFocus_Bad = false;
+    //     if ($input_bad.data('changed')) {
+    //         if ($input_bad.data('suggestion-changed') === false) {
+    //             console.log("We'll request api...")
+    //             // HTML をマークダウンに変換
+    //             const markdown = turndownService.turndown(event.target.innerHTML);
+                
+    //             fetch('/notes/gpt_api_request_bad', {
+    //                 method: 'POST',
+    //                 headers: {
+    //                     'Content-Type': 'application/json',
+    //                     // CSRFトークンをmetaタグから取得して設定
+    //                     'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    //                 },
+    //                 body: JSON.stringify({data: { value: markdown, user_id: parseInt(document.getElementById("good").getAttribute("data-user-id")), token: document.getElementById("good").getAttribute("data-token"), group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")), note_for: document.getElementById("good").getAttribute("data-note-for") }})
+    //             });
+    //         } else {
+    //             $input_bad.data('changed', false);
+    //         }
+    //     }
+    // });
+
+    // var $input_next = $('#note_next');
+    // $input_next.on('trix-change', function(event) {
+    //     // HTML をマークダウンに変換
+    //     const markdown = turndownService.turndown(event.target.innerHTML);
+    //     // 変更フラグをセット
+    //     $input_next.data('changed', true);
+    // });
+
+    // // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
+    // $input_next.on('trix-blur', function(event) {
+    //     if ($input_next.data('changed')) {
+    //         console.log("We'll request api...")
+    //         // HTML をマークダウンに変換
+    //         const markdown = turndownService.turndown(event.target.innerHTML);
+            
+    //         fetch('/notes/gpt_api_request_next', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 // CSRFトークンをmetaタグから取得して設定
+    //                 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    //             },
+    //             body: JSON.stringify({data: { value: markdown, user_id: parseInt(document.getElementById("good").getAttribute("data-user-id")), token: document.getElementById("good").getAttribute("data-token"), group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")), note_for: document.getElementById("good").getAttribute("data-note-for") }})
+    //         });
+    //         $input_next.data('changed', false);
+    //     }
+    // });
 
     function replaceWith(type, suggestion_title) {
         console.log("type: ", type);
@@ -575,6 +613,66 @@
             
         }
     }
+
+    function saveContent() {
+        document.getElementById('hidden_note_good').value = document.getElementById('note_good').innerText;
+        document.getElementById('hidden_note_bad').value = document.getElementById('note_bad').innerText;
+        document.getElementById('hidden_note_next').value = document.getElementById('note_next').innerText;
+        document.getElementById('hidden_note_discuss').value = document.getElementById('note_discuss').innerText;
+    }
+
+    // ステップに応じてプログレスバーを更新する関数
+    function updateProgressBar(step) {
+        const totalSteps = 4; // ステップの総数
+        for (let i = 1; i <= totalSteps; i++) {
+            const progressStep = document.getElementById(`progress-step-${i}`);
+            if (i <= step) {
+                progressStep.classList.remove('inactive');
+            } else {
+                progressStep.classList.add('inactive');
+            }
+        }
+        // プログレステキストを更新
+        if (step == totalSteps) {
+            document.getElementById('progress-text').innerText = `${step}/${totalSteps} ステップ完了 ✅`;
+        } else {
+            document.getElementById('progress-text').innerText = `${step}/${totalSteps} ステップ完了`;
+        }
+        
+    }
+
+    document.addEventListener("turbo:load", function() {
+        // 初期ステップを設定
+        let currentStep = 0;
+        updateProgressBar(currentStep);
+
+        document.querySelectorAll(".next-button").forEach(button => {
+            button.addEventListener("click", function() {
+                currentStep = countValidTextBoxes().length;
+                updateProgressBar(currentStep);
+            });
+        });
+
+        document.querySelectorAll(".back-button").forEach(button => {
+            button.addEventListener("click", function() {
+                currentStep = countValidTextBoxes().length;
+                updateProgressBar(currentStep);
+            });
+        });
+    });
+
+    function countValidTextBoxes() {
+        const textBoxes = ['note_good', 'note_bad', 'note_next', 'note_discuss'];
+        let notEmpty = [];
+        for (let i = 0; i < textBoxes.length; i++) {
+            const noteContent = document.getElementById(textBoxes[i]).innerText;
+            if (noteContent.trim() !== "") {
+                notEmpty.push(i + 1);
+            }
+        }
+        return notEmpty;
+    }
+
 </script>
 
 <% if @with_video && @video_id %>

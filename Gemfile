@@ -1,21 +1,23 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.1.4"
+ruby "3.3.7"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 7.0.7"
+gem "rails", "~> 8.0.0"
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
 
 # Use sqlite3 as the database for Active Record
 # gem "sqlite3", "~> 1.4"
-gem 'sqlite3', '~> 1.4'
+gem 'sqlite3'
 
 gem 'pg'
 
 gem "dotenv-rails"
+
+gem 'concurrent-ruby', '1.3.4'
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", "~> 5.0"
@@ -34,7 +36,6 @@ gem "jbuilder"
 
 # Use Redis adapter to run Action Cable in production
 gem "redis", "~> 4.0"
-gem 'redis-rails'
 
 gem "sidekiq" # 非同期ジョブの処理をサポートするgem
 
@@ -64,6 +65,12 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+
+  gem 'capistrano', '~> 3.9'
+  gem 'capistrano-rails'
+  gem 'capistrano-rbenv'
+  gem 'capistrano-bundler'
+  gem 'capistrano3-puma'
 
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "rack-mini-profiler"
@@ -116,3 +123,4 @@ gem 'sassc-rails'
 gem 'redcarpet'
 
 gem 'mini_racer'
+gem "kamal", "~> 2.5"

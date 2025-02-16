@@ -16,15 +16,6 @@ import "trix"
 import "@rails/actiontext"
 
 
-document.addEventListener("trix-before-initialize", () => {
-    console.log("passed.");
-    Trix.config.blockAttributes.highlightSpan = {
-        tagName: 'span',
-        htmlAttributes: [ "class" ],
-        inheritable: true,
-    };
-})
-
 document.addEventListener("trix-paste", function(event) {
     // エディターの全てのspanタグをdivタグに置き換える
     const editorElement = event.target.editor.element;

@@ -8,4 +8,3 @@ window.Stimulus   = application
 
 export { application }
 
-import "tribute"

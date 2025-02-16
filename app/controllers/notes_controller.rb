@@ -157,16 +157,20 @@ class NotesController < ApplicationController
             @note.group_id = session[:current_group_id]
         end
 
+        if @@note_for == "match"
+            @note.note_for = "match"
+            @note.title = "[#{Date.today}] 試合の振り返り"
+        elsif @@note_for == "practice"
+            @note.note_for = "practice"
+            @note.title = "[#{Date.today}] 練習の振り返り"
+        end
+
         @note.note_type = "good_bad_next_discuss"
         if @@with_video
             @note.video_id = @@video_id
+            @note.title = "#{@note.video.title}の振り返り"
         end
 
-        if @@note_for == "match"
-            @note.note_for = "match"
-        elsif @@note_for == "practice"
-            @note.note_for = "practice"
-        end
 
         if @note.save
             redirect_to @note

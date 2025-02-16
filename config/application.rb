@@ -10,9 +10,14 @@ module TacticaChat
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
-      config.i18n.default_locale = :en
-      config.i18n.fallbacks = true
-      config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
+    config.i18n.default_locale = :en
+    config.i18n.fallbacks = true
+    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
+
+    # Please, add to the `ignore` list any other `lib` subdirectories that do
+    # not contain `.rb` files, or that should not be reloaded or eager loaded.
+    # Common ones are `templates`, `generators`, or `middleware`, for example.
+    config.autoload_lib(ignore: %w[assets tasks])
 
     # Configuration for the application, engines, and railties goes here.
     #
@@ -34,9 +39,5 @@ module TacticaChat
     end
 
     config.active_storage.service_urls_expire_in = 2.hours
-
-    config.action_text.allowed_tags = %w(span ol)
-    config.action_text.allowed_attributes = %w(class)
-
   end
 end
