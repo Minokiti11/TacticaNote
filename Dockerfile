@@ -15,6 +15,8 @@ WORKDIR /rails
 COPY bin/docker-entrypoint /rails/bin/
 RUN chmod +x /rails/bin/docker-entrypoint
 
+ENV PATH $PATH:/usr/local/src/bin
+
 # Install base packages
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y sudo curl libjemalloc2 libvips sqlite3 libpq-dev libyaml-dev && \
