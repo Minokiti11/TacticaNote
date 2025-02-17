@@ -102,6 +102,7 @@ Rails.application.configure do
 
   # config.hosts.clear
   config.hosts << 'tactica-note.com'
+  config.hosts << "4000afde2cd3"
 
   config.action_cable.url = "ws://tactica-note.com/cable"
   # config.session_store :redis_store, servers: 'redis://localhost:6379/0', expire_in: 1.day
