@@ -30,7 +30,7 @@ module TacticaChat
     # CORS設定
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins '*'
+        origins ENV['CORS_ALLOWED_ORIGINS']&.split(',') || ['http://localhost:3000', 'https://tactica-note.com']
         resource '*',
           headers: :any,
           methods: [:get, :post, :patch, :put, :delete, :options, :head],
@@ -40,10 +40,11 @@ module TacticaChat
     end
 
     # セッション設定
-    config.session_store :cookie_store, key: '_tactica_chat_session'
+    config.session_store :cookie_store, key: '_tactica_note_session'
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use config.session_store, config.session_options
 
     config.active_storage.service_urls_expire_in = 2.hours
   end
 end
+
