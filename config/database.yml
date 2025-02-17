@@ -11,7 +11,7 @@ default: &default
 development:
   <<: *default
   adapter: sqlite3
-  database: storage/development.sqlite3
+  database: db/development.sqlite3
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -19,9 +19,9 @@ development:
 test:
   <<: *default
   adapter: sqlite3
-  database: storage/test.sqlite3
+  database: db/test.sqlite3
 
 production:
   <<: *default
   adapter: sqlite3
-  url: storage/production.sqlite3
+  url: db/production.sqlite3
