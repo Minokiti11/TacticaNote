@@ -192,17 +192,6 @@ GEM
     ffi (1.17.1-x86_64-linux-musl)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-cloud-env (2.2.1)
-      faraday (>= 1.0, < 3.a)
-    google-logging-utils (0.1.0)
-    googleauth (1.13.1)
-      faraday (>= 1.0, < 3.a)
-      google-cloud-env (~> 2.2)
-      google-logging-utils (~> 0.1)
-      jwt (>= 1.4, < 3.0)
-      multi_json (~> 1.11)
-      os (>= 0.9, < 2.0)
-      signet (>= 0.16, < 2.a)
     hashie (5.0.0)
     http-accept (1.7.0)
     http-cookie (1.0.8)
@@ -270,7 +259,6 @@ GEM
       libv8-node (~> 18.19.0.0)
     minitest (5.25.4)
     msgpack (1.8.0)
-    multi_json (1.15.0)
     multi_xml (0.7.1)
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
@@ -336,7 +324,6 @@ GEM
       actionpack (>= 4.2)
       omniauth (~> 2.0)
     orm_adapter (0.5.0)
-    os (1.1.4)
     ostruct (0.6.1)
     pg (1.5.9)
     popper_js (2.11.8)
@@ -446,11 +433,6 @@ GEM
       logger
       rack (>= 2.2.4)
       redis-client (>= 0.22.2)
-    signet (0.19.0)
-      addressable (~> 2.8)
-      faraday (>= 0.17.5, < 3.a)
-      jwt (>= 1.5, < 3.0)
-      multi_json (~> 1.10)
     sinatra (2.0.8.1)
       mustermann (~> 1.0)
       rack (~> 2.0)
@@ -554,7 +536,6 @@ DEPENDENCIES
   devise
   devise-i18n
   dotenv-rails
-  googleauth
   image_processing
   importmap-rails
   jbuilder
@@ -562,6 +543,7 @@ DEPENDENCIES
   meta-tags
   mini_racer
   net-http
+  omniauth
   omniauth-github
   omniauth-google-oauth2
   omniauth-rails_csrf_protection
