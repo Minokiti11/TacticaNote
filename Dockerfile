@@ -37,7 +37,7 @@ RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     bundle exec bootsnap precompile --gemfile
 
-HEALTHCHECK --interval=3s --timeout=20s --start-period=30s --retries=3 CMD curl --fail http://localhost:3000/up || exit 1
+HEALTHCHECK --interval=10s --timeout=120s --start-period=60s --retries=3 CMD curl --fail http://localhost:3000/up || exit 1
 
 # Copy application code
 COPY . .

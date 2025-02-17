@@ -25,9 +25,9 @@ proxy:
   app_port: 3000
   response_timeout: 300
   healthcheck:
-    interval: 3
+    interval: 10
     path: /up
-    timeout: 20
+    timeout: 30
 
 sshkit:
   max_concurrent_starts: 90
