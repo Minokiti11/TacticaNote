@@ -100,9 +100,9 @@ Rails.application.configure do
   # Do not fallback to assets pipeline if a precompiled asset is missed.
   config.assets.compile = false
 
-  # config.hosts.clear
-  config.hosts << 'tactica-note.com'
-  config.hosts << "4000afde2cd3"
+  config.hosts.clear
+  # config.hosts << 'tactica-note.com'
+  # config.hosts << "4000afde2cd3"
 
   config.action_cable.url = "ws://tactica-note.com/cable"
   # config.session_store :redis_store, servers: 'redis://localhost:6379/0', expire_in: 1.day
