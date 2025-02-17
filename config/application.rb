@@ -30,13 +30,19 @@ module TacticaChat
     # CORS設定
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins '*'  # すべてのオリジンからのアクセスを許可
-        resource '*', 
-          headers: :any, 
+        origins '*'
+        resource '*',
+          headers: :any,
           methods: [:get, :post, :patch, :put, :delete, :options, :head],
-          credentials: false
+          credentials: true,
+          expose: ['Authorization']
       end
     end
+
+    # セッション設定
+    config.session_store :cookie_store, key: '_tactica_chat_session'
+    config.middleware.use ActionDispatch::Cookies
+    config.middleware.use config.session_store, config.session_options
 
     config.active_storage.service_urls_expire_in = 2.hours
   end

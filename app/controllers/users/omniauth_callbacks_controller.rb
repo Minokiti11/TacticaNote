@@ -23,9 +23,14 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def failure
-    Rails.logger.error "OmniAuth CSRF detected. State mismatch?"
+    Rails.logger.error "OmniAuth Authentication Failed:"
+    Rails.logger.error "Error Reason: #{params[:message]}"
+    Rails.logger.error "Strategy: #{params[:strategy]}"
     Rails.logger.error "Received state: #{params[:state]}"
-    Rails.logger.error "Expected state: #{session['omniauth.state']}"
-    redirect_to root_path and return
+    Rails.logger.error "Session state: #{session['omniauth.state']}"
+    Rails.logger.error "Environment: #{request.env['omniauth.error'].inspect}" if request.env['omniauth.error']
+    
+    flash[:error] = "認証に失敗しました。もう一度お試しください。"
+    redirect_to new_user_session_path
   end
 end
