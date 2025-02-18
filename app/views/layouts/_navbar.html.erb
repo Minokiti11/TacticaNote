@@ -15,6 +15,7 @@
           </li>
         </ul>
         <ul class="navbar-nav ml-auto">
+          <% p :current_user, current_user %>
           <% if current_user %>
             <li> <%= link_to "グループを作成", new_group_path, class: "nav-link", "data-turbo": false %></li>
             <% if current_user.groups.length >= 2 %>
