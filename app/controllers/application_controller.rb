@@ -1,6 +1,5 @@
 class ApplicationController < ActionController::Base
-    include SessionsHelper
-    before_action :configurepermitted_parameters, if: :devise_controller?
+    before_action :configure_permitted_parameters, if: :devise_controller?
     before_action :set_current_group
     before_action :authenticate_user!, unless: -> { devise_controller? || params[:controller] == 'high_voltage/pages' }
     before_action :block_bad_ip
@@ -11,16 +10,18 @@ class ApplicationController < ActionController::Base
         renderer = self.renderer.new('warden' => proxy)
         renderer.render(*args)
     end
+
     protected
-    def configurepermitted_parameters
+
+    def configure_permitted_parameters
         devise_parameter_sanitizer.permit(:sign_up, keys: [:username, :email])
         devise_parameter_sanitizer.permit(:sign_in, keys: [:username, :email])
         devise_parameter_sanitizer.permit(:account_update, keys: [:username, :position])
     end
 
-    # Deviseの authenticate_user! メソッドをオーバーライド
     def authenticate_user!(opts = {})
-        if !user_signed_in?
+        unless current_user
+            store_location_for(:user, request.fullpath)
             flash[:alert] = "ログインが必要です。"
             redirect_to new_user_session_path
         end
