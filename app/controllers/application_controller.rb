@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+    include SessionsHelper
     before_action :configurepermitted_parameters, if: :devise_controller?
     before_action :set_current_group
     before_action :authenticate_user!, unless: :devise_controller?
