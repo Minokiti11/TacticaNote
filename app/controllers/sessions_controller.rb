@@ -1,6 +1,5 @@
 # app/controllers/sessions_controller.rb
 class SessionsController < ApplicationController
-    skip_before_action :require_login, only: :create
 
     def create
         user = find_or_create_from_auth_hash(auth_hash)
