@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
     include SessionsHelper
     before_action :configurepermitted_parameters, if: :devise_controller?
     before_action :set_current_group
-    before_action :authenticate_user!, unless: :devise_controller?
+    before_action :authenticate_user!, unless: -> { devise_controller? || params[:controller] == 'high_voltage/pages' }
     before_action :block_bad_ip
     
     def self.render_with_signed_in_user(user, *args)
