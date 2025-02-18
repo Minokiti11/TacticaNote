@@ -125,3 +125,5 @@ gem 'mini_racer'
 gem "kamal", "~> 2.5"
 
 gem 'thruster'
+
+gem 'high_voltage'

@@ -193,6 +193,7 @@ GEM
     globalid (1.2.1)
       activesupport (>= 6.1)
     hashie (5.0.0)
+    high_voltage (4.0.0)
     http-accept (1.7.0)
     http-cookie (1.0.8)
       domain_name (~> 0.5)
@@ -536,6 +537,7 @@ DEPENDENCIES
   devise
   devise-i18n
   dotenv-rails
+  high_voltage
   image_processing
   importmap-rails
   jbuilder
