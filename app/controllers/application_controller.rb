@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
     before_action :set_current_group
     before_action :authenticate_user!, unless: :devise_controller?
     before_action :block_bad_ip
+    before_action :require_login
     
     def self.render_with_signed_in_user(user, *args)
         ActionController::Renderer::RACK_KEY_TRANSLATION['warden'] ||= 'warden'
@@ -21,6 +22,14 @@ class ApplicationController < ActionController::Base
     # Deviseの authenticate_user! メソッドをオーバーライド
     def authenticate_user!(opts = {})
         if !user_signed_in?
+            flash[:alert] = "ログインが必要です。"
+            redirect_to new_user_session_path
+        end
+    end
+
+    # require_loginメソッドの定義
+    def require_login
+        unless user_signed_in?
             flash[:alert] = "ログインが必要です。"
             redirect_to new_user_session_path
         end
