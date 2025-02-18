@@ -2,7 +2,7 @@
   <div class="col-md-4 mx-auto">
     <h1 class = "text-center">Log In / ログイン</h1>
     <script src="https://accounts.google.com/gsi/client" async></script>
-    <a href="users/auth/google_oauth2">
+    <%= link_to user_google_oauth2_omniauth_authorize_path, data: { turbo_method: post } do %>
       <div class="gsi-material-button mx-auto" style="margin-top: 50px;">
         <div class="gsi-material-button-state"></div>
         <div class="gsi-material-button-content-wrapper">
@@ -19,7 +19,7 @@
           <span style="display: none;">Sign in with Google</span>
         </div>
       </div>
-    </a>
+    <% end %>
 
     <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
       <%= render "devise/shared/error_messages", resource: resource %>
