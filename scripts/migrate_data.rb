@@ -34,7 +34,9 @@ tables.each do |table|
     data.rows.each do |row|
         attributes = data.columns.zip(row).to_h
         begin
-            sqlite_conn.insert_fixture(attributes, table)
+            columns = attributes.keys.join(", ")
+            values = attributes.values.map { |v| ActiveRecord::Base.connection.quote(v) }.join(", ")
+            sqlite_connection.execute("INSERT INTO #{table} (#{columns}) VALUES (#{values})")
         rescue => e
             puts "Error inserting into #{table}: #{e.message}"
         end
@@ -44,3 +46,4 @@ tables.each do |table|
 end
 
 puts "Migration completed successfully!"
+
