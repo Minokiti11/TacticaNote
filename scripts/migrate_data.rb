@@ -15,7 +15,7 @@ pg_config = {
 # SQLiteの設定
 sqlite_config = {
     adapter:  "sqlite3",
-    database: "db/production.sqlite3"
+    database: "storage/production.sqlite3"
 }
 
 # PostgreSQLへの接続
