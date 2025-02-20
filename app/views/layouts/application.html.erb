@@ -38,7 +38,9 @@
 
 
   <body data-controller="<%= controller_name %>" data-action="<%= action_name %>">
-    <%= render 'layouts/navbar' %>
+    <% unless controller_name == 'home' && action_name == 'index' && !current_user %>
+      <%= render 'layouts/navbar' %>
+    <% end %>
     
     <% if flash[:notice] %>
       <div class="alert alert-success alert-dismissible fade show mb-0" role="alert" data-controller="clipboard" data-clipboard-target="source">
