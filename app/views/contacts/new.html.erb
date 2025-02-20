@@ -1,0 +1,117 @@
+<div class="d-flex align-items-center justify-content-center">
+	<div class="mt-5 mb-5 form-card">
+		<h2 class="fw-bold contact_heading">お問い合わせフォーム</h1>
+		<p class="subtext">お気軽にお問い合わせください。</p>
+		<%= form_with(model: @contact, local: true) do |f| %>
+			<% if @contact.errors.any? %>
+				<div class="alert alert-danger">
+					<ul class="mb-0">
+						<% @contact.errors.full_messages.each do |msg| %>
+							<li><%= msg %></li>
+						<% end %>
+					</ul>
+				</div>
+			<% end %>
+
+			<div class="form-group">
+				<label for="name">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+					お名前
+				</label>
+				<%= f.text_field :name, class: "form-control", required: true, placeholder: "例: 山田 太郎" %>
+			</div>
+
+			<div class="form-group">
+				<label for="email">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+					メールアドレス
+				</label>
+				<%= f.email_field :email, class: "form-control", required: true, placeholder: "例: example@example.com" %>
+			</div>
+
+			<div class="form-group">
+				<label for="message">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+					お問い合わせ内容
+				</label>
+				<%= f.text_area :message, class: "form-control", rows: 5, required: true, placeholder: "ご要望やご質問をお書きください" %>
+			</div>
+
+			<div class="text-center">
+				<%= f.submit "送信", class: "submit-btn" do %>
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+				<% end %>
+			</div>
+		<% end %>
+	</div>
+</div>
+
+<style>
+	.form-card {
+		max-width: 500px;
+		width: 100%;
+		align-items: center;
+		font-family: "Helvetica Neue", Arial, sans-serif;
+		background-color: white;
+		padding: 20px;
+		border-radius: 10px;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	}
+
+	.contact_heading {
+		color: #333;
+		margin-bottom: 10px;
+		text-align: center;
+	}
+
+	.subtext {
+		color: #666;
+		margin-bottom: 20px;
+		text-align: center;
+	}
+
+	.form-group {
+		margin-bottom: 20px;
+	}
+
+	label {
+		display: flex;
+		align-items: center;
+		margin-bottom: 5px;
+		color: #333;
+		font-weight: bold;
+	}
+
+	svg {
+		margin-right: 8px;
+	}
+
+	.submit-btn {
+		width: 100%;
+		padding: 12px;
+		background-color: black;
+		color: white;
+		border: none;
+		border-radius: 4px;
+		font-size: 16px;
+		cursor: pointer;
+		transition: background-color 0.3s ease;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.submit-btn:hover {
+		background-color: #357abd;
+	}
+
+	.submit-btn svg {
+		margin-right: 8px;
+	}
+
+	@media (max-width: 480px) {
+		.form-card {
+			padding: 20px;
+		}
+	}
+</style>

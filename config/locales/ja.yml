@@ -21,3 +21,23 @@ ja:
         other: "%{count}分"
   time:
     ago: "前"
+  activemodel:
+    models:
+      contact_form: "お問い合わせ"
+    attributes:
+      contact_form:
+        name: "お名前"
+        email: "メールアドレス"
+        message: "お問い合わせ内容"
+    errors:
+      models:
+        contact_form:
+          attributes:
+            name:
+              blank: "を入力してください"
+            email:
+              blank: "を入力してください"
+              invalid: "は正しい形式で入力してください"
+            message:
+              blank: "を入力してください"
+              too_long: "は1000文字以内で入力してください"
