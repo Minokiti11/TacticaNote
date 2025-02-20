@@ -61,105 +61,78 @@
           }
 
           .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 0 20px;
           }
 
-          /* Button styles */
-          .btn {
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 0.25rem;
-            cursor: pointer;
-            font-weight: bold;
-          }
-
-          .btn-primary {
-          background-color: #2563eb;
-          color: #fff;
-          }
-
-          .btn-primary:hover {
-          background-color: #1d4ed8;
-          }
-
-          .btn-secondary {
-          background-color: #fff;
-          color: #2563eb;
-          }
-
-          .btn-secondary:hover {
-          background-color: #f3f4f6;
-          }
-
           /* Hero section styles */
           .hero {
-          background: linear-gradient(to right, #2563eb, #1d4ed8);
-          color: #fff;
-          padding: 4rem 0;
+            background: linear-gradient(to right, #2563eb, #1d4ed8);
+            color: #fff;
+            padding: 4rem 0;
           }
 
           .hero .container {
-          display: flex;
-          align-items: center;
-          gap: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
           }
 
           .hero-content {
-          flex: 1;
+            flex: 1;
           }
 
           .hero h1 {
-          font-size: 2.5rem;
-          margin-bottom: 1rem;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
           }
 
           .hero p {
-          font-size: 1.1rem;
-          margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
           }
 
           .hero-image {
-          flex: 1;
+            flex: 1;
           }
 
           .hero-image img {
-          max-width: 100%;
-          border-radius: 0.5rem;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 100%;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
           }
 
           /* Features section styles */
           .features {
-          padding: 4rem 0;
-          background-color: #f3f4f6;
+            padding: 4rem 0;
+            background-color: #f3f4f6;
           }
 
           .features h2 {
-          text-align: center;
-          margin-bottom: 2rem;
-          font-size: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
           }
 
           .feature-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-          gap: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
           }
 
           .feature-item {
-          background-color: #fff;
-          padding: 1.5rem;
-          border-radius: 0.5rem;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
           }
 
           .feature-icon {
-          width: 48px;
-          height: 48px;
-          color: #2563eb;
-          margin-bottom: 1rem;
+            width: 48px;
+            height: 48px;
+            color: #2563eb;
+            margin-bottom: 1rem;
           }
 
           .feature-item h3 {
@@ -238,71 +211,70 @@
         <main>
             <section class="hero">
                 <div class="container">
-                    <div class="hero-content">
-                        <h1>AIがあなたのサッカー戦術をレベルアップ</h1>
-                        <p>TacticaNoteは、AIを活用してあなたのチームの戦術分析と戦略立案をサポートします。試合の勝率を上げ、チームのパフォーマンスを最大化しましょう。</p>
-                        <button class="btn btn-secondary">今すぐ試す</button>
-                    </div>
-                    <div class="hero-image">
-                        <img src="https://placehold.co/400x400" alt="TacticaNote アプリのイメージ">
-                    </div>
+                  <div class="hero-content">
+                      <h1 class="fw-bold">サッカーノートに命を吹き込む。</h1>
+                      <p>TacticaNoteは、あなたのチームの選手が思考を言語化し、課題を深掘り・共有・要約することで、スムーズな課題解決へと導きます。チーム全体のコミュニケーションを活発にし、成長を加速させましょう。</p>
+                      <button class="button button-secondary">今すぐ試す</button>
+                  </div>
+                  <div class="hero-image">
+                      <img src="https://placehold.co/600x400">
+                  </div>
                 </div>
             </section>
 
             <section id="features" class="features" style="margin: 0 !important;">
                 <div class="container">
-                    <h2>TacticaNoteの主な機能</h2>
+                    <h2 class="fw-bold">TacticaNoteの主な機能</h2>
                     <div class="feature-grid">
                         <div class="feature-item">
                             <i data-lucide="brain" class="feature-icon"></i>
-                            <h3>AI戦術分析</h3>
-                            <p>試合データを分析し、最適な戦術を提案します。</p>
+                            <h3 class="fw-bold fs-5">AIフィードバック</h3>
+                            <p>ユーザーが入力した内容に対してフィードバックし、ピッチで起きた現象を深掘ります。</p>
                         </div>
                         <div class="feature-item">
-                            <i data-lucide="bar-chart" class="feature-icon"></i>
-                            <h3>パフォーマンス追跡</h3>
-                            <p>選手とチームのパフォーマンスを詳細に追跡し、改善点を明確にします。</p>
+                          <i data-lucide="users" class="feature-icon"></i>
+                          <h3 class="fw-bold fs-5">ノートの共有</h3>
+                          <p>書いたノートはチームで共有され、選手自身が課題を発見し、解決へと繋げるサポートをします。</p>
                         </div>
                         <div class="feature-item">
-                            <i data-lucide="users" class="feature-icon"></i>
-                            <h3>チーム管理</h3>
-                            <p>選手のスケジュール、コンディション、目標を一元管理します。</p>
+                          <i data-lucide="zap" class="feature-icon"></i>
+                          <h3 class="fw-bold fs-5">ノートの要約</h3>
+                          <p>メンバーが書いたノートを要約し、チームが抱えている課題や議論すべきポイントを一瞬で把握できます。</p>
                         </div>
                         <div class="feature-item">
-                            <i data-lucide="zap" class="feature-icon"></i>
-                            <h3>リアルタイム分析</h3>
-                            <p>試合中のリアルタイムデータを分析し、即座に戦術アドバイスを提供します。</p>
+                          <i data-lucide="file-video-2" class="feature-icon"></i>
+                          <h3 class="fw-bold fs-5">動画との同期</h3>
+                          <p>選手は動画から振り返るシーンを選び、特定のシーンを振り返ります。<br>これによって、メンバー間の意思疎通が深まり、課題解決のサイクルを加速させます。</p>
                         </div>
+
                     </div>
                 </div>
             </section>
 
             <section id="pricing" class="pricing" style="margin: 0 !important;">
                 <div class="container">
-                    <h2>料金プラン</h2>
+                    <h2 class="fw-bold">料金プラン</h2>
                     <div class="pricing-grid">
                         <div class="pricing-item">
                             <h3>Basic</h3>
                             <p class="price">¥1,980<span>/月</span></p>
                             <ul>
-                                <li>動画のアップロード: 1ヶ月につき10本まで(無期限)</li>
-                                <li>チーム管理（最大100人）</li>
-                                <li>ノートの要約</li>
-                                <li>Convert to Bird's View （俯瞰図生成）機能: (10クレジット/月)</li>
+                              <li style="text-align: left;">動画のアップロード: 1ヶ月につき10本まで(無期限)</li>
+                              <li style="text-align: left;">チーム管理（最大50人）</li>
+                              <li style="text-align: left;">ノートの要約</li>
+                              <li style="text-align: left;">Convert to Bird's View (俯瞰図生成) : 10クレジット/月</li>
                             </ul>
-                            <button class="btn btn-primary">選択する</button>
                         </div>
                         <div class="pricing-item">
                             <h3>Pro</h3>
                             <p class="price">¥3,980<span>/月</span></p>
                             <ul>
-                                <li>動画のアップロード: 無制限</li>
-                                <li>チーム管理(無制限)</li>
-                                <li>ノートの要約</li>
-                                <li>自動シーン分類</li>
-                                <li>Convert to Bird's View 機能（俯瞰図生成）</li>
+                              <li style="text-align: left;">動画のアップロード: 無制限</li>
+                              <li style="text-align: left;">チーム管理(無制限)</li>
+                              <li style="text-align: left;">ノートの要約</li>
+                              <li style="text-align: left;">自動シーン分類</li>
+                              <li style="text-align: left;">Convert to Bird's View (俯瞰図生成) : 無制限</li>
                             </ul>
-                            <button class="btn btn-primary">選択する</button>
                         </div>
                     </div>
                 </div>
