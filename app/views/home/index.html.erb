@@ -12,14 +12,8 @@
           height: 100%;
           top: 0;
           left: 0;
-          background-color: rgba(37, 39, 71, 0.5);
+          background-color: rgba(0, 0, 0, 0.5);
           z-index: -1;
-        }
-
-        .btn {
-          padding: 14px 18px;
-          border-width: 2px;
-          border-radius: 0;
         }
       </style>
     </head>
@@ -38,9 +32,9 @@
                       <% else %>
                         <% group_id = session[:current_group_id] %>
                       <% end %>
-                      <p style = "margin-top: 200px;"><%=link_to "Go To Dashboard", group_path(group_id), class: "btn btn-outline-light", style: "font-size: 17px;", "data-turbo": false %></p>
+                      <p style = "margin-top: 200px;"><%=link_to "Go To Dashboard", group_path(group_id), class: "button button-primary", style: "font-size: 17px;", "data-turbo": false %></p>
                     <% else %>
-                      <p style = "margin-top: 200px;"><%=link_to "Create a Group", new_group_path, class: "btn btn-outline-light", style: "font-size: 17px;", "data-turbo": false %></p>
+                      <p style = "margin-top: 200px;"><%=link_to "Create a Group", new_group_path, class: "button button-primary", style: "font-size: 17px;", "data-turbo": false %></p>
                     <% end %>
                   </div>
               </div>
@@ -69,8 +63,9 @@
           /* Hero section styles */
           .hero {
             background: linear-gradient(to right, #2563eb, #1d4ed8);
+            backdrop-filter: brightness(0.5);
             color: #fff;
-            padding: 4rem 0;
+            padding: 3rem 0;
           }
 
           .hero .container {
@@ -85,12 +80,14 @@
 
           .hero h1 {
             font-size: 2.5rem;
-            margin-bottom: 1rem;
+            padding-bottom: 3rem;
           }
 
           .hero p {
             font-size: 1.1rem;
             margin-bottom: 1.5rem;
+            padding-right: 1rem;
+            padding-left: 1rem;
           }
 
           .hero-image {
@@ -212,9 +209,9 @@
             <section class="hero" style="background-image: url(<%= asset_path 'background.jpeg' %>); background-position: center; background-size: cover;">
               <div class="container">
                 <div class="hero-content">
-                  <h1 class="fw-bold">サッカーノートに命を吹き込む。</h1>
-                  <p>TacticaNoteは、あなたのチームの選手が思考を言語化し、課題を深掘り・共有・要約することで、スムーズな課題解決へと導きます。チーム全体のコミュニケーションを活発にし、成長を加速させましょう。</p>
-                  <%= link_to "今すぐ試す", new_contact_path, class: "button button-primary" %>
+                  <h1 class="fw-bold" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">サッカーノートに命を吹き込む。</h1>
+                  <p>TacticaNoteは、あなたのチームの選手の課題を深掘り・共有・要約することで、スムーズな課題解決へと導きます。チーム全体のコミュニケーションを活発にし、成長を加速させましょう。</p>
+                  <%= link_to "今すぐ試す", new_contact_path, class: "button button-primary", style: "display: flex; height: 2.8rem; width: 7.5rem; justify-content: center; align-items: center; margin-left: 1rem;" %>
                 </div>
                 <div class="hero-image">
                   <img src="https://placehold.co/600x400">
@@ -257,7 +254,7 @@
                     <div class="pricing-grid">
                         <div class="pricing-item">
                             <h3>Basic</h3>
-                            <p class="price">¥1,980<span>/月</span></p>
+                            <p class="price">¥980<span>/月</span></p>
                             <ul>
                               <li style="text-align: left;">動画のアップロード: 1ヶ月につき10本まで(無期限)</li>
                               <li style="text-align: left;">チーム管理（最大50人）</li>
@@ -267,7 +264,7 @@
                         </div>
                         <div class="pricing-item">
                             <h3>Pro</h3>
-                            <p class="price">¥3,980<span>/月</span></p>
+                            <p class="price">¥2,980<span>/月</span></p>
                             <ul>
                               <li style="text-align: left;">動画のアップロード: 無制限</li>
                               <li style="text-align: left;">チーム管理(無制限)</li>
@@ -283,8 +280,4 @@
       <% end %>
     </body>
 </html>
-
-
-
-
 
