@@ -38,8 +38,10 @@
 
 
   <body data-controller="<%= controller_name %>" data-action="<%= action_name %>">
-    <% unless controller_name == 'home' && action_name == 'index' && !current_user %>
+    <% if current_user %>
       <%= render 'layouts/navbar' %>
+    <% else %>
+      <%= render 'layouts/lp_navbar'%>
     <% end %>
     
     <% if flash[:notice] %>

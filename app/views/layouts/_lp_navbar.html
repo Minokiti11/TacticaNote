@@ -1,0 +1,99 @@
+<style>
+    /* Reset and base styles */
+    
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: "Inter", sans-serif;
+        line-height: 1.6;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    /* Header styles */
+    .header {
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 1rem 0;
+    }
+
+    .header .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+
+    .logo-icon {
+        width: 24px;
+        height: 24px;
+        margin-right: 0.5rem;
+        color: #2563eb;
+    }
+
+    nav a {
+        margin-left: 1rem;
+        text-decoration: none;
+        color: #4b5563;
+    }
+
+    nav a:hover {
+        color: #2563eb;
+    }
+
+    /* Button styles */
+    .btn {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .btn-primary {
+        background-color: #2563eb;
+        color: #fff;
+    }
+
+    .btn-primary:hover {
+        background-color: #1d4ed8;
+    }
+
+    .btn-secondary {
+        background-color: #fff;
+        color: #2563eb;
+    }
+
+    .btn-secondary:hover {
+        background-color: #f3f4f6;
+    }
+</style>
+<header class="header sticky-top">
+    <div class="container">
+        <a href="/" class="logo">
+            <i data-lucide="notebook" class="logo-icon"></i>
+            <span>TacticaNote</span>
+        </a>
+        <nav>
+            <a href="/#features">機能</a>
+            <a href="/#pricing">料金プラン</a>
+        </nav>
+        <button class="btn btn-primary">無料で始める</button>
+    </div>
+</header>
