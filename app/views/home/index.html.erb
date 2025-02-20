@@ -47,17 +47,147 @@
           </div>
         </div>
       <% else %>
-        <div class="hero vh-100 d-flex align-items-center" style="background-image: url(<%= asset_path 'background.jpg' %>); background-position: center; background-size: cover; background-attachment: fixed; position:relative; z-index: 2;">
-          <div class="container">
-              <div class="row">
-                  <div class="col-lg-12 mx-auto text-center">
-                    <h1 class="display-8" style = "color: white; font-size: calc(1.25rem + 2vw); font-weight: 750; ">課題と解決策を共有して、練習をより効果的に。</h1>
-                    <h3 class="display-8" style = "color: white; font-size: calc(1.375rem + 1.0vw); margin-top: 50px;">　AI搭載。選手の思考の言語化をサポートする、共有型サッカーノート。　</h3>
-                    <p style = "margin-top: 200px;"><%=link_to "Get Started",new_user_registration_path, class: "btn btn-outline-light", style: "font-size: 17px;" %></p>
-                  </div>
-              </div>
-          </div>
-        </div>
+        <header class="header">
+            <div class="container">
+                <a href="/" class="logo">
+                    <i data-lucide="notebook" class="logo-icon"></i>
+                    <span>TacticaNote</span>
+                </a>
+                <nav>
+                    <a href="#features">機能</a>
+                    <a href="#pricing">料金プラン</a>
+                </nav>
+                <button class="btn btn-primary">無料で始める</button>
+            </div>
+        </header>
+
+        <main>
+            <section class="hero">
+                <div class="container">
+                    <div class="hero-content">
+                        <h1>AIがあなたのサッカー戦術をレベルアップ</h1>
+                        <p>TacticaNoteは、AIを活用してあなたのチームの戦術分析と戦略立案をサポートします。試合の勝率を上げ、チームのパフォーマンスを最大化しましょう。</p>
+                        <button class="btn btn-secondary">今すぐ試す</button>
+                    </div>
+                    <div class="hero-image">
+                        <img src="https://placehold.co/400x400" alt="TacticaNote アプリのイメージ">
+                    </div>
+                </div>
+            </section>
+
+            <section id="features" class="features">
+                <div class="container">
+                    <h2>TacticaNoteの主な機能</h2>
+                    <div class="feature-grid">
+                        <div class="feature-item">
+                            <i data-lucide="brain" class="feature-icon"></i>
+                            <h3>AI戦術分析</h3>
+                            <p>試合データを分析し、最適な戦術を提案します。</p>
+                        </div>
+                        <div class="feature-item">
+                            <i data-lucide="bar-chart" class="feature-icon"></i>
+                            <h3>パフォーマンス追跡</h3>
+                            <p>選手とチームのパフォーマンスを詳細に追跡し、改善点を明確にします。</p>
+                        </div>
+                        <div class="feature-item">
+                            <i data-lucide="users" class="feature-icon"></i>
+                            <h3>チーム管理</h3>
+                            <p>選手のスケジュール、コンディション、目標を一元管理します。</p>
+                        </div>
+                        <div class="feature-item">
+                            <i data-lucide="zap" class="feature-icon"></i>
+                            <h3>リアルタイム分析</h3>
+                            <p>試合中のリアルタイムデータを分析し、即座に戦術アドバイスを提供します。</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="pricing" class="pricing">
+                <div class="container">
+                    <h2>料金プラン</h2>
+                    <div class="pricing-grid">
+                        <div class="pricing-item">
+                            <h3>Basic</h3>
+                            <p class="price">¥1,980<span>/月</span></p>
+                            <ul>
+                                <li>動画のアップロード: 1ヶ月につき10本まで(無期限)</li>
+                                <li>チーム管理（最大100人）</li>
+                                <li>ノートの要約</li>
+                                <li>Convert to Bird's View （俯瞰図生成）機能: (10クレジット/月)</li>
+                            </ul>
+                            <button class="btn btn-primary">選択する</button>
+                        </div>
+                        <div class="pricing-item">
+                            <h3>Pro</h3>
+                            <p class="price">¥3,980<span>/月</span></p>
+                            <ul>
+                                <li>動画のアップロード: 無制限</li>
+                                <li>チーム管理(無制限)</li>
+                                <li>ノートの要約</li>
+                                <li>自動シーン分類</li>
+                                <li>Convert to Bird's View 機能（俯瞰図生成）</li>
+                            </ul>
+                            <button class="btn btn-primary">選択する</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cta">
+                <div class="container">
+                    <h2>今すぐTacticaNoteでチームを強化しよう</h2>
+                    <p>14日間の無料トライアルで、AIの力を体験してください。</p>
+                    <button class="btn btn-secondary">無料トライアルを開始</button>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-section">
+                        <h3>TacticaNote</h3>
+                        <p>AIで選手の思考を深めるサッカーノートアプリ</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4>リンク</h4>
+                        <ul>
+                            <li><a href="#">ホーム</a></li>
+                            <li><a href="#features">機能</a></li>
+                            <li><a href="#pricing">料金プラン</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>サポート</h4>
+                        <ul>
+                            <li><a href="#">よくある質問</a></li>
+                            <li><a href="#">お問い合わせ</a></li>
+                            <li><a href="#">利用規約</a></li>
+                            <li><a href="#">プライバシーポリシー</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>フォローする</h4>
+                        <div class="social-icons">
+                            <a href="#"><i data-lucide="facebook"></i></a>
+                            <a href="#"><i data-lucide="twitter"></i></a>
+                            <a href="#"><i data-lucide="instagram"></i></a>
+                            <a href="#"><i data-lucide="linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>© 2023 TacticaNote. All rights reserved. | 
+                        <a href="https://twitter.com/minorex14" target="_blank" rel="noopener noreferrer">@minorex14</a>
+                    </p>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            lucide.createIcons();
+        </script>
       <% end %>
     </body>
 </html>
