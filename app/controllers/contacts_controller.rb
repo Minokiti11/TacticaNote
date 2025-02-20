@@ -5,7 +5,8 @@ class ContactsController < ApplicationController
 
   def create
     @contact = Contact.new(contact_params)
-    if @contact.valid?
+
+    if @contact.valid? && @contact.save
       # 問い合わせ者へ自動返信メール送信
       ContactMailer.inquiry(@contact).deliver_later
       # 管理者へ通知メール送信
