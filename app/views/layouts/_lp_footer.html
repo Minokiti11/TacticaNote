@@ -1,0 +1,107 @@
+<style>
+/* Footer styles */
+.footer {
+    background-color: #1f2937;
+    color: #fff;
+    padding: 4rem 0 2rem;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.footer-section h3,
+.footer-section h4 {
+    margin-bottom: 1rem;
+}
+
+.footer-section ul {
+    list-style: none;
+}
+
+.footer-section li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-section a {
+    color: #9ca3af;
+    text-decoration: none;
+}
+
+.footer-section a:hover {
+    color: #fff;
+}
+
+.social-icons {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-icons a {
+    color: white;
+}
+
+.social-icons a:hover {
+    color: #fff;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid #374151;
+    font-size: 0.9rem;
+    color: #9ca3af;
+}
+
+.footer-bottom a {
+    color: #9ca3af;
+    text-decoration: none;
+}
+
+.footer-bottom a:hover {
+    color: #fff;
+}
+</style>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-section">
+                <h3>TacticaNote</h3>
+                <p>AIで選手の思考を深めるサッカーノートアプリ</p>
+            </div>
+            <div class="footer-section">
+                <h4>リンク</h4>
+                <ul>
+                    <li><a href="#">ホーム</a></li>
+                    <li><a href="#features">機能</a></li>
+                    <li><a href="#pricing">料金プラン</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>サポート</h4>
+                <ul>
+                    <!--  <li><a href="#">よくある質問</a></li> -->
+                    <li><a href="#">お問い合わせ</a></li>
+                    <li><a href="pages/terms">利用規約・プライバシーポリシー</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>フォローする</h4>
+                <div class="social-icons">
+                    <a href="#"><i data-lucide="twitter"></i></a>
+                    <a href="#"><i data-lucide="instagram"></i></a>
+                    <a href="#"><i data-lucide="linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2023 TacticaNote. All rights reserved. | 
+                <a href="https://twitter.com/minorex14" target="_blank" rel="noopener noreferrer">@minorex14</a>
+            </p>
+        </div>
+    </div>
+</footer>

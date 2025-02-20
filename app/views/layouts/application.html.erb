@@ -64,4 +64,8 @@
     <%= yield %>
 
   </body>
+  <% if !current_user %>
+    <%= render 'layouts/lp_cta'%>
+    <%= render 'layouts/lp_footer'%>
+  <% end %>
 </html>
