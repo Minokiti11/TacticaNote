@@ -13,7 +13,7 @@ class ContactMailer < ApplicationMailer
     @contact_form = contact_form
     mail(
       subject: '【新規お問い合わせ】Webサイトからのお問い合わせ',
-      from: contact_form.email
+      reply_to: contact_form.email
     )
   end
 end

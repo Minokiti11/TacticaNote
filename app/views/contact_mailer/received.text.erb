@@ -1,3 +1,19 @@
-Contact#received
+Webサイトから新しいお問い合わせがありました。
 
-<%= @greeting %>, find me in app/views/contact_mailer/received.text.erb
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【お名前】
+<%= @contact_form.name %>
+
+【メールアドレス】
+<%= @contact_form.email %>
+
+【お問い合わせ内容】
+<%= @contact_form.message %>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+※このメールは自動送信されています。
+返信する場合は、このメールの Reply-To に設定されている
+送信者のメールアドレスに返信してください。
+
+送信日時：<%= Time.current.strftime('%Y年%m月%d日 %H:%M:%S') %>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
