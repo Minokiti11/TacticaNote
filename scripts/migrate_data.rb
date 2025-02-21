@@ -27,7 +27,7 @@ ActiveRecord::Base.establish_connection(sqlite_config)
 sqlite_connection = ActiveRecord::Base.connection
 
 # テーブルごとにデータを移行
-tables = ["users", "groups", "group_users", "videos", "sns_credentials", "notes", "responses", "practices", "daily_practices", "daily_practice_items", "summaries", "ai_practices", "timestamps"] # 移行するテーブル名を列挙
+tables = ["users", "groups", "group_users", "active_storage_attachments", "active_storage_blobs", "active_storage_variant_records", "videos", "sns_credentials", "notes", "responses", "practices", "daily_practices", "daily_practice_items", "summaries", "ai_practices", "timestamps"] # 移行するテーブル名を列挙
 tables.each do |table|
     puts "Migrating #{table}..."
     data = pg_connection.select_all("SELECT * FROM #{table}")
