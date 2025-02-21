@@ -130,3 +130,5 @@ gem "kamal", "~> 2.5"
 gem 'thruster'
 
 gem 'high_voltage'
+
+gem 'sitemap_generator'
