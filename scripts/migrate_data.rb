@@ -26,7 +26,6 @@ pg_connection = ActiveRecord::Base.connection
 ActiveRecord::Base.establish_connection(sqlite_config)
 sqlite_connection = ActiveRecord::Base.connection
 
-# テーブルごとにデータを移行
 # ActiveStorageの依存関係を考慮した順序
 tables = [
     # まずActiveStorageの基本テーブル
@@ -47,14 +46,25 @@ tables = [
     "ai_practices",
     "timestamps"
 ] # 移行するテーブル名を列挙
+
+# 最初に全テーブルのデータを削除（逆順で）
+puts "Cleaning up existing data..."
+tables.reverse.each do |table|
+    begin
+        puts "Deleting data from #{table}..."
+        sqlite_connection.execute("DELETE FROM #{table}")
+        sqlite_connection.execute("DELETE FROM sqlite_sequence WHERE name='#{table}'")
+    rescue => e
+        puts "Error cleaning #{table}: #{e.message}"
+    end
+end
+
+# テーブルごとにデータを移行（正順で）
+puts "Starting data migration..."
+
 tables.each do |table|
     puts "Migrating #{table}..."
     data = pg_connection.select_all("SELECT * FROM #{table}")
-    # テーブルの既存データを削除
-    sqlite_connection.execute("DELETE FROM #{table}")
-    
-    # シーケンスをリセット（SQLiteの場合）
-    sqlite_connection.execute("DELETE FROM sqlite_sequence WHERE name='#{table}'")
     
     data.rows.each do |row|
         attributes = data.columns.zip(row).to_h
