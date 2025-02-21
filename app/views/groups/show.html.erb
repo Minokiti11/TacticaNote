@@ -441,11 +441,15 @@ select#practice-select {
                     </div>
                   </div>
                   
-                  <% sum_of_training_time = 0 %>
-                  <% @group.daily_practice.daily_practice_items.each do |item| %>
-                    <% sum_of_training_time += item.training_time %>
+                  <% if @group.daily_practice %>
+                    <% sum_of_training_time = 0 %>
+                    <% @group.daily_practice.daily_practice_items.each do |item| %>
+                      <% sum_of_training_time += item.training_time %>
+                    <% end %>
+                    <div id="sum_of_time" style="margin-left: 20px; margin-bottom: 10px;">合計: <%= sum_of_training_time %>分</div>
+                  <% else %>
+                    <div id="sum_of_time" style="margin-left: 20px; margin-bottom: 10px;">合計: 0分</div>
                   <% end %>
-                  <div id="sum_of_time" style="margin-left: 20px; margin-bottom: 10px;">合計: <%= sum_of_training_time %>分</div>
                 </div>
               </div>
               
