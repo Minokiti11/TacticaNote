@@ -27,10 +27,35 @@ ActiveRecord::Base.establish_connection(sqlite_config)
 sqlite_connection = ActiveRecord::Base.connection
 
 # テーブルごとにデータを移行
-tables = ["users", "groups", "group_users", "active_storage_attachments", "active_storage_blobs", "active_storage_variant_records", "videos", "sns_credentials", "notes", "responses", "practices", "daily_practices", "daily_practice_items", "summaries", "ai_practices", "timestamps"] # 移行するテーブル名を列挙
+# ActiveStorageの依存関係を考慮した順序
+tables = [
+    # まずActiveStorageの基本テーブル
+    "active_storage_blobs",           # 最初にblobsを作成
+    "active_storage_attachments",     # 次にattachments（blobsに依存）
+    "active_storage_variant_records", # 最後にvariant_records（blobsに依存）
+    "users",
+    "groups",
+    "group_users",
+    "videos",
+    "sns_credentials",
+    "notes",
+    "responses",
+    "practices",
+    "daily_practices",
+    "daily_practice_items",
+    "summaries",
+    "ai_practices",
+    "timestamps"
+] # 移行するテーブル名を列挙
 tables.each do |table|
     puts "Migrating #{table}..."
     data = pg_connection.select_all("SELECT * FROM #{table}")
+    # テーブルの既存データを削除
+    sqlite_connection.execute("DELETE FROM #{table}")
+    
+    # シーケンスをリセット（SQLiteの場合）
+    sqlite_connection.execute("DELETE FROM sqlite_sequence WHERE name='#{table}'")
+    
     data.rows.each do |row|
         attributes = data.columns.zip(row).to_h
         begin
@@ -39,6 +64,7 @@ tables.each do |table|
             sqlite_connection.execute("INSERT INTO #{table} (#{columns}) VALUES (#{values})")
         rescue => e
             puts "Error inserting into #{table}: #{e.message}"
+            puts "Attributes: #{attributes.inspect}"
         end
     end
 

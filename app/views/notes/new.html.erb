@@ -182,10 +182,16 @@
 
             <% video = nil %>
             <% if @with_video == "true" && @video_id %>
-                <% video = Video.find_by(id: @video_id)%>
-                <video class="video-js vjs-big-play-centered" preload="metadata" controls playsinline id="video" data-video-id="<%= @video_id%>">
-                    <source src="<%= rails_blob_path(video.video) %>" type="video/mp4">
-                </video>
+                <% video = Video.find_by(id: @video_id) %>
+                <% if video.video.attached? %>
+                    <video class="video-js vjs-big-play-centered" preload="metadata" controls playsinline id="video" data-video-id="<%= @video_id %>">
+                        <source src="<%= rails_blob_path(video.video) %>" type="video/mp4">
+                    </video>
+                <% else %>
+                    <div class="alert alert-warning">
+                        動画ファイルが見つかりませんでした。
+                    </div>
+                <% end %>
 
                 <!-- タイムスタンプリスト -->
                 <div id="timestamp-list" class="for-mobile" style="margin-top: 10px;">
