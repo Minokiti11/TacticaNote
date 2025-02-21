@@ -48,7 +48,7 @@
     }
 
     nav a {
-        margin-left: 1rem;
+        margin-left: 0.6rem;
         text-decoration: none;
         color: #4b5563;
     }
@@ -64,8 +64,8 @@
             <span>TacticaNote</span>
         </a>
         <nav style="display: flex; align-items: center;">
-            <a href="/#features" style="margin-right: 1rem;">機能</a>
-            <a href="/#pricing" style="margin-right: 1rem;">料金</a>
+            <a href="/#features" class="d-none d-sm-inline" style="margin-right: 0.6rem;">機能</a>
+            <a href="/#pricing" class="d-none d-sm-inline" style="margin-right: 0.6rem;">料金</a>
             <%= link_to "今すぐ試す", new_contact_path, class: "btn btn-primary d-none d-md-inline" %>
             <%= link_to "ログイン", new_user_session_path, class: "btn btn-dark" %>
         </nav>
