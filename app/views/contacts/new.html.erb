@@ -15,7 +15,7 @@
 
 			<div class="form-group">
 				<label for="name">
-					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
 					お名前
 				</label>
 				<%= f.text_field :name, class: "form-control", required: true, placeholder: "例: 山田 太郎" %>
@@ -23,7 +23,7 @@
 
 			<div class="form-group">
 				<label for="email">
-					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
 					メールアドレス
 				</label>
 				<%= f.email_field :email, class: "form-control", required: true, placeholder: "例: example@example.com" %>
@@ -31,13 +31,13 @@
 
 			<div class="form-group">
 				<label for="message">
-					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
 					お問い合わせ内容
 				</label>
 				<%= f.text_area :message, class: "form-control", rows: 5, required: true, placeholder: "ご要望やご質問をお書きください" %>
 			</div>
 
-			<div class="text-center">
+			<div class="text-center"></div>
 				<%= f.button type: "submit", class: "submit-btn" do %>
 					<svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 15px;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 						<line x1="22" y1="2" x2="11" y2="13"></line>
@@ -79,11 +79,10 @@
 	}
 
 	label {
-		display: flex;
-		align-items: center;
+		/* display: flex;
+		align-items: center; */
 		margin-bottom: 5px;
 		color: #333;
-		font-weight: bold;
 	}
 
 	svg {

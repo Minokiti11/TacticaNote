@@ -63,10 +63,11 @@
             <i data-lucide="notebook" class="logo-icon"></i>
             <span>TacticaNote</span>
         </a>
-        <nav>
-            <a href="/#features">機能</a>
-            <a href="/#pricing">料金</a>
+        <nav style="display: flex; align-items: center;">
+            <a href="/#features" style="margin-right: 1rem;">機能</a>
+            <a href="/#pricing" style="margin-right: 1rem;">料金</a>
+            <%= link_to "今すぐ試す", new_contact_path, class: "btn btn-primary d-none d-md-inline" %>
+            <%= link_to "ログイン", new_user_session_path, class: "btn btn-dark" %>
         </nav>
-        <%= link_to "今すぐ試す", new_contact_path, class: "button button-primary d-none d-md-inline" %>
     </div>
 </header>
