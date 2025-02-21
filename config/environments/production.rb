@@ -99,7 +99,7 @@ Rails.application.configure do
   config.assets.compile = true
 
   config.hosts.clear
-  # config.hosts << 'tactica-note.com'
+  config.hosts << 'tactica-note.com'
   # config.hosts << "4000afde2cd3"
 
   config.action_cable.url = "ws://tactica-note.com/cable"
