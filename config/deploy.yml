@@ -1,6 +1,9 @@
 # Name of your application. Used to uniquely configure containers.
 service: tacticanote
 
+options:
+  network: host
+
 # Name of the container image.
 image: minorex15/tacticanote
 
@@ -54,8 +57,8 @@ builder:
 # Inject ENV variables into containers (secrets come from .kamal/secrets).
 #
 env:
-  # clear:
-  #   DB_HOST: 192.168.0.2
+  clear:
+    REDIS_URL: redis://127.0.0.1:6379
   secret:
     - RAILS_MASTER_KEY
 
