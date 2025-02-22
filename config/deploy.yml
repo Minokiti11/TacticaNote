@@ -58,7 +58,7 @@ builder:
 #
 env:
   clear:
-    REDIS_URL: redis://163.43.106.77:6379
+    REDIS_URL: redis://127.0.0.1:6379
   secret:
     - RAILS_MASTER_KEY
 
@@ -92,13 +92,13 @@ asset_path: /rails/public/assets
 
 # Use accessory services (secrets come from .kamal/secrets).
 #
-accessories:
-  redis:
-    image: redis:7
-    host: 163.43.106.77
-    port: 6379
-    directories:
-      - redis_data:/data
+# accessories:
+#   redis:
+#     image: redis:7
+#     host: 163.43.106.77
+#     port: 6379
+#     directories:
+#       - redis_data:/data
 #   db:
 #     image: mysql:8.0
 #     host: 192.168.0.2
