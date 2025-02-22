@@ -27,6 +27,8 @@ module TacticaChat
     config.time_zone = 'Tokyo'
     # config.eager_load_paths << Rails.root.join("extras")
 
+    config.active_job.queue_adapter = :sidekiq
+
     # CORS設定
     config.middleware.insert_before 0, Rack::Cors do
       allow do
