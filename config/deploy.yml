@@ -1,8 +1,8 @@
 # Name of your application. Used to uniquely configure containers.
 service: tacticanote
 
-options:
-  network: host
+# options:
+#   network: host
 
 # Name of the container image.
 image: minorex15/tacticanote
@@ -76,6 +76,7 @@ env:
 #
 volumes:
   - "kamal_rails_storage:/rails/storage"
+  - "redis_data:/data"
 
 # Bridge fingerprinted assets, like JS and CSS, between versions to avoid
 # hitting 404 on in-flight requests. Combines all files from new and old
@@ -91,7 +92,13 @@ asset_path: /rails/public/assets
 
 # Use accessory services (secrets come from .kamal/secrets).
 #
-# accessories:
+accessories:
+  redis:
+    image: redis:7
+    host: 127.0.0.1
+    port: 6379
+    directories:
+      - redis_data:/data
 #   db:
 #     image: mysql:8.0
 #     host: 192.168.0.2
@@ -106,11 +113,5 @@ asset_path: /rails/public/assets
 #       - db/production.sql:/docker-entrypoint-initdb.d/setup.sql
 #     directories:
 #       - data:/var/lib/mysql
-#   redis:
-#     image: valkey/valkey:8
-#     host: 192.168.0.2
-#     port: 6379
-#     directories:
-#       - data:/data
 
 deploy_timeout: 300
