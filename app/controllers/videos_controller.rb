@@ -41,16 +41,6 @@ class VideosController < ApplicationController
       logger.debug "  Content Type: #{@video.video.content_type}"
       logger.debug "  Byte Size: #{@video.video.blob.byte_size}"
       
-      # ファイルの存在確認を試みる
-      @video.video.blob.open do |file|
-        logger.debug "Video file exists at: #{file.path}"
-        logger.debug "File size: #{File.size(file.path)} bytes"
-      end
-
-      # URLの生成をログ出力
-      blob_url = rails_blob_path(@video.video)
-      logger.debug "Generated Blob URL: #{blob_url}"
-      
     rescue ActiveStorage::FileNotFoundError => e
       logger.error "Video file not found: #{e.message}"
       logger.error "Backtrace:\n\t#{e.backtrace.join("\n\t")}"
