@@ -1,5 +1,5 @@
-<script src="https://vjs.zencdn.net/7.20.2/video.min.js"></script>
-<link href="https://vjs.zencdn.net/7.20.2/video-js.css" rel="stylesheet" />
+<script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+<link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
 
 <link rel="stylesheet" type="text/css" href="/dist/videojs-zoom.css">
 <script src="/dist/videojs-zoom.js"></script>
@@ -103,7 +103,10 @@
   <div id="container" class="px-3 mt-5">
     <% if @video.video.attached? %>
       <video class="video-js vjs-big-play-centered" preload="metadata" controls playsinline id="video" data-video-id="<%= @video_id%>">
-        <source src="<%= rails_blob_path(@video.video) %>" type="video/mp4">
+        <source src="<%= rails_blob_path(@video.video) %>" type="<%= @video.video.content_type %>">
+        <p class="vjs-no-js">
+          申し訳ありません。このビデオを再生するには、JavaScriptを有効にしてください。
+        </p>
       </video>
       <h3 style="margin-top: 15px;">
         <%= @video.title %>
@@ -298,6 +301,24 @@
     }
   });
   player.ready(function() {
+    // 動画の読み込み状態をモニタリング
+    player.on('loadstart', function() {
+      console.log('Video loadstart - メディアの読み込みを開始しました');
+    });
+    
+    player.on('loadedmetadata', function() {
+      console.log('Video loadedmetadata - メタデータを読み込みました');
+      console.log('Duration:', player.duration());
+      console.log('Video dimensions:', player.videoWidth(), 'x', player.videoHeight());
+    });
+    
+    player.on('loadeddata', function() {
+      console.log('Video loadeddata - メディアの最初のフレームを読み込みました');
+    });
+    
+    player.on('canplay', function() {
+      console.log('Video canplay - 再生可能な状態です');
+    });
     // フルスクリーン切り替え後にボタンを追加
     player.on('loadedmetadata', () => {
       const controlBar = player.getChild('ControlBar');
@@ -344,210 +365,213 @@
 
   var video_el = document.getElementById("video");
 
-  const zoomPlugin = player.zoomPlugin();
+  // const zoomPlugin = player.zoomPlugin();
 
-  let initialDistance = 0;
-  let initialPoint;
-  let initialPointX;
-  let initialPointY;
+  // let initialDistance = 0;
+  // let initialPoint;
+  // let initialPointX;
+  // let initialPointY;
 
-  let ongoingTouches = [];
+  // let ongoingTouches = [];
 
-  function handleTouchStart(evt) {
-    // タッチがコントロールバー内のボタンから発生した場合は処理を中断
-    if (evt.target.closest('.vjs-control')) {
-      console.log("ボタンタッチのため処理を中断");
-      return;
-    }
+  // function handleTouchStart(evt) {
+  //   // タッチがコントロールバー内のボタンから発生した場合は処理を中断
+  //   if (evt.target.closest('.vjs-control')) {
+  //     console.log("ボタンタッチのため処理を中断");
+  //     return;
+  //   }
 
-    // タッチイベントが動画要素から発生した場合のみ処理を実行
-    if (!evt.target.closest('video')) {
-      return;
-    }
+  //   // タッチイベントが動画要素から発生した場合のみ処理を実行
+  //   if (!evt.target.closest('video')) {
+  //     return;
+  //   }
 
-    evt.preventDefault();
-    const touches = evt.changedTouches;
+  //   evt.preventDefault();
+  //   const touches = evt.changedTouches;
 
-    for (let i = 0; i < touches.length; i++) {
-      ongoingTouches.push(copyTouch(touches[i]));
-    }
+  //   for (let i = 0; i < touches.length; i++) {
+  //     ongoingTouches.push(copyTouch(touches[i]));
+  //   }
 
-    if (ongoingTouches.length === 2) {
-      initialDistance = getDistance(ongoingTouches[0], ongoingTouches[1]);
-      initialPointX = (ongoingTouches[0].pageX + ongoingTouches[1].pageX) / 2;
-      initialPointY = (ongoingTouches[0].pageY + ongoingTouches[1].pageY) / 2;
-    } else if (ongoingTouches.length === 1) {
-      initialPoint = ongoingTouches[0];
-    }
-  }
+  //   if (ongoingTouches.length === 2) {
+  //     initialDistance = getDistance(ongoingTouches[0], ongoingTouches[1]);
+  //     initialPointX = (ongoingTouches[0].pageX + ongoingTouches[1].pageX) / 2;
+  //     initialPointY = (ongoingTouches[0].pageY + ongoingTouches[1].pageY) / 2;
+  //   } else if (ongoingTouches.length === 1) {
+  //     initialPoint = ongoingTouches[0];
+  //   }
+  // }
 
-  let ratio = 1;
-  let previousDistance = 0;
-  var Pos = { x: 0, y: 0 };
+  // let ratio = 1;
+  // let previousDistance = 0;
+  // var Pos = { x: 0, y: 0 };
 
-  function handleTouchMove(evt) {
-    // タッチがコントロールバー内のボタンから発生した場合は処理を中断
-    if (evt.target.closest('.vjs-control')) {
-      return;
-    }
+  // function handleTouchMove(evt) {
+  //   // タッチがコントロールバー内のボタンから発生した場合は処理を中断
+  //   if (evt.target.closest('.vjs-control')) {
+  //     return;
+  //   }
 
-    if (!evt.target.closest('video')) {
-      return;
-    }
+  //   if (!evt.target.closest('video')) {
+  //     return;
+  //   }
 
-    evt.preventDefault();
-    const touches = evt.changedTouches;
+  //   evt.preventDefault();
+  //   const touches = evt.changedTouches;
 
-    for (let i = 0; i < touches.length; i++) {
-      const idx = ongoingTouchIndexById(touches[i].identifier);
-      if (idx >= 0) {
-        ongoingTouches.splice(idx, 1, copyTouch(touches[i]));
-      }
-    }
+  //   for (let i = 0; i < touches.length; i++) {
+  //     const idx = ongoingTouchIndexById(touches[i].identifier);
+  //     if (idx >= 0) {
+  //       ongoingTouches.splice(idx, 1, copyTouch(touches[i]));
+  //     }
+  //   }
 
-    if (ongoingTouches.length === 2) {
-      const currentDistance = getDistance(ongoingTouches[0], ongoingTouches[1]);
-      if (currentDistance > initialDistance) {
-        if (typeof ratio !== 'undefined' && ratio !== null) {
-          if (currentDistance < previousDistance) {
-            ratio -= (currentDistance - initialDistance) / initialDistance * 0.1;
-          } else {
-            ratio = Math.min(6, ratio + (currentDistance - initialDistance) / initialDistance * 0.1);
-          }
+  //   if (ongoingTouches.length === 2) {
+  //     const currentDistance = getDistance(ongoingTouches[0], ongoingTouches[1]);
+  //     if (currentDistance > initialDistance) {
+  //       if (typeof ratio !== 'undefined' && ratio !== null) {
+  //         if (currentDistance < previousDistance) {
+  //           ratio -= (currentDistance - initialDistance) / initialDistance * 0.1;
+  //         } else {
+  //           ratio = Math.min(6, ratio + (currentDistance - initialDistance) / initialDistance * 0.1);
+  //         }
           
-          $('#ratio').text(`${ratio.toFixed(1)}倍`);
-        }
+  //         $('#ratio').text(`${ratio.toFixed(1)}倍`);
+  //       }
         
-        if (ratio > 1) {
-          zoomPlugin.zoom(ratio);
+  //       if (ratio > 1) {
+  //         zoomPlugin.zoom(ratio);
 
-          // $("#ratio").text(`(${initialPointX}, ${initialPointY})`);
+  //         // $("#ratio").text(`(${initialPointX}, ${initialPointY})`);
 
-          // // ズームの中心をinitialPointX, initialPointYに設定
-          // // ビデオの中心座標を計算
-          // const videoCenterX = video_el.clientWidth / 2;
-          // const videoCenterY = video_el.clientHeight / 2;
+  //         // // ズームの中心をinitialPointX, initialPointYに設定
+  //         // // ビデオの中心座標を計算
+  //         // const videoCenterX = video_el.clientWidth / 2;
+  //         // const videoCenterY = video_el.clientHeight / 2;
 
-          // $("#distance").text(`(${-(video_el.clientWidth * ratio / 2) + (video_el.clientWidth / 2)} < Pos.x < ${(video_el.clientWidth * ratio / 2) - (video_el.clientWidth / 2)})`);
+  //         // $("#distance").text(`(${-(video_el.clientWidth * ratio / 2) + (video_el.clientWidth / 2)} < Pos.x < ${(video_el.clientWidth * ratio / 2) - (video_el.clientWidth / 2)})`);
 
-          // // Pos.x と Pos.y を指定された範囲内に制限
-          // Pos.x = Math.max(-(video_el.clientWidth * ratio / 2) + (video_el.clientWidth / 2),
-          //                  Math.min(initialPointX - (video_el.clientWidth / 2), (video_el.clientWidth * ratio / 2) - (video_el.clientWidth / 2)));
-          // Pos.y = Math.max(-(video_el.clientHeight * ratio / 2) + (video_el.clientHeight / 2),
-          //                  Math.min((video_el.clientHeight, (video_el.clientHeight * ratio / 2) - (video_el.clientHeight / 2))));
+  //         // // Pos.x と Pos.y を指定された範囲内に制限
+  //         // Pos.x = Math.max(-(video_el.clientWidth * ratio / 2) + (video_el.clientWidth / 2),
+  //         //                  Math.min(initialPointX - (video_el.clientWidth / 2), (video_el.clientWidth * ratio / 2) - (video_el.clientWidth / 2)));
+  //         // Pos.y = Math.max(-(video_el.clientHeight * ratio / 2) + (video_el.clientHeight / 2),
+  //         //                  Math.min((video_el.clientHeight, (video_el.clientHeight * ratio / 2) - (video_el.clientHeight / 2))));
 
           
-          // zoomPlugin.move(Pos.x, Pos.y);
-        }
-      } else if (currentDistance < initialDistance) {
-        if (typeof ratio !== 'undefined' && ratio !== null) {
-          ratio -= (initialDistance - currentDistance) / initialDistance * 0.2;
-          ratio = Math.max(ratio, 1);
-          $('#ratio').text(`${ratio.toFixed(1)}倍`);
-        }
-        if (ratio > 1) {
-          zoomPlugin.zoom(ratio);
+  //         // zoomPlugin.move(Pos.x, Pos.y);
+  //       }
+  //     } else if (currentDistance < initialDistance) {
+  //       if (typeof ratio !== 'undefined' && ratio !== null) {
+  //         ratio -= (initialDistance - currentDistance) / initialDistance * 0.2;
+  //         ratio = Math.max(ratio, 1);
+  //         $('#ratio').text(`${ratio.toFixed(1)}倍`);
+  //       }
+  //       if (ratio > 1) {
+  //         zoomPlugin.zoom(ratio);
 
-          Pos.x = Math.max(-(video_el.clientWidth * ratio / 2) + (video_el.clientWidth / 2), Math.min((video_el.clientWidth * ratio / 2) - (video_el.clientWidth / 2), Pos.x));
-          Pos.y = Math.max(-(video_el.clientHeight * ratio / 2) + (video_el.clientHeight / 2), Math.min((video_el.clientHeight * ratio / 2) - (video_el.clientHeight / 2), Pos.y));
+  //         Pos.x = Math.max(-(video_el.clientWidth * ratio / 2) + (video_el.clientWidth / 2), Math.min((video_el.clientWidth * ratio / 2) - (video_el.clientWidth / 2), Pos.x));
+  //         Pos.y = Math.max(-(video_el.clientHeight * ratio / 2) + (video_el.clientHeight / 2), Math.min((video_el.clientHeight * ratio / 2) - (video_el.clientHeight / 2), Pos.y));
 
-          // 相対座標で移動
-          zoomPlugin.move(Pos.x, Pos.y);
-        }
-      }
-      previousDistance = currentDistance;
-    } else if (ongoingTouches.length === 1) {
-      let currentPoint = ongoingTouches[0];
-      // 相対移動量を計算
-      let deltaX = currentPoint.pageX - initialPoint.pageX;
-      let deltaY = currentPoint.pageY - initialPoint.pageY;
+  //         // 相対座標で移動
+  //         zoomPlugin.move(Pos.x, Pos.y);
+  //       }
+  //     }
+  //     previousDistance = currentDistance;
+  //   } else if (ongoingTouches.length === 1) {
+  //     let currentPoint = ongoingTouches[0];
+  //     // 相対移動量を計算
+  //     let deltaX = currentPoint.pageX - initialPoint.pageX;
+  //     let deltaY = currentPoint.pageY - initialPoint.pageY;
 
-      // 初期ポイントを更新
-      initialPoint = { ...currentPoint };
+  //     // 初期ポイントを更新
+  //     initialPoint = { ...currentPoint };
 
-      // 現在の位置に移動量を加算
-      if (initialPoint.pageX > currentPoint.pageX){
-        Pos.x -= deltaX;
-      } else {
-        Pos.x += deltaX;
-      }
+  //     // 現在の位置に移動量を加算
+  //     if (initialPoint.pageX > currentPoint.pageX){
+  //       Pos.x -= deltaX;
+  //     } else {
+  //       Pos.x += deltaX;
+  //     }
 
-      if (initialPoint.pageY > currentPoint.pageY){
-        Pos.y -= deltaY;
-      } else {
-        Pos.y += deltaY;
-      }
-      Pos.x = Math.max(-(video_el.clientWidth * ratio / 2) + (video_el.clientWidth / 2), Math.min((video_el.clientWidth * ratio / 2) - (video_el.clientWidth / 2), Pos.x));
-      Pos.y = Math.max(-(video_el.clientHeight * ratio / 2) + (video_el.clientHeight / 2), Math.min((video_el.clientHeight * ratio / 2) - (video_el.clientHeight / 2), Pos.y));
+  //     if (initialPoint.pageY > currentPoint.pageY){
+  //       Pos.y -= deltaY;
+  //     } else {
+  //       Pos.y += deltaY;
+  //     }
+  //     Pos.x = Math.max(-(video_el.clientWidth * ratio / 2) + (video_el.clientWidth / 2), Math.min((video_el.clientWidth * ratio / 2) - (video_el.clientWidth / 2), Pos.x));
+  //     Pos.y = Math.max(-(video_el.clientHeight * ratio / 2) + (video_el.clientHeight / 2), Math.min((video_el.clientHeight * ratio / 2) - (video_el.clientHeight / 2), Pos.y));
 
-      // 相対座標で移動
-      zoomPlugin.move(Pos.x, Pos.y);
-    }
-  }
+  //     // 相対座標で移動
+  //     zoomPlugin.move(Pos.x, Pos.y);
+  //   }
+  // }
 
 
-  function handleTouchEnd(evt) {
-    // タッチがコントロールバー内のボタンから発生した場合は処理を中断
-    if (evt.target.closest('.vjs-control')) {
-      return;
-    }
+  // function handleTouchEnd(evt) {
+  //   // タッチがコントロールバー内のボタンから発生した場合は処理を中断
+  //   if (evt.target.closest('.vjs-control')) {
+  //     return;
+  //   }
 
-    if (!evt.target.closest('video')) {
-      return;
-    }
+  //   if (!evt.target.closest('video')) {
+  //     return;
+  //   }
 
-    evt.preventDefault();
-    const touches = evt.changedTouches;
+  //   evt.preventDefault();
+  //   const touches = evt.changedTouches;
 
-    for (let i = 0; i < touches.length; i++) {
-      const idx = ongoingTouchIndexById(touches[i].identifier);
-      if (idx >= 0) {
-        ongoingTouches.splice(idx, 1);
-      }
-    }
-  }
+  //   for (let i = 0; i < touches.length; i++) {
+  //     const idx = ongoingTouchIndexById(touches[i].identifier);
+  //     if (idx >= 0) {
+  //       ongoingTouches.splice(idx, 1);
+  //     }
+  //   }
+  // }
 
-  function handleTouchCancel(evt) {
-    if (!evt.target.closest('video')) {
-      return;
-    }
+  // function handleTouchCancel(evt) {
+  //   if (!evt.target.closest('video')) {
+  //     return;
+  //   }
 
-    evt.preventDefault();
-    ongoingTouches = [];
-  }
+  //   evt.preventDefault();
+  //   ongoingTouches = [];
+  // }
 
-  function copyTouch(touch) {
-    return { identifier: touch.identifier, pageX: touch.pageX, pageY: touch.pageY };
-  }
+  // function copyTouch(touch) {
+  //   return { identifier: touch.identifier, pageX: touch.pageX, pageY: touch.pageY };
+  // }
 
-  function ongoingTouchIndexById(idToFind) {
-    for (let i = 0; i < ongoingTouches.length; i++) {
-      const id = ongoingTouches[i].identifier;
+  // function ongoingTouchIndexById(idToFind) {
+  //   for (let i = 0; i < ongoingTouches.length; i++) {
+  //     const id = ongoingTouches[i].identifier;
 
-      if (id === idToFind) {
-        return i;
-      }
-    }
-    return -1;
-  }
+  //     if (id === idToFind) {
+  //       return i;
+  //     }
+  //   }
+  //   return -1;
+  // }
 
-  function getDistance(touch1, touch2) {
-    const dx = touch2.pageX - touch1.pageX;
-    const dy = touch2.pageY - touch1.pageY;
-    return Math.sqrt(dx * dx + dy * dy);
-  }
+  // function getDistance(touch1, touch2) {
+  //   const dx = touch2.pageX - touch1.pageX;
+  //   const dy = touch2.pageY - touch1.pageY;
+  //   return Math.sqrt(dx * dx + dy * dy);
+  // }
 
-  video_el.addEventListener('touchstart', handleTouchStart, { passive: false });
-  video_el.addEventListener('touchmove', handleTouchMove, { passive: false });
-  video_el.addEventListener('touchend', handleTouchEnd, { passive: false });
-  video_el.addEventListener('touchcancel', handleTouchCancel, { passive: false });
+  // video_el.addEventListener('touchstart', handleTouchStart, { passive: false });
+  // video_el.addEventListener('touchmove', handleTouchMove, { passive: false });
+  // video_el.addEventListener('touchend', handleTouchEnd, { passive: false });
+  // video_el.addEventListener('touchcancel', handleTouchCancel, { passive: false });
 
   
 
   player.on('error', function() {
     const error = player.error();
-    alert('セッションが切断されました。リロードします・・');
-    location.reload();
+    console.log('Video.js Error:', error);
+    console.log('Error Type:', error.type);
+    console.log('Error Details:', error.message);
+    console.log('Video Source:', player.currentSrc());
+    console.log('Video Type:', document.querySelector('video source').type);
   });
 
   function jumpTo(time) {
