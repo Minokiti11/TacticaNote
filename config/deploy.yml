@@ -12,10 +12,10 @@ servers:
   web:
     hosts:
       - 163.43.106.77
-  # job:
-  #   hosts:
-  #     - 192.168.0.1
-  #   cmd: bin/jobs
+  job:
+    hosts:
+      - 163.43.106.77
+    cmd: bundle exec sidekiq
 
 # Enable SSL auto certification via Let's Encrypt and allow for multiple apps on a single web server.
 # Remove this section when using multiple web servers and ensure you terminate SSL at your load balancer.
@@ -58,7 +58,7 @@ builder:
 #
 env:
   clear:
-    REDIS_URL: redis://127.0.0.1:6379
+    REDIS_URL: redis://tacticanote-redis:6379
   secret:
     - RAILS_MASTER_KEY
 
@@ -94,14 +94,13 @@ asset_path: /rails/public/assets
 #
 accessories:
   redis:
-    image: redis:7
+    image: redis:latest
     roles:
       - web
+      - job
     cmd: "redis-server"
     volumes:
       - /var/lib/redis:/data
-    options:
-      network: "private"
 #   db:
 #     image: mysql:8.0
 #     host: 192.168.0.2
