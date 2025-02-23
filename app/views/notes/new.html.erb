@@ -330,22 +330,28 @@
             </div>
             -->
 
-            <div id="step-1" class="step">
-                <div class="form-group">
-                    <label class="form-label">上手くいったこと</label>
-                    <div contenteditable="true" class="form-control mb-3" id="note_good"></div>
-                    
+            <div id="step-1" class="step mt-4">
+                <label class="form-label fw-bold mr-2">上手くいったこと</label>
+                <div class="form-group card" style="border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
+                    <div class="card-header p-0 d-flex justify-content-end">
+                        <button type="button" class="btn btn-light bg-light" style="border-radius: 5px; font-size: 0.5rem; padding: 5px 10px;" onclick="insertBulletPoint('note_good');">
+                            <i data-lucide="list" style="width: 20px; height: 20px;"></i>
+                        </button>
+                    </div>
+                    <div class="card-body p-0">
+                        <div contenteditable="true" class="form-control" style="border-radius: 0;" id="note_good"></div>
+                    </div>
                     <%= form.hidden_field :good, id: 'hidden_note_good' %>
                 </div>
-                <div class="text-center">
-                    <button type="button" class="custom-button">フィードバックをもらう</button>
+                <div class="text-center mt-4">
+                    <button type="button" class="custom-button" onclick="requestGood(document.getElementById('note_good').innerHTML);">フィードバックをもらう</button>
                     <button type="button" class="btn btn-primary next-button" data-next="step-2">次に進む</button>
                 </div>
             </div>
 
             <div id="step-2" class="step d-none">
-                <div class="form-group">
-                    <label class="form-label">上手くいかなかったこと</label>
+                <div class="form-group mt-4">
+                    <label class="form-label fw-bold">上手くいかなかったこと</label>
                     <div contenteditable="true" class="form-control mb-3" id="note_bad"></div>
                     <%= form.hidden_field :bad, id: 'hidden_note_bad' %>
                 </div>
@@ -357,8 +363,8 @@
             </div>
 
             <div id="step-3" class="step d-none">
-                <div class="form-group">
-                    <label class="form-label">次に意識すること・次に向けて取り組むこと</label>
+                <div class="form-group mt-4">
+                    <label class="form-label fw-bold">次に意識すること・次に向けて取り組むこと</label>
                     <%# <div class="placeholder" id="placeholder_next">次に意識することを記入</div> %>
                     <div contenteditable="true" class="form-control mb-3" id="note_next"></div>
                     <%= form.hidden_field :next, id: 'hidden_note_next' %>
@@ -370,8 +376,8 @@
             </div>
 
             <div id="step-4" class="step d-none">
-                <div class="form-group">
-                    <label class="form-label">チームで話し合いたいこと・確認したいこと</label>
+                <div class="form-group mt-4">
+                    <label class="form-label fw-bold">チームで話し合いたいこと・確認したいこと</label>
                     <%# <div class="placeholder" id="placeholder_discuss">ミーティングなどでチームで話し合いたいこと・確認したいことを記入</div> %>
                     <div contenteditable="true" class="form-control mb-3" id="note_discuss"></div>
                     <%= form.hidden_field :discuss, id: 'hidden_note_discuss' %>
@@ -431,30 +437,46 @@
     const turndownService = new TurndownService();
 
     document.addEventListener("turbo:load", function() {
-    document.querySelectorAll(".next-button").forEach(button => {
-        button.addEventListener("click", function() {
-            let nextStep = document.getElementById(this.dataset.next);
-            let currentStep = this.closest(".step");
-            
-            if (nextStep) {
-                currentStep.classList.add("d-none");
-                nextStep.classList.remove("d-none");
-            }
+        document.querySelectorAll(".next-button").forEach(button => {
+            button.addEventListener("click", function() {
+                let nextStep = document.getElementById(this.dataset.next);
+                let currentStep = this.closest(".step");
+                
+                if (nextStep) {
+                    currentStep.classList.add("d-none");
+                    nextStep.classList.remove("d-none");
+                }
+            });
+        });
+
+        document.querySelectorAll(".back-button").forEach(button => {
+            button.addEventListener("click", function() {
+                let backStep = document.getElementById(this.dataset.back);
+                let currentStep = this.closest(".step");
+                
+                if (backStep) {
+                    currentStep.classList.add("d-none");
+                    backStep.classList.remove("d-none");
+                }
+            });
         });
     });
 
-    document.querySelectorAll(".back-button").forEach(button => {
-        button.addEventListener("click", function() {
-            let backStep = document.getElementById(this.dataset.back);
-            let currentStep = this.closest(".step");
-            
-            if (backStep) {
-                currentStep.classList.add("d-none");
-                backStep.classList.remove("d-none");
-            }
-        });
-    });
-    });
+    function insertBulletPoint(noteId) {
+        const noteField = document.getElementById(noteId);
+        const bulletPoint = document.createElement("li");
+        bulletPoint.contentEditable = true; // リスト項目を編集可能にする
+        bulletPoint.innerText = ""; // デフォルトのテキスト
+        const list = document.createElement("ul"); // 新しいリストを作成
+        list.style.marginLeft = "-10px"; // 左のマージンを設定
+        list.appendChild(bulletPoint); // リストに項目を追加
+
+        // 現在のカーソル位置にリストを挿入
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        range.insertNode(list);
+        range.collapse(false); // カーソルをリストの後ろに移動
+    }
 
     // var $input_good = $('#note_good');
     // // trixのイベントをリッスンしてsuggestion-changedを初期化
@@ -485,36 +507,22 @@
     //     $('#note_good').data('changed', true);
     // });
 
-    // $input_good.on('trix-blur', function() {
-    //     isManualFocus_Good = false;
-    //     $input_good = $('#note_good');
-    //     console.log("changed: ", $input_good.data('changed'));
-    //     console.log("suggestion-changed: ", $input_good.data('suggestion-changed'));
-    //     if ($input_good.data('changed')) {
-    //         if ($input_good.data('suggestion-changed') === false) {
-    //             const markdown = turndownService.turndown(this.innerHTML);
-                
-    //             fetch('/notes/gpt_api_request_good', {
-    //                 method: 'POST',
-    //                 headers: {
-    //                     'Content-Type': 'application/json',
-    //                     // CSRFトークンをmetaタグから取得して設定
-    //                     'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-    //                 },
-    //                 body: JSON.stringify({data: { value: markdown, user_id: parseInt(document.getElementById("good").getAttribute("data-user-id")), token: document.getElementById("good").getAttribute("data-token"), group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")), note_for: document.getElementById("good").getAttribute("data-note-for") }})
-    //             }).then(response => {
-    //                 if (response.ok) {
-    //                     $('#note_good').data('changed', false);
-    //                 }
-    //             }).catch(error => {
-    //                 console.error('Error:', error);
-    //             });
-    //         } else {
-    //             $('#note_good').data('changed', false);
-    //         }
-            
-    //     }
-    // });
+    function requestGood(context) {
+        const markdown = turndownService.turndown(context);
+        
+        fetch('/notes/gpt_api_request_good', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // CSRFトークンをmetaタグから取得して設定
+                'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({data: { value: markdown, user_id: parseInt(document.getElementById("good").getAttribute("data-user-id")), token: document.getElementById("good").getAttribute("data-token"), group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")), note_for: document.getElementById("good").getAttribute("data-note-for") }})
+        }).then(response => {
+        }).catch(error => {
+            console.error('Error:', error);
+        });
+    }
 
     // var $input_bad = $('#note_bad');
     // // trixのイベントをリッスンしてsuggestion-changedを初期化
@@ -678,6 +686,8 @@
         }
         return notEmpty;
     }
+
+    lucide.createIcons();
 
 </script>
 
