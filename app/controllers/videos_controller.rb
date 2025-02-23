@@ -21,9 +21,23 @@ class VideosController < ApplicationController
   end
 
   def show
-    @video = Video.find(params[:id])
+    @video = Video.find_by(id: params[:id])
+    
+    if @video.nil?
+      redirect_to videos_path, alert: '指定されたビデオは存在しません'
+      return
+    end
+
+    unless @video.video.attached?
+      redirect_to videos_path, alert: 'ビデオファイルが見つかりません'
+      return
+    end
+
     @video_id = params[:id]
     @group = Group.find(@video.group_id)
+
+  rescue ActiveStorage::FileNotFoundError
+    redirect_to videos_path, alert: 'ビデオファイルの読み込みに失敗しました'
   end
 
   def destroy
