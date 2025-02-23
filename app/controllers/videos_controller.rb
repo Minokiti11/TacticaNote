@@ -40,7 +40,6 @@ class VideosController < ApplicationController
       logger.debug "  Blob Key: #{@video.video.blob.key}"
       logger.debug "  Content Type: #{@video.video.content_type}"
       logger.debug "  Byte Size: #{@video.video.blob.byte_size}"
-      logger.debug "  Service URL: #{@video.video.blob.service_url}"
       
       # ファイルの存在確認を試みる
       @video.video.blob.open do |file|
@@ -49,8 +48,8 @@ class VideosController < ApplicationController
       end
 
       # URLの生成をログ出力
-      blob_path = rails_blob_path(@video.video, only_path: true)
-      logger.debug "Generated Blob Path: #{blob_path}"
+      blob_url = rails_blob_path(@video.video)
+      logger.debug "Generated Blob URL: #{blob_url}"
       
     rescue ActiveStorage::FileNotFoundError => e
       logger.error "Video file not found: #{e.message}"
