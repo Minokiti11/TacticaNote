@@ -14,9 +14,9 @@ class Video < ApplicationRecord
     def acceptable_video
         return unless video.attached?
 
-        acceptable_types = ['video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/x-ms-wmv']
+        acceptable_types = ['video/mp4', 'video/webm']
         unless acceptable_types.include?(video.content_type)
-            errors.add(:video, 'はMP4、MOV、AVI、WMV形式でアップロードしてください')
+            errors.add(:video, 'はMP4またはWebM形式でアップロードしてください')
         end
     end
 end

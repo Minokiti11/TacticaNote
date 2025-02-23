@@ -33,11 +33,39 @@ class VideosController < ApplicationController
       return
     end
 
+    begin
+      # blobの情報をログ出力
+      logger.debug "Video Blob Info:"
+      logger.debug "  Blob ID: #{@video.video.blob.id}"
+      logger.debug "  Blob Key: #{@video.video.blob.key}"
+      logger.debug "  Content Type: #{@video.video.content_type}"
+      logger.debug "  Byte Size: #{@video.video.blob.byte_size}"
+      logger.debug "  Service URL: #{@video.video.blob.service_url}"
+      
+      # ファイルの存在確認を試みる
+      @video.video.blob.open do |file|
+        logger.debug "Video file exists at: #{file.path}"
+        logger.debug "File size: #{File.size(file.path)} bytes"
+      end
+
+      # URLの生成をログ出力
+      blob_path = rails_blob_path(@video.video, only_path: true)
+      logger.debug "Generated Blob Path: #{blob_path}"
+      
+    rescue ActiveStorage::FileNotFoundError => e
+      logger.error "Video file not found: #{e.message}"
+      logger.error "Backtrace:\n\t#{e.backtrace.join("\n\t")}"
+      redirect_to videos_path, alert: 'ビデオファイルの読み込みに失敗しました'
+      return
+    rescue StandardError => e
+      logger.error "Error accessing video file: #{e.message}"
+      logger.error "Backtrace:\n\t#{e.backtrace.join("\n\t")}"
+      redirect_to videos_path, alert: 'ビデオファイルへのアクセスに失敗しました'
+      return
+    end
+
     @video_id = params[:id]
     @group = Group.find(@video.group_id)
-
-  rescue ActiveStorage::FileNotFoundError
-    redirect_to videos_path, alert: 'ビデオファイルの読み込みに失敗しました'
   end
 
   def destroy
