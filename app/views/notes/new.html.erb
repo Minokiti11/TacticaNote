@@ -474,8 +474,14 @@
         // 現在のカーソル位置にリストを挿入
         const selection = window.getSelection();
         const range = selection.getRangeAt(0);
-        range.insertNode(list);
-        range.collapse(false); // カーソルをリストの後ろに移動
+        if (range) {
+            range.insertNode(list);
+            range.collapse(false); // カーソルをリストの後ろに移動
+        } else {
+            // カーソルが見つからなかった場合、リストを末尾に追加
+            const noteField = document.getElementById(noteId);
+            noteField.appendChild(list);
+        }
     }
 
     // var $input_good = $('#note_good');
