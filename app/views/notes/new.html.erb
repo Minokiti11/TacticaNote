@@ -194,27 +194,13 @@
                 <% end %>
 
                 <details>
-                    <summary class="h5 mt-3 mb-2 d-flex align-items-center" onclick="toggleIcon(this)">
+                    <summary class="h5 mt-3 mb-2 d-flex align-items-center summary" onclick="toggleIcon(this)">
                         タイムスタンプ
                         <div class="btn btn-light ms-3" style="border: none; background: transparent; padding: 0;">
                             <i class="fas fa-chevron-down"></i>
                         </div>
                     </summary>
-                    <script>
-                        function toggleIcon(summary) {
-                            const icon = summary.querySelector('i');
-                            icon.classList.toggle('fa-chevron-down');
-                            icon.classList.toggle('fa-times'); // バツのアイコンに変更
-                            const details = summary.parentElement;
-                            const content = details.querySelector('#timestamp-list');
-                            if (details.open) {
-                                content.style.maxHeight = '0'; // 開くときの高さを0に
-                            } else {
-                                content.style.maxHeight = content.scrollHeight + 'px'; // 開くときの高さをコンテンツの高さに
-                            }
-                        }
-                    </script>
-                    <div id="timestamp-list" class="for-mobile" style="margin-top: 10px; overflow: hidden; transition: max-height 0.3s ease;">
+                    <div id="timestamp-list" class="for-mobile answer" style="margin-top: 10px; overflow: hidden; transition: max-height 0.3s ease;">
                         <div class="d-flex justify-content-between align-items-center" style="margin-right: 10px;">
                         <%# <button class="modal-open btn btn-dark d-block rounded-circle bg-black" style="margin-bottom: 20px;">
                             <i class="fas fa-plus"></i>
@@ -527,6 +513,61 @@
                 if (backStep) {
                     currentStep.classList.add("d-none");
                     backStep.classList.remove("d-none");
+                }
+            });
+        });
+        // アニメーションの時間とイージング
+        const animTiming = {
+            duration: 300,
+            easing: "ease-in-out",
+        };
+
+        // アコーディオンを閉じるときのキーフレーム
+        const closingAnimation = (answer) => [
+        {
+            height: answer.offsetHeight + "px",
+            opacity: 1,
+        },
+        {
+            height: 0,
+            opacity: 0,
+        },
+        ];
+
+        // アコーディオンを開くときのキーフレーム
+        const openingAnimation = (answer) => [
+        {
+            height: 0,
+            opacity: 0,
+        },
+        {
+            height: answer.offsetHeight + "px",
+            opacity: 1,
+        },
+        ];
+        document.querySelectorAll(".details").forEach(function (el) {
+            const summary = el.querySelector(".summary");
+            const answer = el.querySelector(".answer");
+            summary.addEventListener("click", (event) => {
+                // デフォルトの挙動を無効化
+                event.preventDefault();
+                const icon = summary.querySelector('i');
+                icon.classList.toggle('fa-chevron-down');
+                icon.classList.toggle('fa-times'); // バツのアイコンに変更
+                // detailsのopen属性を判定
+                if (el.getAttribute("open") !== null) {
+                    // アコーディオンを閉じるときの処理
+                    const closingAnim = answer.animate(closingAnimation(answer), animTiming);
+
+                    closingAnim.onfinish = () => {
+                        // アニメーションの完了後にopen属性を取り除く
+                        el.removeAttribute("open");
+                    };
+                } else {
+                    // open属性を付与
+                    el.setAttribute("open", "true");
+                    // アコーディオンを開くときの処理
+                    const openingAnim = answer.animate(openingAnimation(answer), animTiming);
                 }
             });
         });
