@@ -127,7 +127,7 @@
     }
 
     .custom-button {
-        margin-bottom: 20px;
+        margin-bottom: 15px;
         background-color: black; /* 背景色を黒に設定 */
         color: white; /* 文字色を白に設定 */
         border: none; /* ボーダーをなしに設定 */
@@ -332,7 +332,7 @@
 
             <div id="step-1" class="step mt-4">
                 <label class="form-label fw-bold mr-2">上手くいったこと</label>
-                <div class="form-group card" style="border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
+                <div class="form-group card" id="good" style="border-bottom-left-radius: 0; border-bottom-right-radius: 0;" data-note-for="<%= @note_for %>" data-user-id="<%= current_user.id %>" data-token="<%= @unique_token %>" data-group-id="<%= params[:group_id]%>">
                     <div class="card-header p-0 d-flex justify-content-end">
                         <button type="button" class="btn btn-light bg-light" style="border-radius: 5px; font-size: 0.5rem; padding: 5px 10px;" onclick="insertBulletPoint('note_good');">
                             <i data-lucide="list" style="width: 20px; height: 20px;"></i>
@@ -343,48 +343,98 @@
                     </div>
                     <%= form.hidden_field :good, id: 'hidden_note_good' %>
                 </div>
-                <div class="text-center mt-4">
-                    <button type="button" class="custom-button" onclick="requestGood(document.getElementById('note_good').innerHTML);">フィードバックをもらう</button>
-                    <button type="button" class="btn btn-primary next-button" data-next="step-2">次に進む</button>
+                <div class="mt-4">
+                    <div class="text-center">
+                        <button type="button" class="custom-button" onclick="requestGood(document.getElementById('note_good').innerHTML);">フィードバックをもらう</button>
+                    </div>
+                    <div class="text-center" id="notes_good"></div>
+                    <%= turbo_stream_from "user_#{session.id}" %>
+                    <%= turbo_stream_from "spinner" %>
+                    <div id="spinner_good"></div>
+                    <div class="text-center">
+                        <button type="button" class="btn btn-primary next-button" data-next="step-2">次に進む</button>
+                    </div>
                 </div>
             </div>
 
-            <div id="step-2" class="step d-none">
-                <div class="form-group mt-4">
-                    <label class="form-label fw-bold">上手くいかなかったこと</label>
-                    <div contenteditable="true" class="form-control mb-3" id="note_bad"></div>
+            <div id="step-2" class="step mt-4 d-none">
+                <label class="form-label fw-bold mr-2">上手くいかなかったこと</label>
+                <div class="form-group card" style="border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
+                    <div class="card-header p-0 d-flex justify-content-end">
+                        <button type="button" class="btn btn-light bg-light" style="border-radius: 5px; font-size: 0.5rem; padding: 5px 10px;" onclick="insertBulletPoint('note_bad');">
+                            <i data-lucide="list" style="width: 20px; height: 20px;"></i>
+                        </button>
+                    </div>
+                    <div class="card-body p-0">
+                        <div contenteditable="true" class="form-control mb-3" id="note_bad"></div>
+                    </div>
                     <%= form.hidden_field :bad, id: 'hidden_note_bad' %>
                 </div>
-                
-                <div class="text-center d-flex justify-content-between">
-                    <button type="button" class="btn btn-secondary back-button" data-back="step-1">戻る</button>
-                    <button type="button" class="btn btn-primary next-button" data-next="step-3">次に進む</button>
+
+                <div class="mt-4">
+                    <div class="text-center">
+                        <button type="button" class="custom-button" onclick="requestBad(document.getElementById('note_bad').innerHTML);">フィードバックをもらう</button>
+                    </div>
+                    <div class="text-center" id="notes_bad"></div>
+                    <div id="spinner_bad"></div>
+                    <div class="text-center d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary back-button" data-back="step-1">戻る</button>
+                        <button type="button" class="btn btn-primary next-button" data-next="step-3">次に進む</button>
+                    </div>
                 </div>
             </div>
 
-            <div id="step-3" class="step d-none">
-                <div class="form-group mt-4">
-                    <label class="form-label fw-bold">次に意識すること・次に向けて取り組むこと</label>
-                    <%# <div class="placeholder" id="placeholder_next">次に意識することを記入</div> %>
-                    <div contenteditable="true" class="form-control mb-3" id="note_next"></div>
+            <div id="step-3" class="step mt-4 d-none">
+                <label class="form-label fw-bold mr-2">次に意識すること・次に向けて取り組むこと</label>
+                <div class="form-group card" style="border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
+                    <div class="card-header p-0 d-flex justify-content-end">
+                        <button type="button" class="btn btn-light bg-light" style="border-radius: 5px; font-size: 0.5rem; padding: 5px 10px;" onclick="insertBulletPoint('note_next');">
+                            <i data-lucide="list" style="width: 20px; height: 20px;"></i>
+                        </button>
+                    </div>
+                    <div class="card-body p-0">
+                        <div contenteditable="true" class="form-control mb-3" id="note_next"></div>
+                    </div>
                     <%= form.hidden_field :next, id: 'hidden_note_next' %>
                 </div>
-                <div class="text-center d-flex justify-content-between">
-                    <button type="button" class="btn btn-secondary back-button" data-back="step-2">戻る</button>
-                    <button type="button" class="btn btn-primary next-button" data-next="step-4">次に進む</button>
+
+                <div class="mt-4">
+                    <div class="text-center">
+                        <button type="button" class="custom-button" onclick="requestNext(document.getElementById('note_next').innerHTML);">フィードバックをもらう</button>
+                    </div>
+                    <div class="text-center" id="notes_next"></div>
+                    <div id="spinner_next"></div>
+                    <div class="text-center d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary back-button" data-back="step-2">戻る</button>
+                        <button type="button" class="btn btn-primary next-button" data-next="step-4">次に進む</button>
+                    </div>
                 </div>
             </div>
 
-            <div id="step-4" class="step d-none">
-                <div class="form-group mt-4">
-                    <label class="form-label fw-bold">チームで話し合いたいこと・確認したいこと</label>
-                    <%# <div class="placeholder" id="placeholder_discuss">ミーティングなどでチームで話し合いたいこと・確認したいことを記入</div> %>
-                    <div contenteditable="true" class="form-control mb-3" id="note_discuss"></div>
+            <div id="step-4" class="step mt-4 d-none">
+                <label class="form-label fw-bold mr-2">チームで話し合いたいこと・確認したいこと</label>
+                <div class="form-group card" style="border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
+                    <div class="card-header p-0 d-flex justify-content-end">
+                        <button type="button" class="btn btn-light bg-light" style="border-radius: 5px; font-size: 0.5rem; padding: 5px 10px;" onclick="insertBulletPoint('note_discuss');">
+                            <i data-lucide="list" style="width: 20px; height: 20px;"></i>
+                        </button>
+                    </div>
+                    <div class="card-body p-0">
+                        <div contenteditable="true" class="form-control mb-3" id="note_discuss"></div>
+                    </div>
                     <%= form.hidden_field :discuss, id: 'hidden_note_discuss' %>
                 </div>
-                <div class="text-center d-flex justify-content-between">
-                <button type="button" class="btn btn-secondary back-button" data-back="step-3">戻る</button>
-                <%= form.submit "完了", class: 'btn btn-success next-button', onclick: "saveContent()" %>
+
+                <div class="mt-4">
+                    <div class="text-center">
+                        <button type="button" class="custom-button" onclick="requestDiscuss(document.getElementById('note_discuss').innerHTML);">フィードバックをもらう</button>
+                    </div>
+                    <div class="text-center" id="notes_discuss"></div>
+                    <div id="spinner_discuss"></div>
+                    <div class="text-center d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary back-button" data-back="step-3">戻る</button>
+                        <%= form.submit "完了", class: 'btn btn-success next-button', onclick: "saveContent()" %>
+                    </div>
                 </div>
             </div>
         </div>

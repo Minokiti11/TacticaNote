@@ -1,31 +1,33 @@
-<div id="<%= target %>">
-    <div style="color: green;" data-diff-content="">
-        <%= markdown(message) %>
-    </div>
-    <% if suggestion %>
-        <% suggestions = suggestion.split(/1\. /).last.split(/2\. |3\. /).reject(&:empty?) %>
-        <% suggestion_title = suggestion.split('1.').first.strip.gsub(/\n/, '') %>
-        <% option1, option2, option3 = suggestions %>
-
-        <h5 class="fw-bold">変更提案:</h5><br/>
-        <h6 style="font-size: 1.2rem;">「<%= suggestion_title %>」 →</h5>
-        <div class="custom-radio-group w-100">
-            <label class="custom-radio-container">
-                <input type="radio" name="custom-radio" value="option1" />
-                <span class="custom-radio-checkmark"></span>
-                <%= option1 %>
-            </label>
-            <label class="custom-radio-container">
-                <input type="radio" name="custom-radio" value="option2" />
-                <span class="custom-radio-checkmark"></span>
-                <%= option2 %>
-            </label>
-            <label class="custom-radio-container">
-                <input type="radio" name="custom-radio" value="option3" />
-                <span class="custom-radio-checkmark"></span>
-                <%= option3 %>
-            </label>
+<div id="<%= target %>" class="mb-4" style="display: <%= display %>;">
+    <div class="fw-bold mb-2">AIからのフィードバック</div>
+    <div style="background-color:rgb(231, 231, 231); padding: 10px; border-radius: 5px;">
+        <div class="rating" style="display: flex;">
+            <% (1..5).each do |i| %>
+                <input type="checkbox" class="star_rating" id="star<%= i %>" <%= 'checked' if rate > i-1 %>>
+                <label for="star<%= i %>">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+                    </svg>
+                </label>
+            <% end %>
         </div>
-        <button type="button" class="btn btn-primary mt-3" onclick="replaceWith('<%= trix_target %>', '<%= suggestion_title %>');">変更する</button>
-    <% end %>
+
+        <div class="text-left mt-2">
+            <% modified_messages = message.split("\n").map { |line| line.gsub(/^- /, '') if line.present? }.compact %>
+            <% p "message_split: ", modified_messages %>
+            <% modified_messages.each do |msg| %>
+                <%# 優先度ごとに色分けする　%>
+                <%# 先頭の優先度の識別用の文字列を削除 %>
+                <% if msg.start_with?("[優先度: 高]") %>
+                    <div class="feedback-item" style="background: #f8d7da; color: #721c24;"><%= msg.gsub(/\[優先度: [高中低]\]/, '') %></div>
+                <% elsif msg.start_with?("[優先度: 中]") %>
+                    <div class="feedback-item" style="background: #fff3cd; color: #856404;"><%= msg.gsub(/\[優先度: [高中低]\]/, '') %></div>
+                <% elsif msg.start_with?("[優先度: 低]") %>
+                    <div class="feedback-item" style="background: #f8f9fa; color: #6c757d;"><%= msg.gsub(/\[優先度: [高中低]\]/, '') %></div>
+                <% else %>
+                    <div class="feedback-item"><%= msg %></div>
+                <% end %>
+            <% end %>
+        </div>
+    </div>
 </div>

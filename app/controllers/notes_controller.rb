@@ -29,22 +29,22 @@ class NotesController < ApplicationController
         data = params.require(:data).permit(:value, :user_id, :token, :group_id, :note_for)
         p "data[:value]", data[:value]
         p "token: ", data[:token]
-        p :notefor, data[:note_for]
+        p :note_for, data[:note_for]
 
-        if data[:value]
-            same_session_id_responses = Response.where(section_type: "good", token: data[:token])
+        # if data[:value]
+        #     same_session_id_responses = Response.where(section_type: "good", token: data[:token])
 
-            if same_session_id_responses.length != 0 && same_session_id_responses
-                previous_data = same_session_id_responses.last.input
-                if previous_data.present?
-                    similar = check_content_similarity(previous_data, data[:value])
-                    p "previous: ", previous_data
-                    p "present: ", data[:value]
-                    p :similar, similar
-                    return if similar
-                end
-            end
-        end
+        #     if same_session_id_responses.length != 0 && same_session_id_responses
+        #         previous_data = same_session_id_responses.last.input
+        #         if previous_data.present?
+        #             similar = check_content_similarity(previous_data, data[:value])
+        #             p "previous: ", previous_data
+        #             p "present: ", data[:value]
+        #             p :similar, similar
+        #             return if similar
+        #         end
+        #     end
+        # end
         
         if !@@debug && !(data == nil) && !(data[:value] == "")
             response = Response.create(section_type: "good", input: data["value"], user_id: data[:user_id], token: data[:token], session_id: session.id.to_s)
@@ -53,7 +53,7 @@ class NotesController < ApplicationController
                 "user_#{session.id}",
                 target: "notes_good",
                 partial: "notes/message",
-                locals: { message: "", diff_content: "", target: "notes_good", suggestion: nil }
+                locals: { message: "", display: "none", target: "notes_good", rate: 0}
             )
             
             GetAiResponse.perform_async(data[:note_for], "user_#{session.id}", data[:value], "good", data[:token], current_user.id, data[:group_id], response.id)
@@ -89,7 +89,7 @@ class NotesController < ApplicationController
                 "user_#{session.id}",
                 target: "notes_bad",
                 partial: "notes/message",
-                locals: { message: "", target: "notes_bad", diff_content: "", suggestion: nil }
+                locals: { message: "", target: "notes_bad", display: "none", rate: 0}
             )
 
             GetAiResponse.perform_async(data[:note_for], "user_#{session.id}", data[:value], "bad", data[:token], current_user.id, data[:group_id], response.id)
@@ -125,7 +125,7 @@ class NotesController < ApplicationController
                 "user_#{session.id}",
                 target: "notes_next",
                 partial: "notes/message",
-                locals: { message: "", target: "notes_next", diff_content: "", suggestion: nil }
+                locals: { message: "", target: "notes_next", display: "none", rate: 0}
             )
 
             GetAiResponse.perform_async(data[:note_for], "user_#{session.id}", data[:value], "next", data[:token], current_user.id, data[:group_id], response.id)
@@ -138,15 +138,6 @@ class NotesController < ApplicationController
             )
         end
     end
-
-    # def self.daily_job(group_id)
-    #     puts "毎日昼の12時に実行されるジョブです。"
-    #     @group = Group.find(group_id)
-    #     p :group, @group
-    #     @notes = @group.notes.where('created_at >= ?', Time.now - 24.hours).where('created_at <= ?', Time.now)
-    #     p :notes, @notes
-    #     Summary.create(group_id: group_id)
-    # end
 
     def create
         @note = Note.new(note_params)
