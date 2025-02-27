@@ -3,8 +3,6 @@
     <div class="card">
       <div class="card-body" style="padding: 40px;">
         <h3 class="text-left fw-bold">ログイン</h3>
-
-
         <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
           <%= render "devise/shared/error_messages", resource: resource %>
           <div class="field mt-3">
@@ -28,11 +26,9 @@
             <%= f.submit "ログイン", class: "form-control py-2 btn btn-dark", id: "login-btn", "data-turbo": false %>
           </div>
         <% end %>
-        <!--
         <div class = "nav-link">
           <%= link_to "アカウントを持っていませんか? アカウントを作成", new_user_registration_path, "data-turbo": false, class: "nav-link"  %>
         </div>
-        -->
         <div class="text-center">
           <div style="display: flex; align-items: center; justify-content: center;">
             <hr style="display: inline-block; width: 38%;">
