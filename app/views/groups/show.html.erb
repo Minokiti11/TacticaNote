@@ -512,6 +512,7 @@ select#practice-select {
                 <% end %>
               </div>
               <% if notes[0].note_for == "match" %>
+                <!--
                 <% if AiPractice.find_by(date_for: date, group_id: @group.id) %>
                   <% ai_practice = AiPractice.find_by(date_for: date, group_id: @group.id) %>
                   <div class="fw-bold mb-2">⚡️ 練習メニューのレコメンド ⚡️</div>
@@ -523,6 +524,7 @@ select#practice-select {
                   <div id="ai_practice_for_<%= date %>"></div>
                   <div id="ai_practice_spinner_<%= date %>"></div>
                 <% end %>
+                -->
               <% end %>
               <% if Summary.find_by(date_for: date, group_id: @group.id) %>
                 <button class="btn btn-outline-primary" style="border-radius: 0px; margin-bottom: 30px;" onclick="createSummary('<%= date %>', <%= @group.id %>)">AIで要約する</button>
