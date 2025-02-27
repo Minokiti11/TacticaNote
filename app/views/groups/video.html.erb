@@ -6,7 +6,7 @@
 <%=link_to "Upload Video",new_video_path, class: "btn btn-outline-dark", style: "border-width: 2px; border-radius: 0; margin: 20px; font-size: 17px;"%>
 
 <div class="row row-cols-1 row-cols-lg-2">
-    <% @videos.reverse.each do |video| %>
+    <% @videos.sort_by(&:created_at).reverse.each do |video| %>
         <div class="col">
             <%= link_to video_path(video), "data-turbo": false, class: "card mb-3", style: "text-decoration: none; color: black; margin: 20px;" do %>
                 <% if video.video.attached? %>
