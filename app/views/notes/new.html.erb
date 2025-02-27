@@ -427,9 +427,9 @@
                 </div>
 
                 <div class="mt-4">
-                    <div class="text-center">
+                    <%# <div class="text-center">
                         <button type="button" class="custom-button" onclick="requestDiscuss(document.getElementById('note_discuss').innerHTML);">フィードバックをもらう</button>
-                    </div>
+                    </div> %>
                     <div class="text-center" id="notes_discuss"></div>
                     <div id="spinner_discuss"></div>
                     <div class="text-center d-flex justify-content-between">
@@ -589,35 +589,6 @@
         }
     }
 
-    // var $input_good = $('#note_good');
-    // // trixのイベントをリッスンしてsuggestion-changedを初期化
-    // $input_good.on('trix-initialize', function() {
-    //     $(this).data('suggestion-changed', false);
-    // });
-
-    // // 手動フォーカスを検出するフラグを追加
-    // var isManualFocus_Good = false;
-
-    // // マウスダウンまたはタッチスタート時にフラグをセット
-    // $input_good.on('mousedown touchstart', function() {
-    //     isManualFocus_Good = true;
-    // });
-
-    // $input_good.on('trix-focus', function() {
-    //     if (isManualFocus_Good) {
-    //         $input_good.find('*').removeClass('highlight-green');
-    //         $input_good.data('suggestion-changed', false);
-    //     }
-    // });
-
-    // $input_good.on('trix-change', function(event) {
-    //     // HTML をマークダウンに変換
-    //     const markdown = turndownService.turndown(event.target.innerHTML);
-    //     $input_good.find('*').removeClass('highlight-green');
-    //     // 変更フラグをセット
-    //     $('#note_good').data('changed', true);
-    // });
-
     function requestGood(context) {
         const markdown = turndownService.turndown(context);
         
@@ -635,86 +606,39 @@
         });
     }
 
-    // var $input_bad = $('#note_bad');
-    // // trixのイベントをリッスンしてsuggestion-changedを初期化
-    // $input_bad.on('trix-initialize', function() {
-    //     $(this).data('suggestion-changed', false);
-    // });
+    function requestBad(context) {
+        const markdown = turndownService.turndown(context);
+        
+        fetch('/notes/gpt_api_request_bad', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // CSRFトークンをmetaタグから取得して設定
+                'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({data: { value: markdown, user_id: parseInt(document.getElementById("good").getAttribute("data-user-id")), token: document.getElementById("good").getAttribute("data-token"), group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")), note_for: document.getElementById("good").getAttribute("data-note-for") }})
+        }).then(response => {
+        }).catch(error => {
+            console.error('Error:', error);
+        });
+    }
 
-    // // 手動フォーカスを検出するフラグを追加
-    // var isManualFocus_Bad = false;
-
-    // // マウスダウンまたはタッチスタート時にフラグをセット
-    // $input_bad.on('mousedown touchstart', function() {
-    //     isManualFocus_Bad = true;
-    // });
-
-    // $input_bad.on('trix-focus', function() {
-    //     if (isManualFocus_Bad) {
-    //         console.log("focus...");
-    //         $input_bad.find('*').removeClass('highlight-green');
-    //         $input_bad.data('suggestion-changed', false);
-    //     }
-    // });
-
-    // $input_bad.on('trix-change', function(event) {
-    //     // HTML をマークダウンに変換
-    //     const markdown = turndownService.turndown(event.target.innerHTML);
-    //     // 変更フラグをセット
-    //     $input_bad.data('changed', true);
-    //     $input_bad.find('*').removeClass('highlight-green');
-    // });
-    // // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
-    // $input_bad.on('trix-blur', function(event) {
-    //     isManualFocus_Bad = false;
-    //     if ($input_bad.data('changed')) {
-    //         if ($input_bad.data('suggestion-changed') === false) {
-    //             console.log("We'll request api...")
-    //             // HTML をマークダウンに変換
-    //             const markdown = turndownService.turndown(event.target.innerHTML);
-                
-    //             fetch('/notes/gpt_api_request_bad', {
-    //                 method: 'POST',
-    //                 headers: {
-    //                     'Content-Type': 'application/json',
-    //                     // CSRFトークンをmetaタグから取得して設定
-    //                     'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-    //                 },
-    //                 body: JSON.stringify({data: { value: markdown, user_id: parseInt(document.getElementById("good").getAttribute("data-user-id")), token: document.getElementById("good").getAttribute("data-token"), group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")), note_for: document.getElementById("good").getAttribute("data-note-for") }})
-    //             });
-    //         } else {
-    //             $input_bad.data('changed', false);
-    //         }
-    //     }
-    // });
-
-    // var $input_next = $('#note_next');
-    // $input_next.on('trix-change', function(event) {
-    //     // HTML をマークダウンに変換
-    //     const markdown = turndownService.turndown(event.target.innerHTML);
-    //     // 変更フラグをセット
-    //     $input_next.data('changed', true);
-    // });
-
-    // // フォームに入力され、ポインターがテキストボックスから外れた時に発火するイベント
-    // $input_next.on('trix-blur', function(event) {
-    //     if ($input_next.data('changed')) {
-    //         console.log("We'll request api...")
-    //         // HTML をマークダウンに変換
-    //         const markdown = turndownService.turndown(event.target.innerHTML);
-            
-    //         fetch('/notes/gpt_api_request_next', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 // CSRFトークンをmetaタグから取得して設定
-    //                 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-    //             },
-    //             body: JSON.stringify({data: { value: markdown, user_id: parseInt(document.getElementById("good").getAttribute("data-user-id")), token: document.getElementById("good").getAttribute("data-token"), group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")), note_for: document.getElementById("good").getAttribute("data-note-for") }})
-    //         });
-    //         $input_next.data('changed', false);
-    //     }
-    // });
+    function requestNext(context) {
+        const markdown = turndownService.turndown(context);
+        
+        fetch('/notes/gpt_api_request_next', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // CSRFトークンをmetaタグから取得して設定
+                'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({data: { value: markdown, user_id: parseInt(document.getElementById("good").getAttribute("data-user-id")), token: document.getElementById("good").getAttribute("data-token"), group_id: parseInt(document.getElementById("good").getAttribute("data-group-id")), note_for: document.getElementById("good").getAttribute("data-note-for") }})
+        }).then(response => {
+        }).catch(error => {
+            console.error('Error:', error);
+        });
+    }
 
     function replaceWith(type, suggestion_title) {
         console.log("type: ", type);
