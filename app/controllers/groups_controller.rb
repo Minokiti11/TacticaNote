@@ -158,7 +158,7 @@ class GroupsController < ApplicationController
     @group.generate_invite_token
     @group.save
     if Rails.env.production?
-      @group_invite_link = "tactica-chat.com/groups/#{params[:id]}/join/#{@group.invite_token}?openExternalBrowser=1"
+      @group_invite_link = "tactica-note.com/groups/#{params[:id]}/join/#{@group.invite_token}?openExternalBrowser=1"
     elsif Rails.env.development?
       @group_invite_link = "localhost:3000/groups/#{params[:id]}/join/#{@group.invite_token}"
     end
