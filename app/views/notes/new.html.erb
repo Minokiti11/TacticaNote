@@ -193,32 +193,46 @@
                     </div>
                 <% end %>
 
-                <!-- タイムスタンプリスト -->
-                <div id="timestamp-list" class="for-mobile" style="margin-top: 10px;">
-                    <div class="d-flex justify-content-between align-items-center" style="margin-right: 10px;">
-                    <%# <button class="modal-open btn btn-dark d-block rounded-circle bg-black" style="margin-bottom: 20px;">
-                        <i class="fas fa-plus"></i>
-                    </button> %>
-                    </div>
-
-                    <ul class="timestamp-list" style="max-height: 450px; overflow-y">
-                    <% video.timestamps.order(time_s: :asc).each do |timestamp| %>
-                        <li>
-                        <div class="card timestamp-card">
-                            <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <a href="#" class="timestamp-link" data-turbo="false" onclick="jumpTo(<%= timestamp.time_s %>)">
-                                    <span class="timestamp-description"><%= timestamp.description %></span>
-                                    <span class="timestamp-time"><%= "#{(timestamp.time_s / 60).to_i}:#{(timestamp.time_s % 60).to_i}" %></span>
-                                </a>
-                            </div>
-                            </div>
+                <details>
+                    <summary class="h4 mt-2 mb-2 d-flex align-items-center" onclick="toggleIcon(this)">
+                        タイムスタンプ
+                        <div class="btn btn-light ms-3" style="border: none; background: transparent; padding: 0;">
+                            <i class="fas fa-chevron-down"></i>
                         </div>
-                        </li>
-                    <% end %>
-                    </ul>
-                    <hr style="border-top: 1px solid grey; width: 100%; margin-top: 20px; margin-bottom: 20px;">
-                </div>
+                    </summary>
+                    <script>
+                        function toggleIcon(summary) {
+                            const icon = summary.querySelector('i');
+                            icon.classList.toggle('fa-chevron-down');
+                            icon.classList.toggle('fa-times'); // バツのアイコンに変更
+                        }
+                    </script>
+                    <div id="timestamp-list" class="for-mobile" style="margin-top: 10px;">
+                        <div class="d-flex justify-content-between align-items-center" style="margin-right: 10px;">
+                        <%# <button class="modal-open btn btn-dark d-block rounded-circle bg-black" style="margin-bottom: 20px;">
+                            <i class="fas fa-plus"></i>
+                        </button> %>
+                        </div>
+
+                        <ul class="timestamp-list" style="max-height: 450px; overflow-y">
+                        <% video.timestamps.order(time_s: :asc).each do |timestamp| %>
+                            <li>
+                            <div class="card timestamp-card">
+                                <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <a href="#" class="timestamp-link" data-turbo="false" onclick="jumpTo(<%= timestamp.time_s %>)">
+                                        <span class="timestamp-description"><%= timestamp.description %></span>
+                                        <span class="timestamp-time"><%= "#{(timestamp.time_s / 60).to_i}:#{(timestamp.time_s % 60).to_i}" %></span>
+                                    </a>
+                                </div>
+                                </div>
+                            </div>
+                            </li>
+                        <% end %>
+                        </ul>
+                        <hr style="border-top: 1px solid grey; width: 100%; margin-top: 20px; margin-bottom: 20px;">
+                    </div>
+                </details>
             <% end %>
 
             <!-- 前回のノートを取得（試合なら試合、練習なら練習のノート） -->
@@ -441,29 +455,28 @@
         <% if !request.env['HTTP_USER_AGENT'].include?('Mobile') && video %>
             <!-- タイムスタンプリスト -->
             <div id="timestamp-list" class="for-pc mt-3" style="margin-top: 10px;">
-            <div class="d-flex justify-content-between align-items-center" style="margin-right: 10px;">
-                <%# <button class="modal-open btn btn-dark d-block rounded-circle bg-black" style="margin-bottom: 20px;">
-                    <i class="fas fa-plus"></i>
-                </button> %>
-            </div>
+                <div class="d-flex justify-content-between align-items-center" style="margin-right: 10px;">
+                    <%# <button class="modal-open btn btn-dark d-block rounded-circle bg-black" style="margin-bottom: 20px;">
+                        <i class="fas fa-plus"></i>
+                    </button> %>
+                </div>
 
-            <ul class="timestamp-list">
-                <% video.timestamps.order(time_s: :asc).each do |timestamp| %>
-                <li>
-                    <div class="card timestamp-card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                        <a href="#" id = "timestamp-link" class="timestamp-link" data-turbo="false" onclick="jumpTo(<%= timestamp.time_s %>)">
-                            <span class="timestamp-description"><%= timestamp.description %></span>
-                            <span class="timestamp-time"><%= "#{(timestamp.time_s / 60).to_i}:#{(timestamp.time_s % 60).to_i}" %></span>
-                        </a>
+                <ul class="timestamp-list">
+                    <% video.timestamps.order(time_s: :asc).each do |timestamp| %>
+                    <li>
+                        <div class="card timestamp-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                            <a href="#" id = "timestamp-link" class="timestamp-link" data-turbo="false" onclick="jumpTo(<%= timestamp.time_s %>)">
+                                <span class="timestamp-description"><%= timestamp.description %></span>
+                                <span class="timestamp-time"><%= "#{(timestamp.time_s / 60).to_i}:#{(timestamp.time_s % 60).to_i}" %></span>
+                            </a>
+                            </div>
                         </div>
-                    </div>
-                    </div>
-                </li>
-                <% end %>
-            </ul>
-            <%# <hr style="border-top: 1px solid grey; width: 100%; margin-top: 20px; margin-bottom: 20px;"> %>
+                        </div>
+                    </li>
+                    <% end %>
+                </ul>
             </div>
         <% end %>
     </div>
