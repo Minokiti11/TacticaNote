@@ -193,14 +193,14 @@
                     </div>
                 <% end %>
 
-                <details class="details">
+                <details class="details for-mobile">
                     <summary class="h5 mt-3 mb-2 d-flex align-items-center summary" onclick="toggleIcon(this)">
                         タイムスタンプ
                         <div class="btn btn-light ms-3" style="border: none; background: transparent; padding: 0;">
                             <i class="fas fa-chevron-down"></i>
                         </div>
                     </summary>
-                    <div id="timestamp-list" class="for-mobile answer" style="margin-top: 10px; overflow: hidden; transition: max-height 0.3s ease;">
+                    <div id="timestamp-list" class="answer" style="margin-top: 10px; overflow: hidden; transition: max-height 0.3s ease;">
                         <ul class="timestamp-list" style="max-height: 450px; overflow-y">
                         <% video.timestamps.order(time_s: :asc).each do |timestamp| %>
                             <li>
