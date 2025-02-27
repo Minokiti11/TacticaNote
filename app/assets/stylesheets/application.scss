@@ -24,8 +24,13 @@ textarea{
     resize: none;/*ユーザによるリサイズを不可にし、右下に///が出ないようにする*/
 }
 
-.highlight-green {
-    background-color: rgba(0, 187, 0, 0.5);
+.summary {
+    display: block;
+}
+
+.summary::-webkit-details-marker {
+    /* Safari-デフォルトの三角形を削除*/
+    display: none;
 }
 
 .feedback-item {
