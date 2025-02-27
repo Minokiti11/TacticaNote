@@ -205,9 +205,16 @@
                             const icon = summary.querySelector('i');
                             icon.classList.toggle('fa-chevron-down');
                             icon.classList.toggle('fa-times'); // バツのアイコンに変更
+                            const details = summary.parentElement;
+                            const content = details.querySelector('#timestamp-list');
+                            if (details.open) {
+                                content.style.maxHeight = '0'; // 開くときの高さを0に
+                            } else {
+                                content.style.maxHeight = content.scrollHeight + 'px'; // 開くときの高さをコンテンツの高さに
+                            }
                         }
                     </script>
-                    <div id="timestamp-list" class="for-mobile" style="margin-top: 10px;">
+                    <div id="timestamp-list" class="for-mobile" style="margin-top: 10px; overflow: hidden; transition: max-height 0.3s ease;">
                         <div class="d-flex justify-content-between align-items-center" style="margin-right: 10px;">
                         <%# <button class="modal-open btn btn-dark d-block rounded-circle bg-black" style="margin-bottom: 20px;">
                             <i class="fas fa-plus"></i>
