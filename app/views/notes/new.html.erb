@@ -149,6 +149,12 @@
         color: white; /* 文字色を白に保つ */
         box-shadow: none; /* ボックスシャドウを無効にする */
     }
+
+    @media (min-width: 370px) {
+        .custom-button {
+            font-size: 1rem !important;
+        }
+    }
 </style>
 <%= form_with model: @note, local: true, html: {class: "needs-validation", novalidate: true, params: { group_id: params[:group_id] } } do |form| %>
     <% if @note.errors.any? %>
@@ -346,7 +352,7 @@
                 </div>
                 <div class="mt-4">
                     <div class="text-center">
-                        <button type="button" class="custom-button" onclick="requestGood(document.getElementById('note_good').innerHTML);">フィードバックをもらう</button>
+                        <button type="button" class="custom-button" style="font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" onclick="requestGood(document.getElementById('note_good').innerHTML);">フィードバックをもらう</button>
                     </div>
                     <div class="text-center" id="notes_good"></div>
                     <%= turbo_stream_from "user_#{session.id}" %>
