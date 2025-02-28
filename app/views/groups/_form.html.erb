@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-center mt-5">
-  <div class="card shadow-lg" style="width: 70%; border: none;">
+  <div class="w-100 card shadow-lg" style="border: none;">
     <div class="card-body">
       <%= form_with model: group, local: true, html: {class: "needs-validation", novalidate: ""} do |form| %>
         <div class="mb-3">
@@ -15,6 +15,10 @@
           <div class="invalid-feedback">
             紹介文を入力してください
           </div>
+        </div>
+        <div class="mb-3">
+          <label for="introduction" class="form-label">カテゴリ</label>
+          <%= form.select :category, [['U-12'], ['U-15'], ['U-18'], ['その他']], { include_blank: 'カテゴリを選択してください' }, { class: "form-control"} %>
         </div>
         <%= form.submit "送信", class: "btn btn-primary shadow" %>
       <% end %>

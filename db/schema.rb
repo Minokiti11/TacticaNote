@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_20_103241) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_28_015406) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -104,6 +104,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_20_103241) do
     t.datetime "updated_at", null: false
     t.string "invite_token"
     t.datetime "invite_token_expires_at"
+    t.string "category"
   end
 
   create_table "messages", force: :cascade do |t|
