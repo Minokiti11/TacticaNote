@@ -7,8 +7,8 @@ class Group < ApplicationRecord
     has_many :practices, dependent: :destroy
     has_one :daily_practice, dependent: :destroy
 
-    validates :name, presence: true, uniqueness: true
-    validates :introduction, presence: true
+    validates :name, presence: true
+    validates :category, presence: true
     # attachment :image, destroy: false
 
     # 招待リンク用のトークンを生成するメソッド

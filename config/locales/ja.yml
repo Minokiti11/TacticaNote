@@ -21,6 +21,25 @@ ja:
         other: "%{count}分"
   time:
     ago: "前"
+  activerecord:
+    models:
+      group: "グループ"
+    attributes:
+      group:
+        name: "グループ名"
+        introduction: "紹介文"
+        category: "カテゴリ"
+    errors:
+      models:
+        group:
+          attributes:
+            name:
+              blank: "を入力してください"
+              taken: "は既に使用されています"
+            introduction:
+              blank: "を入力してください"
+            category:
+              blank: "を選択してください"
   activemodel:
     models:
       contact_form: "お問い合わせ"

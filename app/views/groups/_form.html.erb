@@ -17,8 +17,11 @@
           </div>
         </div>
         <div class="mb-3">
-          <label for="introduction" class="form-label">カテゴリ</label>
-          <%= form.select :category, [['U-12'], ['U-15'], ['U-18'], ['その他']], { include_blank: 'カテゴリを選択してください' }, { class: "form-control"} %>
+          <label for="category" class="form-label">カテゴリ</label>
+          <%= form.select :category, [['U-12'], ['U-15'], ['U-18'], ['その他']], { include_blank: 'カテゴリを選択してください' }, { class: "form-control", required: true } %>
+          <div class="invalid-feedback">
+            カテゴリを選択してください
+          </div>
         </div>
         <%= form.submit "送信", class: "btn btn-primary shadow" %>
       <% end %>

@@ -70,12 +70,12 @@ class GroupsController < ApplicationController
   def create
     @group = Group.new(group_params)
     @group.owner_id = current_user.id
-    #追記
     @group.users << current_user
     if @group.save
       redirect_to groups_path
     else
-      render 'new'
+      flash.now[:alert] = @group.errors.full_messages.join(", ")
+      render 'new', status: :unprocessable_entity
     end
   end
 
@@ -207,7 +207,7 @@ class GroupsController < ApplicationController
   private
 
   def group_params
-    params.require(:group).permit(:id, :name, :introduction, :teams_behaviour, :monthly_target, :image, :invite_token, :invite_token_expires_at)
+    params.require(:group).permit(:id, :name, :introduction, :category, :teams_behaviour, :monthly_target, :image, :invite_token, :invite_token_expires_at)
   end
 
   def ensure_correct_user
