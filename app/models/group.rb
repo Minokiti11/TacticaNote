@@ -8,7 +8,7 @@ class Group < ApplicationRecord
     has_one :daily_practice, dependent: :destroy
 
     validates :name, presence: true
-    validates :category, presence: true
+    # validates :category, presence: true  # カラム追加後に有効化
     # attachment :image, destroy: false
 
     # 招待リンク用のトークンを生成するメソッド
