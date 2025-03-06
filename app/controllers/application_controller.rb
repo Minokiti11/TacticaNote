@@ -32,9 +32,12 @@ class ApplicationController < ActionController::Base
     def set_current_group
         if params[:controller] == 'groups' && params[:action] == 'show'
             session[:current_group_id] = params[:id]
-        end
-        if params[:group_id]
+        elsif params[:group_id]
             session[:current_group_id] = params[:group_id]
+        elsif session[:current_group_id].nil? && current_user
+            # ユーザーが所属する最初のグループを設定
+            first_group = current_user.groups.first
+            session[:current_group_id] = first_group.id if first_group
         end
     end
 
