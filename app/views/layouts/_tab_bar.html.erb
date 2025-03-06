@@ -1,0 +1,21 @@
+<nav class="mobile-tab-bar">
+  <%= link_to root_path, class: "tab-item #{'active' if current_page?(root_path)}" do %>
+    <i class="fas fa-home"></i>
+    <span>ホーム</span>
+  <% end %>
+  
+  <%= link_to group_path(session[:current_group_id]), class: "tab-item #{'active' if controller_name == 'groups' && action_name == "show"}" do %>
+    <i class="fas fa-users"></i>
+    <span>グループ</span>
+  <% end %>
+  
+  <%= link_to group_video_path(session[:current_group_id]), class: "tab-item #{'active' if controller_name == 'groups' && action_name == 'video'}" do %>
+    <i class="fas fa-video"></i>
+    <span>動画</span>
+  <% end %>
+  
+  <%= link_to my_page_path, class: "tab-item #{'active' if controller_name == 'users' && action_name == 'show'}" do %>
+    <i class="fas fa-user"></i>
+    <span>マイページ</span>
+  <% end %>
+</nav>
