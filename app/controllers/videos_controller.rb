@@ -36,12 +36,12 @@ class VideosController < ApplicationController
     rescue ActiveStorage::FileNotFoundError => e
       logger.error "Video file not found: #{e.message}"
       logger.error "Backtrace:\n\t#{e.backtrace.join("\n\t")}"
-      redirect_to group_video_path(group.id), alert: 'ビデオファイルの読み込みに失敗しました'
+      redirect_to group_video_path(@group.id), alert: 'ビデオファイルの読み込みに失敗しました'
       return
     rescue StandardError => e
       logger.error "Error accessing video file: #{e.message}"
       logger.error "Backtrace:\n\t#{e.backtrace.join("\n\t")}"
-      redirect_to group_video_path(group.id), alert: 'ビデオファイルへのアクセスに失敗しました'
+      redirect_to group_video_path(@group.id), alert: 'ビデオファイルへのアクセスに失敗しました'
       return
     end
 
