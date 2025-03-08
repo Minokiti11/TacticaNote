@@ -22,14 +22,16 @@ class VideosController < ApplicationController
 
   def show
     @video = Video.find_by(id: params[:id])
+    @video_id = params[:id]
+    @group = Group.find(@video.group_id)
     
     if @video.nil?
-      redirect_to videos_path, alert: '指定されたビデオは存在しません'
+      redirect_to group_video_path(group.id), alert: '指定されたビデオは存在しません'
       return
     end
 
     unless @video.video.attached?
-      redirect_to videos_path, alert: 'ビデオファイルが見つかりません'
+      redirect_to group_video_path(group.id), alert: 'ビデオファイルが見つかりません'
       return
     end
 
@@ -44,17 +46,16 @@ class VideosController < ApplicationController
     rescue ActiveStorage::FileNotFoundError => e
       logger.error "Video file not found: #{e.message}"
       logger.error "Backtrace:\n\t#{e.backtrace.join("\n\t")}"
-      redirect_to videos_path, alert: 'ビデオファイルの読み込みに失敗しました'
+      redirect_to group_video_path(group.id), alert: 'ビデオファイルの読み込みに失敗しました'
       return
     rescue StandardError => e
       logger.error "Error accessing video file: #{e.message}"
       logger.error "Backtrace:\n\t#{e.backtrace.join("\n\t")}"
-      redirect_to videos_path, alert: 'ビデオファイルへのアクセスに失敗しました'
+      redirect_to group_video_path(group.id), alert: 'ビデオファイルへのアクセスに失敗しました'
       return
     end
 
-    @video_id = params[:id]
-    @group = Group.find(@video.group_id)
+
   end
 
   def destroy
