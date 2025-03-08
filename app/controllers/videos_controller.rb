@@ -24,16 +24,6 @@ class VideosController < ApplicationController
     @video = Video.find_by(id: params[:id])
     @video_id = params[:id]
     @group = Group.find(@video.group_id)
-    
-    if @video.nil?
-      redirect_to group_video_path(group.id), alert: '指定されたビデオは存在しません'
-      return
-    end
-
-    unless @video.video.attached?
-      redirect_to group_video_path(group.id), alert: 'ビデオファイルが見つかりません'
-      return
-    end
 
     begin
       # blobの情報をログ出力
