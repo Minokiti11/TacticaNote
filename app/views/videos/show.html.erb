@@ -176,7 +176,7 @@
     </div>
   </div>
 
-  <% if !request.env['HTTP_USER_AGENT'].include?('Mobile') %>
+  <% if !request.env['HTTP_USER_AGENT'].include?('Mobile') && @video.video.attached?%>
     <!-- タイムスタンプリスト -->
     <div id="timestamp-list" class="for-pc mt-5" style="margin-top: 10px;">
       <div class="d-flex justify-content-between align-items-center" style="margin-right: 10px;">
