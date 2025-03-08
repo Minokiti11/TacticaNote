@@ -25,25 +25,24 @@ class VideosController < ApplicationController
     @video_id = params[:id]
     @group = Group.find(@video.group_id)
 
-    begin
-      # blobの情報をログ出力
-      logger.debug "Video Blob Info:"
-      logger.debug "  Blob ID: #{@video.video.blob.id}"
-      logger.debug "  Blob Key: #{@video.video.blob.key}"
-      logger.debug "  Content Type: #{@video.video.content_type}"
-      logger.debug "  Byte Size: #{@video.video.blob.byte_size}"
-      
-    rescue ActiveStorage::FileNotFoundError => e
-      logger.error "Video file not found: #{e.message}"
-      logger.error "Backtrace:\n\t#{e.backtrace.join("\n\t")}"
-      redirect_to group_video_path(@group.id), alert: 'ビデオファイルの読み込みに失敗しました'
-      return
-    rescue StandardError => e
-      logger.error "Error accessing video file: #{e.message}"
-      logger.error "Backtrace:\n\t#{e.backtrace.join("\n\t")}"
-      redirect_to group_video_path(@group.id), alert: 'ビデオファイルへのアクセスに失敗しました'
-      return
-    end
+    # begin
+    #   # blobの情報をログ出力
+    #   logger.debug "Video Blob Info:"
+    #   logger.debug "  Blob ID: #{@video.video.blob.id}"
+    #   logger.debug "  Blob Key: #{@video.video.blob.key}"
+    #   logger.debug "  Content Type: #{@video.video.content_type}"
+    #   logger.debug "  Byte Size: #{@video.video.blob.byte_size}"
+    # rescue ActiveStorage::FileNotFoundError => e
+    #   logger.error "Video file not found: #{e.message}"
+    #   logger.error "Backtrace:\n\t#{e.backtrace.join("\n\t")}"
+    #   redirect_to group_video_path(@group.id), alert: 'ビデオファイルの読み込みに失敗しました'
+    #   return
+    # rescue StandardError => e
+    #   logger.error "Error accessing video file: #{e.message}"
+    #   logger.error "Backtrace:\n\t#{e.backtrace.join("\n\t")}"
+    #   redirect_to group_video_path(@group.id), alert: 'ビデオファイルへのアクセスに失敗しました'
+    #   return
+    # end
 
 
   end
