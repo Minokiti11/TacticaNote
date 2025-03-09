@@ -5,7 +5,7 @@ require 'uppy/s3_multipart'
 Rails.application.routes.draw do
   # AWS S3 Multipart Upload
   if Rails.application.credentials.dig(:aws, :access_key_id).present?
-    bucket = Aws::S3::Bucket.New(
+    bucket = Aws::S3::Bucket.new(
       access_key_id: Rails.application.credentials.dig(:aws, :access_key_id),
       name: Rails.application.credentials.dig(:aws, :s3_bucket),
       region: Rails.application.credentials.dig(:aws, :region),
@@ -19,7 +19,7 @@ Rails.application.routes.draw do
     })
     mount UPPY_S3_MULTIPART_APP => '/s3/multipart'
   end
-  
+
   resources :contacts, only: [:new, :create]
   get 'summaries/create'
   get 'users/show'
