@@ -25,26 +25,6 @@ uppyStyles.rel = 'stylesheet';
 uppyStyles.href = 'https://releases.transloadit.com/uppy/v3.8.0/uppy.min.css';
 document.head.appendChild(uppyStyles);
 
-
-// document.addEventListener("trix-paste", function(event) {
-//     // エディターの全てのspanタグをdivタグに置き換える
-//     const editorElement = event.target.editor.element;
-//     const spans = editorElement.querySelectorAll('span');
-//     spans.forEach(span => {
-//         const div = document.createElement('div');
-//         // 属性をコピー
-//         for (let attr of span.attributes) {
-//             div.setAttribute(attr.name, attr.value);
-//         }
-//         // 子要素を移動
-//         while (span.firstChild) {
-//             div.appendChild(span.firstChild);
-//         }
-//         // spanをdivに置き換える
-//         span.parentNode.replaceChild(div, span);
-//     });
-// });
-
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/service-worker.js')

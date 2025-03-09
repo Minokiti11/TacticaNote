@@ -1,61 +1,85 @@
-<div class="container mt-4">
-  <h1>動画のアップロード</h1>
-
-  <%= form_with(model: @video, local: true, data: { controller: 'video-upload' }) do |f| %>
-    <% if @video.errors.any? %>
-      <div class="alert alert-danger">
-        <h4><%= pluralize(@video.errors.count, "error") %> が発生しました:</h4>
-        <ul>
-          <% @video.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
-
-    <div class="mb-3">
-      <%= f.label :title, "タイトル", class: "form-label" %>
-      <%= f.text_field :title, class: "form-control" %>
+<div class="d-flex justify-content-center mt-5">
+  <div class="card shadow-lg" style="width: 50%; border: none;">
+    <div class="card-body">
+      <%= form_with model: @video, local: true, html: {class: "needs-validation", novalidate: ""} do |form| %>
+        <div class="mb-3">
+          <label for="title" class="form-label">タイトル</label>
+          <%= form.text_field :title, class: "form-control shadow-sm", id: "title", required: true %>
+          <div class="invalid-feedback">
+            タイトルを入力してください。
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="introduction" class="form-label">紹介文</label>
+          <%= form.text_area :introduction, class: "form-control shadow-sm", id: "introduction", rows: 3, required: true %>
+          <div class="invalid-feedback">
+            紹介文を入力してください。
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="video_upload" class="form-label">動画ファイル</label>
+          <%= form.file_field :video, direct_upload: true, class: "form-control shadow-sm", id: "video_upload", required: true %>
+          <div class="invalid-feedback">
+            ビデオファイルをアップロードしてください。
+          </div>
+          <div class="progress mt-3 fade" id="progress">
+            <div class="progress-bar" role="progressbar"
+                style="width: 0;" data-valuenow="0" data-valuemin="0" data-valuemax="100">
+              0%
+            </div>
+          </div>
+        </div>
+        <%= form.submit "送信", class: "btn btn-primary shadow" %>
+      <% end %>
     </div>
-
-    <div class="mb-3">
-      <%= f.label :description, "説明", class: "form-label" %>
-      <%= f.text_area :description, class: "form-control" %>
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label">動画ファイル</label>
-      <!-- Uppyダッシュボード用のコンテナ -->
-      <div id="uppy-dashboard"></div>
-      <%= f.hidden_field :movie_uploaded, value: false, data: { target: 'video-upload.uploadedFlag' } %>
-    </div>
-
-    <%= f.submit "アップロード", class: "btn btn-primary", data: { disable_with: "アップロード中..." } %>
-  <% end %>
+  </div>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Uppyインスタンスの初期化
-  const uppy = initializeUppy('video', <%= @video&.id || 'null' %>);
-  
-  // アップロード完了時の処理
-  uppy.on('upload-success', (file, response) => {
-    document.querySelector('[data-target="video-upload.uploadedFlag"]').value = 'true';
-    // 必要に応じて追加の処理（例：フォームの自動送信など）
-  });
-});
-</script>
+  const progressBar = function(id){
+    const frame = $(id);
+    const bar = $('div.progress-bar', frame);
+    let current = 0;
+    return {
+      current: function(){
+        return current;
+      },
+      set: function(n) {
+        current = (n > 100) ? 100 : n;
+        bar
+          .css('width', current + '%')
+          .prop('aria-valuenow', current)
+          .text(current + '%');
+        return this;
+      },
+      show: function() {
+        this.set(0);
+        frame.addClass('show');
+        bar.addClass('progress-bar-striped progress-bar-animated');
+        return this;
+      },
+      complete: function(){
+        bar.removeClass('progress-bar-striped progress-bar-animated');
+        return this;
+      }
+    };
+  };
 
-<% content_for :styles do %>
-  <style>
-    /* Uppyダッシュボードのカスタマイズ */
-    .uppy-Dashboard {
-      border: 2px dashed #ccc;
-      border-radius: 8px;
-    }
-    .uppy-Dashboard-inner {
-      width: 100% !important;
-    }
-  </style>
-<% end %>
+  $(function() {
+    const progress_bar = new progressBar('#progress');
+
+    addEventListener("direct-upload:start", event => {
+      progress_bar.show();
+    })
+
+    addEventListener("direct-upload:progress", event => {
+      const { id, progress } = event.detail;
+      progress_bar.set(Math.round(progress));
+    })
+
+    addEventListener("direct-upload:end", event => {
+      console.log("direct upload completed.");
+      progress_bar.complete();
+    })
+  });
+</script>
