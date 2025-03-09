@@ -3,8 +3,23 @@ require 'sidekiq/web'
 require 'uppy/s3_multipart'
 
 Rails.application.routes.draw do
-  # アプリケーションのメインルート設定の前にUppy S3 Multipartをマウント
-  mount Uppy::S3Multipart::Engine => '/s3/multipart'
+  # AWS S3 Multipart Upload
+  if Rails.application.credentials.dig(:aws, :access_key_id).present?
+    bucket = Aws::S3::Bucket.New(
+      access_key_id: Rails.application.credentials.dig(:aws, :access_key_id),
+      name: Rails.application.credentials.dig(:aws, :s3_bucket),
+      region: Rails.application.credentials.dig(:aws, :region),
+      secret_access_key: Rails.application.credentials.dig(:aws, :secret_access_key),
+      use_accelerate_endpoints: true,
+    )
+    UPPY_S3_MULTIPART_APP = Uppy::S3Multipart::App.new(bucket: bucket, options: {
+      create_multipart_upload: {
+        storage_class: "INTELLIGENT_TIERING",
+      },
+    })
+    mount UPPY_S3_MULTIPART_APP => '/s3/multipart'
+  end
+  
   resources :contacts, only: [:new, :create]
   get 'summaries/create'
   get 'users/show'
