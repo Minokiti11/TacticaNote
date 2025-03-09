@@ -15,16 +15,6 @@ ActiveStorage.start()
 import "trix"
 import "@rails/actiontext"
 
-// Uppyのインポートと初期化
-import { initializeUppy } from "./uppy_s3_multipart"
-window.initializeUppy = initializeUppy;
-
-// Uppyのスタイルシートを動的に追加
-const uppyStyles = document.createElement('link');
-uppyStyles.rel = 'stylesheet';
-uppyStyles.href = 'https://releases.transloadit.com/uppy/v3.8.0/uppy.min.css';
-document.head.appendChild(uppyStyles);
-
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/service-worker.js')

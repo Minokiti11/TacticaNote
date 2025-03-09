@@ -15,7 +15,6 @@ amazon:
   upload:
     expires_in: 7200 # 120分 (120 minutes * 60 seconds)
     multipart_threshold: 104857600 # 100MB(100 * 1024 * 1024 バイト)
-    part_size: 104857600 # 100MB単位でパート分割
   
 # Use bin/rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 # amazon:
