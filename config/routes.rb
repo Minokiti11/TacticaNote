@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   if Rails.application.credentials.dig(:aws, :access_key_id).present?
     bucket = Aws::S3::Bucket.new(
       access_key_id: Rails.application.credentials.dig(:aws, :access_key_id),
-      name: Rails.application.credentials.dig(:aws, :s3_bucket),
+      name: Rails.application.credentials.dig(:aws, :bucket),
       region: Rails.application.credentials.dig(:aws, :region),
       secret_access_key: Rails.application.credentials.dig(:aws, :secret_access_key),
       use_accelerate_endpoints: true,
