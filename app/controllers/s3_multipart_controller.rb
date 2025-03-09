@@ -1,5 +1,5 @@
 class S3MultipartController < ApplicationController
-  include Uppy::S3Multipart::ControllerHelper
+  # include Uppy::S3Multipart::ControllerHelper
 
   before_action :authenticate_user!
   before_action :set_upload_options, only: [:create, :batch_create]
