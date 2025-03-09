@@ -10,7 +10,7 @@ Rails.application.routes.draw do
       name: Rails.application.credentials.dig(:aws, :bucket),
       region: Rails.application.credentials.dig(:aws, :region),
       secret_access_key: Rails.application.credentials.dig(:aws, :secret_access_key),
-      use_accelerate_endpoints: true,
+      use_accelerate_endpoint: true,
     )
     UPPY_S3_MULTIPART_APP = Uppy::S3Multipart::App.new(bucket: bucket, options: {
       create_multipart_upload: {
