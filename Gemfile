@@ -104,7 +104,8 @@ gem "ruby-openai"
 
 gem 'aws-sdk-rails'
 gem 'aws-sdk-s3', '~> 1'
-gem 'uppy-s3_multipart'
+gem 'uppy-s3_multipart', '~> 1.0'
+gem 'aws-sdk-core', '~> 3'
 
 gem 'omniauth'
 gem 'omniauth-rails_csrf_protection'

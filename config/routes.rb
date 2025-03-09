@@ -1,8 +1,10 @@
 require 'sidekiq/web'
 
+require 'uppy/s3_multipart'
+
 Rails.application.routes.draw do
-  # Uppy S3 Multipartのルートを追加
-  mount Uppy::S3Multipart::Engine, at: '/s3/multipart'
+  # アプリケーションのメインルート設定の前にUppy S3 Multipartをマウント
+  mount Uppy::S3Multipart::Engine => '/s3/multipart'
   resources :contacts, only: [:new, :create]
   get 'summaries/create'
   get 'users/show'

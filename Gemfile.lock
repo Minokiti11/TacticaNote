@@ -543,6 +543,7 @@ PLATFORMS
 DEPENDENCIES
   actioncable
   actiontext
+  aws-sdk-core (~> 3)
   aws-sdk-rails
   aws-sdk-s3 (~> 1)
   bcrypt (~> 3.1.7)
@@ -592,7 +593,7 @@ DEPENDENCIES
   thruster
   turbo-rails
   tzinfo-data
-  uppy-s3_multipart
+  uppy-s3_multipart (~> 1.0)
   web-console
   webdrivers (~> 5.3.0)
   whenever
