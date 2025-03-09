@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
     <script src="https://unpkg.com/lucide@latest"></script>
+    
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "actiontext", "data-turbo-track": "reload" %>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -64,60 +65,6 @@
     <%= yield %>
     <% if current_user %>
       <%= render 'layouts/tab_bar' %>
-      
-      <style>
-        .container {
-          padding-bottom: 70px; /* タブバーの高さ分の余白 */
-        }
-        
-        .mobile-tab-bar {
-          position: fixed;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          background: #ffffff;
-          display: flex;
-          justify-content: space-around;
-          padding: 8px 0;
-          box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-          z-index: 1000;
-        }
-
-        .tab-item {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          text-decoration: none;
-          color: #666;
-          font-size: 0.8rem;
-          padding: 4px 0;
-          width: 25%;
-        }
-
-        .tab-item.active {
-          color: #007bff;
-        }
-
-        .tab-item i {
-          font-size: 1.5rem;
-          margin-bottom: 2px;
-        }
-
-        .tab-item span {
-          font-size: 0.6rem;
-          opacity: 0.8;
-        }
-
-        @media (min-width: 768px) {
-          .mobile-tab-bar {
-            display: none; /* PCでは非表示 */
-          }
-          
-          .container {
-            padding-bottom: initial; /* PCでは余白をリセット */
-          }
-        }
-      </style>
     <% end %>
   </body>
   <% if !current_user %>
