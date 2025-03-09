@@ -111,6 +111,4 @@ Rails.application.configure do
   # この設定により、ActiveJobがジョブをキューに入れる際にSidekiqを使用するようになる
   config.cache_store = :redis_cache_store, { url: ENV['REDIS_URL'] }
   config.session_store :cache_store, expire_after: 90.days #セッションの有効期限は1週間
-
-  config.active_storage.urls_expire_in = 2.hours
 end
