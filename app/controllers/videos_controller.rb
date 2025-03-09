@@ -52,7 +52,7 @@ class VideosController < ApplicationController
     @video = Video.find(params[:id])
     @video.video.purge
     @video.destroy
-    redirect_to videos_path
+    redirect_to group_video_path(session[:current_group_id])
   end
 
   private
