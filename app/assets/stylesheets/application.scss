@@ -15,7 +15,9 @@
  */
 @import "bootstrap";
 @import "actiontext";
-
+body {
+    margin-bottom: 68px;
+}
 a {
     text-decoration: none;
 }
