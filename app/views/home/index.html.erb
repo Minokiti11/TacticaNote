@@ -633,40 +633,6 @@
               </div>
             <% end %>
           <% end %>
-          <!--
-          <div class="video-card-small">
-            <div class="video-thumbnail">
-              <img src="https://via.placeholder.com/320x180" alt="FCトウキョウ vs FCオオサカ ハイライト">
-              <%# <div class="video-duration">15:24</div> %>
-            </div>
-            <h4 class="video-title">FCトウキョウ vs FCオオサカ ハイライト</h4>
-            <p class="video-date">2024年3月7日</p>
-          </div>
-          <div class="video-card-small">
-            <div class="video-thumbnail">
-              <img src="https://via.placeholder.com/320x180" alt="FCトウキョウ vs FCオオサカ 戦術分析">
-              <%# <div class="video-duration">22:10</div> %>
-            </div>
-            <h4 class="video-title">FCトウキョウ vs FCオオサカ 戦術分析</h4>
-            <p class="video-date">2024年3月8日</p>
-          </div>
-          <div class="video-card-small">
-            <div class="video-thumbnail">
-              <img src="https://via.placeholder.com/320x180" alt="FCトウキョウ vs FCナゴヤ ハイライト">
-              <%# <div class="video-duration">18:45</div> %>
-            </div>
-            <h4 class="video-title">FCトウキョウ vs FCナゴヤ ハイライト</h4>
-            <p class="video-date">2024年2月28日</p>
-          </div>
-          <div class="video-card-small">
-            <div class="video-thumbnail">
-              <img src="https://via.placeholder.com/320x180" alt="FCヨコハマ vs FCトウキョウ ハイライト">
-              <%# <div class="video-duration">12:30</div> %>
-            </div>
-            <h4 class="video-title">FCヨコハマ vs FCトウキョウ ハイライト</h4>
-            <p class="video-date">2024年2月21日</p>
-          </div>
-          -->
         </div>
 
         <!-- 試合カード -->
@@ -787,15 +753,13 @@
             <button class="member-button">
               <span>自分</span>
             </button>
-            <button class="member-button">
-              <span>佐藤健</span>
-            </button>
-            <button class="member-button">
-              <span>鈴木コーチ</span>
-            </button>
-            <button class="member-button">
-              <span>山田隆</span>
-            </button>
+            <% group.users.each do |user| %>
+              <% if user != current_user %>
+                <button class="member-button">
+                  <span><%= user.username %></span>
+                </button>
+              <% end %>
+            <% end %>
           </div>
         </div>
 
