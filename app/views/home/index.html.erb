@@ -764,28 +764,32 @@
         </div>
 
         <!-- ノートカード -->
-        <div class="card note-card">
-          <div class="card-content">
-            <div class="note-header">
-              <div>
-                <div class="note-author">
-                  <span class="note-author-name">田中太郎</span>
-                  <div class="note-shared">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-                    共有中
+        <!--
+        <% group.notes.each do |note| %>
+          <div class="card note-card">
+            <div class="card-content">
+              <div class="note-header">
+                <div>
+                  <div class="note-author">
+                    <span class="note-author-name"><%= note.user.username %></span>
+                    <div class="note-shared">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                      共有中
+                    </div>
+                  </div>
+                  <h3 class="note-title"><%= note.title %></h3>
+                  <div class="note-meta">
+                    <span class="note-date">2024年3月7日</span>
+                    <span class="note-match">FCトウキョウ vs FCオオサカ</span>
                   </div>
                 </div>
-                <h3 class="note-title">試合メモ：FCトウキョウ vs FCオオサカ</h3>
-                <div class="note-meta">
-                  <span class="note-date">2024年3月7日</span>
-                  <span class="note-match">FCトウキョウ vs FCオオサカ</span>
-                </div>
+                <%# <div class="note-category">試合分析</div> %>
               </div>
-              <div class="note-category">試合分析</div>
+              <p class="note-content">前半は相手のプレスに苦しんだが、後半からボールポゼッションを高めることができた。サイドからの攻撃が効果的だった。次回は中央突破のバリエーションも増やしたい。</p>
             </div>
-            <p class="note-content">前半は相手のプレスに苦しんだが、後半からボールポゼッションを高めることができた。サイドからの攻撃が効果的だった。次回は中央突破のバリエーションも増やしたい。</p>
           </div>
-        </div>
+        <% end %>
+        -->
 
         <div class="card note-card">
           <div class="card-content">
@@ -1069,7 +1073,8 @@
     /* Hero section styles */
     .hero {
       background: linear-gradient(to right, #2563eb, #1d4ed8);
-      backdrop-filter: brightness(0.5);
+      background-color: #fff;
+      backdrop-filter: blur(10px);
       color: #fff;
       padding: 3rem 0;
     }
