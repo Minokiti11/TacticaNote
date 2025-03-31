@@ -1072,11 +1072,24 @@
 
     /* Hero section styles */
     .hero {
-      background: linear-gradient(to right, #2563eb, #1d4ed8);
-      background-color: #fff;
-      backdrop-filter: blur(10px);
+      position: relative;
       color: #fff;
       padding: 3rem 0;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      background-image: url(<%= asset_path 'background.jpeg' %>);
+      background-position: center;
+      background-size: cover;
+      filter: brightness(0.6); /* 背景画像のみ適用 */
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1; /* 背景を後ろに置く */
     }
 
     .hero .container {
@@ -1217,10 +1230,10 @@
   </style>
 
   <main>
-      <section class="hero" style="background-image: url(<%= asset_path 'background.jpeg' %>); background-position: center; background-size: cover;">
+      <section class="hero">
         <div class="container">
           <div class="hero-content">
-            <h1 class="fw-bold" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">サッカーノートに命を吹き込む。</h1>
+            <h1 class="fw-bold">サッカーノートに命を吹き込む。</h1>
             <p>TacticaNoteは、あなたのチームの選手の課題を深掘り・共有・要約することで、スムーズな課題解決へと導きます。チーム全体のコミュニケーションを活発にし、成長を加速させましょう。</p>
             <%= link_to "今すぐ試す", new_contact_path, class: "button button-primary", style: "display: flex; height: 2.8rem; width: 7.5rem; justify-content: center; align-items: center; margin-left: 1rem;" %>
           </div>
