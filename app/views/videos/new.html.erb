@@ -18,19 +18,12 @@
                 紹介文を入力してください。
               </div>
             </div>
-            <div class="mb-3">
+            <div class="mb-3 form-group" data-uppy="video[video]">
               <label for="video_upload" class="form-label">動画ファイル</label>
-              <%# <div id="uppy-dashboard"></div> %>
-              <%= form.file_field :video, direct_upload: true, class: "form-control shadow-sm", id: "video_upload", required: true %>
-              <div class="invalid-feedback">
-                ビデオファイルをアップロードしてください。
-              </div>
-              <div class="progress mt-3 fade" id="progress">
-                <div class="progress-bar" role="progressbar"
-                    style="width: 0;" data-valuenow="0" data-valuemin="0" data-valuemax="100">
-                  0%
-                </div>
-              </div>
+              <div id="uppy-dashboard"></div>
+              <%= form.hidden_field :video, id: "uploaded_video" %>
+              <%# <%= link_to "Upload", "#", data: { behavior: "uppy-trigger" } %>
+              <%# <%= form.file_field :video, direct_upload: true, class: "form-control shadow-sm", id: "video_upload", required: true %>
             </div>
             <%= form.submit "送信", class: "btn btn-primary shadow" %>
           <% end %>
@@ -39,52 +32,3 @@
     </div>
   </div>
 </div>
-
-<script>
-  const progressBar = function(id){
-    const frame = $(id);
-    const bar = $('div.progress-bar', frame);
-    let current = 0;
-    return {
-      current: function(){
-        return current;
-      },
-      set: function(n) {
-        current = (n > 100) ? 100 : n;
-        bar
-          .css('width', current + '%')
-          .prop('aria-valuenow', current)
-          .text(current + '%');
-        return this;
-      },
-      show: function() {
-        this.set(0);
-        frame.addClass('show');
-        bar.addClass('progress-bar-striped progress-bar-animated');
-        return this;
-      },
-      complete: function(){
-        bar.removeClass('progress-bar-striped progress-bar-animated');
-        return this;
-      }
-    };
-  };
-
-  $(function() {
-    const progress_bar = new progressBar('#progress');
-
-    addEventListener("direct-upload:start", event => {
-      progress_bar.show();
-    })
-
-    addEventListener("direct-upload:progress", event => {
-      const { id, progress } = event.detail;
-      progress_bar.set(Math.round(progress));
-    })
-
-    addEventListener("direct-upload:end", event => {
-      console.log("direct upload completed.");
-      progress_bar.complete();
-    })
-  });
-</script>

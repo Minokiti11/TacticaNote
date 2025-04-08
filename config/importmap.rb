@@ -30,7 +30,7 @@ pin "@uppy/utils/lib/getFileNameAndExtension", to: "@uppy--utils--lib--getFileNa
 pin "@uppy/utils/lib/getFileType", to: "@uppy--utils--lib--getFileType.js" # @6.1.1
 pin "@uppy/utils/lib/getTextDirection", to: "@uppy--utils--lib--getTextDirection.js" # @6.1.1
 pin "@uppy/utils/lib/getTimeStamp", to: "@uppy--utils--lib--getTimeStamp.js" # @6.1.1
-# pin "lodash/throttle.js", to: "lodash--throttle.js.js" # @4.17.21
+pin "lodash/throttle.js", to: "https://ga.jspm.io/npm:lodash@4.17.21/throttle.js" # @4.17.21
 pin "mime-match" # @1.0.2
 pin "namespace-emitter" # @2.0.1
 pin "nanoid/non-secure", to: "nanoid--non-secure.js" # @5.1.5
@@ -56,6 +56,15 @@ pin "@uppy/utils/lib/prettyETA", to: "@uppy--utils--lib--prettyETA.js" # @6.1.1
 pin "@uppy/utils/lib/remoteFileObjToLocal", to: "@uppy--utils--lib--remoteFileObjToLocal.js" # @6.1.1
 pin "@uppy/utils/lib/toArray", to: "@uppy--utils--lib--toArray.js" # @6.1.1
 pin "@uppy/utils/lib/truncateString", to: "@uppy--utils--lib--truncateString.js" # @6.1.1
+pin "@uppy/utils/lib/AbortController", to: "@uppy--utils--lib--AbortController.js" # @6.1.1
+pin "@uppy/utils/lib/ErrorWithCause", to: "@uppy--utils--lib--ErrorWithCause.js" # @6.1.1
+pin "@uppy/utils/lib/RateLimitedQueue", to: "@uppy--utils--lib--RateLimitedQueue.js" # @6.1.1
+pin "@uppy/utils/lib/UserFacingApiError", to: "@uppy--utils--lib--UserFacingApiError.js" # @6.1.1
+pin "@uppy/utils/lib/fetchWithNetworkError", to: "@uppy--utils--lib--fetchWithNetworkError.js" # @6.1.1
+pin "@uppy/utils/lib/fileFilters", to: "@uppy--utils--lib--fileFilters.js" # @6.1.1
+pin "@uppy/utils/lib/getAllowedMetaFields", to: "@uppy--utils--lib--getAllowedMetaFields.js" # @6.1.1
+pin "@uppy/utils/lib/getSocketHost", to: "@uppy--utils--lib--getSocketHost.js" # @6.1.1
+
 pin "classnames" # @2.5.1
 pin "eventemitter3" # @5.0.1
 pin "exifr/dist/mini.esm.mjs", to: "exifr--dist--mini.esm.mjs.js" # @7.1.3
@@ -66,3 +75,13 @@ pin "p-timeout" # @6.1.4
 pin "preact/hooks", to: "preact--hooks.js" # @10.26.4
 pin "shallow-equal" # @3.1.0
 
+pin "@uppy/aws-s3", to: "@uppy--aws-s3.js" # @4.2.3
+pin "@uppy/companion-client", to: "@uppy--companion-client.js" # @4.4.1
+pin "@uppy/core/lib/EventManager.js", to: "@uppy--core--lib--EventManager.js.js" # @4.4.3
+pin "is-network-error" # @1.1.0
+pin "p-retry" # @6.2.1
+pin "retry" # @0.13.1
+pin "@retry/lib/retry_operation", to: "@retry--lib--retry_operation.js"
+pin "@uppy/utils/lib/mimeTypes", to: "@uppy--utils--lib--mimeTypes.js" # @6.1.1
+pin "@uppy/utils/lib/isDOMElement", to: "@uppy--utils--lib--isDOMElement.js" # @6.1.1
+pin "lodash/debounce.js", to: "https://ga.jspm.io/npm:lodash@4.17.21/debounce.js" # @4.17.21
