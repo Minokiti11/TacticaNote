@@ -6,7 +6,6 @@
 //= link channels/index.js
 //= link channels/room_channel.js
 //= link controllers/hello_controller.js
+//= link controllers/clipboard_controller.js
 //= link controllers/index.js
-//= link controllers/room_controller.js
-//= link controllers/room_channel.js
 //= link controllers/application.js
