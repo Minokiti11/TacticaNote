@@ -1,0 +1,4 @@
+// wildcard@1.1.2 downloaded from https://ga.jspm.io/npm:wildcard@1.1.2/index.js
+
+var t={};function WildcardMatcher(t,e){this.text=t=t||"";this.hasWild=~t.indexOf("*");this.separator=e;this.parts=t.split(e)}WildcardMatcher.prototype.match=function(t){var e=true;var r=this.parts;var i;var a=r.length;var s;if("string"==typeof t||t instanceof String)if(this.hasWild||this.text==t){s=(t||"").split(this.separator);for(i=0;e&&i<a;i++)"*"!==r[i]&&(e=i<s.length&&r[i]===s[i]);e=e&&s}else e=false;else if("function"==typeof t.splice){e=[];for(i=t.length;i--;)this.match(t[i])&&(e[e.length]=t[i])}else if("object"==typeof t){e={};for(var h in t)this.match(h)&&(e[h]=t[h])}return e};t=function(t,e,r){var i=new WildcardMatcher(t,r||/[\/\.]/);return"undefined"!=typeof e?i.match(e):i};var e=t;export default e;
+
