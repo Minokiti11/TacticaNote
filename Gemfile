@@ -93,7 +93,7 @@ gem 'devise'
 gem 'devise-i18n' # devise日本語化のためのGem
 
 gem 'actioncable'
-gem "bootstrap", "~> 5.2"
+gem "bootstrap", "~> 5.3"
 
 gem "refile", require: "refile/rails", github: 'manfe/refile'
 gem "refile-mini_magick"
@@ -123,6 +123,7 @@ gem 'pry-rails'
 gem 'whenever', require: false
 
 gem 'sassc-rails'
+# gem 'bootstrap-sass'
 
 gem 'redcarpet'
 
@@ -134,3 +135,5 @@ gem 'thruster'
 gem 'high_voltage'
 
 gem 'sitemap_generator'
+
+gem "jsbundling-rails", "~> 1.3"
