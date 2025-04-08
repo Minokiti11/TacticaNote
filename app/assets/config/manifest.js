@@ -2,5 +2,11 @@
 //= link_directory ../stylesheets .css
 //= link_tree ../../../vendor/javascript .js
 //= link_tree ../builds
-//= link ../../javascript/channels
-//= link ../../javascript/controllers
+//= link channels/consumer.js
+//= link channels/index.js
+//= link channels/room_channel.js
+//= link controllers/hello_controller.js
+//= link controllers/index.js
+//= link controllers/room_controller.js
+//= link controllers/room_channel.js
+//= link controllers/application.js
