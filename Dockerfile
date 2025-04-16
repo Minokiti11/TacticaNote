@@ -33,8 +33,14 @@ FROM base AS build
 
 # Install packages needed to build gems
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git pkg-config && \
+    apt-get install --no-install-recommends -y build-essential git pkg-config curl ffmpeg && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+# Install Node.js and Yarn
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    curl -fsSL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor -o /usr/share/keyrings/yarn.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/yarn.gpg] https://dl.yarnpkg.com/debian stable main" | tee /etc/apt/sources.list.d/yarn.list && \
+    apt-get update -qq && apt-get install -y nodejs yarn
 
 # Install application gems
 COPY Gemfile Gemfile.lock ./
@@ -44,6 +50,9 @@ RUN bundle install && \
     bundle exec bootsnap precompile --gemfile
 
 HEALTHCHECK --interval=10s --timeout=120s --start-period=60s --retries=3 CMD curl --fail http://localhost:3000/up || exit 1
+
+# Install JS dependencies
+RUN yarn install
 
 # Copy application code
 COPY . .

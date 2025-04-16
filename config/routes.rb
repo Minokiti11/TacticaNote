@@ -4,26 +4,27 @@ require 'uppy/s3_multipart'
 
 Rails.application.routes.draw do
   # AWS S3 Multipart Upload
-  # if Rails.application.credentials.dig(:aws, :access_key_id).present?
-  #   bucket = Aws::S3::Bucket.new(
-  #     access_key_id: Rails.application.credentials.dig(:aws, :access_key_id),
-  #     name: Rails.application.credentials.dig(:aws, :bucket),
-  #     region: Rails.application.credentials.dig(:aws, :region),
-  #     secret_access_key: Rails.application.credentials.dig(:aws, :secret_access_key),
-  #     use_accelerate_endpoint: true,
-  #   )
-  #   UPPY_S3_MULTIPART_APP = Uppy::S3Multipart::App.new(bucket: bucket, options: {
-  #     create_multipart_upload: {
-  #       storage_class: "INTELLIGENT_TIERING",
-  #     },
-  #   })
-  #   mount UPPY_S3_MULTIPART_APP => '/s3/multipart'
-  # end
+  if Rails.application.credentials.dig(:aws, :access_key_id).present?
+    bucket = Aws::S3::Bucket.new(
+      access_key_id: Rails.application.credentials.dig(:aws, :access_key_id),
+      name: Rails.application.credentials.dig(:aws, :bucket),
+      region: Rails.application.credentials.dig(:aws, :region),
+      secret_access_key: Rails.application.credentials.dig(:aws, :secret_access_key),
+      use_accelerate_endpoint: false,
+    )
+    UPPY_S3_MULTIPART_APP = Uppy::S3Multipart::App.new(bucket: bucket, options: {
+      create_multipart_upload: {
+        storage_class: "INTELLIGENT_TIERING",
+      },
+    })
+    mount UPPY_S3_MULTIPART_APP => '/s3/multipart'
+  end
 
   resources :contacts, only: [:new, :create]
   get 'summaries/create'
   get 'users/show'
   resources :videos
+  post '/videos/register_blob', to: 'videos#register_blob'
   resources :notes
   resources :practices
   resources :daily_practice_items, only: :destroy

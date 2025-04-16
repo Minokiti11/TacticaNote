@@ -13,11 +13,17 @@
  *= require_tree .
  *= require_self
  */
+
 @import "bootstrap";
-@import "actiontext";
+@import "uppy-core-style";
+@import "uppy-dashboard-style";
+
+
+
 body {
     margin-bottom: 68px;
 }
+
 a {
     text-decoration: none;
 }

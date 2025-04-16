@@ -5,6 +5,7 @@ class VideosController < ApplicationController
   
   def new
     @video = Video.new
+    @group = Group.find(session[:current_group_id])
   end
 
   def create
@@ -13,6 +14,7 @@ class VideosController < ApplicationController
     @video.user_id = current_user.id
     p "current_user.group_users:", current_user.group_users[0].group_id
     @video.group_id = current_user.group_users[0].group_id
+    @video.video.attach(params[:video][:uploaded_video]) if params[:video][:uploaded_video].present?
     if @video.save
       redirect_to @video
     else
@@ -20,31 +22,21 @@ class VideosController < ApplicationController
     end
   end
 
+  def register_blob
+    blob = ActiveStorage::Blob.create_before_direct_upload!(
+      filename: params[:blob][:filename],
+      byte_size: params[:blob][:byte_size],
+      checksum: params[:blob][:checksum],
+      content_type: params[:blob][:content_type],
+      key: params[:blob][:key],
+    )
+    render json: { signed_id: blob.signed_id }
+  end
+
   def show
     @video = Video.find_by(id: params[:id])
     @video_id = params[:id]
     @group = Group.find(@video.group_id)
-
-    # begin
-    #   # blobの情報をログ出力
-    #   logger.debug "Video Blob Info:"
-    #   logger.debug "  Blob ID: #{@video.video.blob.id}"
-    #   logger.debug "  Blob Key: #{@video.video.blob.key}"
-    #   logger.debug "  Content Type: #{@video.video.content_type}"
-    #   logger.debug "  Byte Size: #{@video.video.blob.byte_size}"
-    # rescue ActiveStorage::FileNotFoundError => e
-    #   logger.error "Video file not found: #{e.message}"
-    #   logger.error "Backtrace:\n\t#{e.backtrace.join("\n\t")}"
-    #   redirect_to group_video_path(@group.id), alert: 'ビデオファイルの読み込みに失敗しました'
-    #   return
-    # rescue StandardError => e
-    #   logger.error "Error accessing video file: #{e.message}"
-    #   logger.error "Backtrace:\n\t#{e.backtrace.join("\n\t")}"
-    #   redirect_to group_video_path(@group.id), alert: 'ビデオファイルへのアクセスに失敗しました'
-    #   return
-    # end
-
-
   end
 
   def destroy
@@ -57,7 +49,6 @@ class VideosController < ApplicationController
 
   private
   def video_params
-    params.require(:video).permit(:id, :title, :introduction, :video)
+    params.require(:video).permit(:id, :title, :introduction, :video, :uploaded_video, :thumbnail)
   end
 end
-  

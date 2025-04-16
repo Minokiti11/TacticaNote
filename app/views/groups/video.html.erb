@@ -4,7 +4,7 @@
     <%= link_to '← グループのトップへ', group_path(session[:current_group_id]), class: "mt-2", "data-turbo": false, style: "font-size: 1.2em; display: block;" unless request.env['HTTP_USER_AGENT'].include?('Mobile') %>
     <h3 class="mt-3">試合 映像</h3>
 
-    <%=link_to "Upload Video", new_video_path, class: "btn btn-outline-dark mt-2", style: "border-width: 2px; border-radius: 0; font-size: 14px;"%>
+    <%=link_to "Upload Video", new_video_path, class: "btn btn-outline-dark mt-2", style: "border-width: 2px; border-radius: 0; font-size: 14px;", "data-turbo": false %>
 
     <div class="row row-cols-1 row-cols-lg-2">
         <% @videos.sort_by(&:created_at).reverse.each do |video| %>

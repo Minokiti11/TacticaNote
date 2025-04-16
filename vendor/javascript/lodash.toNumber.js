@@ -1,0 +1,4 @@
+// lodash.tonumber@4.0.3 downloaded from https://ga.jspm.io/npm:lodash.tonumber@4.0.3/index.js
+
+var t={};var e=0/0;var r="[object Symbol]";var o=/^\s+|\s+$/g;var i=/^[-+]0x[0-9a-f]+$/i;var n=/^0b[01]+$/i;var a=/^0o[0-7]+$/i;var f=parseInt;var u=Object.prototype;var c=u.toString;function isObject(t){var e=typeof t;return!!t&&("object"==e||"function"==e)}function isObjectLike(t){return!!t&&"object"==typeof t}function isSymbol(t){return"symbol"==typeof t||isObjectLike(t)&&c.call(t)==r}function toNumber(t){if("number"==typeof t)return t;if(isSymbol(t))return e;if(isObject(t)){var r="function"==typeof t.valueOf?t.valueOf():t;t=isObject(r)?r+"":r}if("string"!=typeof t)return 0===t?t:+t;t=t.replace(o,"");var u=n.test(t);return u||a.test(t)?f(t.slice(2),u?2:8):i.test(t)?e:+t}t=toNumber;var b=t;export default b;
+

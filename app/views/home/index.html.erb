@@ -617,7 +617,7 @@
             <%= link_to video_path(video.id), "data-turbo": false, style: "color: black;" do %>
               <div class="video-card-small">
                 <div class="video-thumbnail">
-                  <% s3 = Aws::S3::Resource.new(
+                  <%# <% s3 = Aws::S3::Resource.new(
                           region: "ap-northeast-1",
                           credentials: Aws::Credentials.new(
                           Rails.application.credentials.dig(:aws, :access_key_id),
@@ -625,8 +625,16 @@
                           )
                       )
                   signer = Aws::S3::Presigner.new(client: s3.client)
+                  p :video_params, video.video
                   presigned_url = signer.presigned_url(:get_object, bucket: Rails.application.credentials.dig(:aws, :bucket), key: "output/thumbnail/#{video.video.filename.base}/#{video.video.filename.base}_thumbnail.0000000.jpg", expires_in: 60) %>
+                  <!--
                   <img src="<%= presigned_url %>" alt="<%= video.title %>">
+                  -->
+                  <% if @video.thumbnail.present? %>
+                    <%= image_tag url_for(@video.thumbnail) %>
+                  <% else %>
+                    <img src="https://placehold.co/600x400">
+                  <% end %>
                 </div>
                 <h4 class="video-title"><%= video.title %></h4>
                 <p class="video-date"><%= video.created_at.strftime('%Y年%-m月%-d日') %></p>
@@ -764,28 +772,32 @@
         </div>
 
         <!-- ノートカード -->
-        <div class="card note-card">
-          <div class="card-content">
-            <div class="note-header">
-              <div>
-                <div class="note-author">
-                  <span class="note-author-name">田中太郎</span>
-                  <div class="note-shared">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-                    共有中
+        <!--
+        <% group.notes.each do |note| %>
+          <div class="card note-card">
+            <div class="card-content">
+              <div class="note-header">
+                <div>
+                  <div class="note-author">
+                    <span class="note-author-name"><%= note.user.username %></span>
+                    <div class="note-shared">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                      共有中
+                    </div>
+                  </div>
+                  <h3 class="note-title"><%= note.title %></h3>
+                  <div class="note-meta">
+                    <span class="note-date">2024年3月7日</span>
+                    <span class="note-match">FCトウキョウ vs FCオオサカ</span>
                   </div>
                 </div>
-                <h3 class="note-title">試合メモ：FCトウキョウ vs FCオオサカ</h3>
-                <div class="note-meta">
-                  <span class="note-date">2024年3月7日</span>
-                  <span class="note-match">FCトウキョウ vs FCオオサカ</span>
-                </div>
+                <%# <div class="note-category">試合分析</div> %>
               </div>
-              <div class="note-category">試合分析</div>
+              <p class="note-content">前半は相手のプレスに苦しんだが、後半からボールポゼッションを高めることができた。サイドからの攻撃が効果的だった。次回は中央突破のバリエーションも増やしたい。</p>
             </div>
-            <p class="note-content">前半は相手のプレスに苦しんだが、後半からボールポゼッションを高めることができた。サイドからの攻撃が効果的だった。次回は中央突破のバリエーションも増やしたい。</p>
           </div>
-        </div>
+        <% end %>
+        -->
 
         <div class="card note-card">
           <div class="card-content">
@@ -1068,10 +1080,24 @@
 
     /* Hero section styles */
     .hero {
-      background: linear-gradient(to right, #2563eb, #1d4ed8);
-      backdrop-filter: brightness(0.5);
+      position: relative;
       color: #fff;
       padding: 3rem 0;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      background-image: url(<%= asset_path 'background.jpeg' %>);
+      background-position: center;
+      background-size: cover;
+      filter: brightness(0.6); /* 背景画像のみ適用 */
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1; /* 背景を後ろに置く */
     }
 
     .hero .container {
@@ -1212,10 +1238,10 @@
   </style>
 
   <main>
-      <section class="hero" style="background-image: url(<%= asset_path 'background.jpeg' %>); background-position: center; background-size: cover;">
+      <section class="hero">
         <div class="container">
           <div class="hero-content">
-            <h1 class="fw-bold" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">サッカーノートに命を吹き込む。</h1>
+            <h1 class="fw-bold">サッカーノートに命を吹き込む。</h1>
             <p>TacticaNoteは、あなたのチームの選手の課題を深掘り・共有・要約することで、スムーズな課題解決へと導きます。チーム全体のコミュニケーションを活発にし、成長を加速させましょう。</p>
             <%= link_to "今すぐ試す", new_contact_path, class: "button button-primary", style: "display: flex; height: 2.8rem; width: 7.5rem; justify-content: center; align-items: center; margin-left: 1rem;" %>
           </div>
