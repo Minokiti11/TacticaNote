@@ -628,11 +628,11 @@
                   presigned_url = signer.presigned_url(:get_object, bucket: Rails.application.credentials.dig(:aws, :bucket), key: "output/thumbnail/#{video.video.filename.base}/#{video.video.filename.base}_thumbnail.0000000.jpg", expires_in: 60) %>
                   <!--<img src="<%#= presigned_url %>" alt="<%= video.title %>">-->
                   <% p video.thumbnail %>
-                  <% if video.thumbnail.present? %>
+                  <%# if video.thumbnail.present? %>
                     <%= image_tag url_for(video.thumbnail) %>
-                  <% else %>
-                    <img src="https://placehold.co/600x400">
-                  <% end %>
+                  <%# else %>
+                    <!--<img src="https://placehold.co/600x400">-->
+                  <%# end %>
                 </div>
                 <h4 class="video-title"><%= video.title %></h4>
                 <p class="video-date"><%= video.created_at.strftime('%Y年%-m月%-d日') %></p>
