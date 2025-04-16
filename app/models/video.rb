@@ -10,10 +10,10 @@ class Video < ApplicationRecord
     validate :acceptable_video
 
     def thumbnail
-        if video.video.attached? && video.video.previewable?
-            video = Video.last
-            video.video.content_type
-            video.video.previewable?
+        if video.attached? && video.previewable?
+            video_tmp = Video.last
+            video_tmp.content_type
+            video_tmp.video.previewable?
             video.preview(resize_to_limit: [640, 360]).processed
         else
             return nil
