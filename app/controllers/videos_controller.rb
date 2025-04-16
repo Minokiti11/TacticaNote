@@ -30,7 +30,6 @@ class VideosController < ApplicationController
       content_type: params[:blob][:content_type],
       key: params[:blob][:key],
     )
-    p "key: " + params[:blob][:key]
     render json: { signed_id: blob.signed_id }
   end
 
@@ -50,6 +49,6 @@ class VideosController < ApplicationController
 
   private
   def video_params
-    params.require(:video).permit(:id, :title, :introduction, :video, :uploaded_video)
+    params.require(:video).permit(:id, :title, :introduction, :video, :uploaded_video, :thumbnail)
   end
 end
