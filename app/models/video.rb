@@ -10,9 +10,7 @@ class Video < ApplicationRecord
     validate :acceptable_video
 
     def thumbnail
-        return unless video.content_type.starts_with?('video/')
-    
-        video.representation(resize_to_limit: [640, 360], format: 'jpg').processed
+        video.preview(resize_to_limit: [640, 360]).processed
     end
     
     private

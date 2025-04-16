@@ -47,6 +47,7 @@ module TacticaChat
     config.middleware.use config.session_store, config.session_options
 
     config.active_storage.service_urls_expire_in = 2.hours
+    config.active_storage.previewers << ActiveStorage::Previewer::VideoPreviewer
   end
 end
 
