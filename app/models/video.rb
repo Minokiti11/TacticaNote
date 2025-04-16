@@ -12,8 +12,8 @@ class Video < ApplicationRecord
     def thumbnail
         if video.attached? && video.previewable?
             video_tmp = Video.last
-            video_tmp.content_type
-            video_tmp.video.previewable?
+            p video_tmp.content_type
+            p video_tmp.video.previewable?
             video.preview(resize_to_limit: [640, 360]).processed
         else
             return nil
