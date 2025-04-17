@@ -1060,32 +1060,68 @@
   </script>
   <% else %>
   <div class="empty-state">
-    <div class="empty-state-content">
+    <div class="empty-state-content" style="display: block;">
       <h2 class="empty-state-title" style="margin-bottom: 2rem;">あなたはどちらですか？</h2>
       
-      <div class="coach-section">
-        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="empty-state-icon">
-          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-          <circle cx="9" cy="7" r="4"/>
-          <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-        </svg>
-        <h2 class="empty-state-title">指導者としてチームを作成</h2>
-        <p class="empty-state-description">選手たちと試合の分析や戦術の共有を始めましょう。</p>
-        <%= link_to "チームを作成", new_group_path, class: "button button-primary", "data-turbo": false %>
-      </div>
+      <div class="row justify-content-center g-4">
+        <div class="col-6 col-sm-6 col-md-6 col-lg-6">
+          <div class="card h-100 shadow-sm" role="button" onclick="showCoachSection()">
+            <div class="card-body text-center p-4">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-3">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+              <h3 class="card-title h5">指導者</h3>
+              <p class="card-text text-muted">チームを作成して選手たちと分析を共有</p>
+            </div>
+          </div>
+        </div>
 
-      <div class="player-section" style="margin-top: 2rem;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="empty-state-icon">
-          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-          <circle cx="9" cy="7" r="4"/>
-        </svg>
-        <h2 class="empty-state-title">選手としてチームに参加</h2>
-        <p class="empty-state-description">チームメイトと試合の分析や戦術の共有を始めましょう。</p>
-        <p class="empty-state-description">チームコードをお持ちの場合は、コーチにご連絡ください。</p>
+        <div class="col-6 col-sm-6 col-md-6 col-lg-6">
+          <div class="card h-100 shadow-sm" role="button" onclick="showPlayerSection()">
+            <div class="card-body text-center p-4">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-3">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+              </svg>
+              <h3 class="card-title h5">選手</h3>
+              <p class="card-text text-muted">チームに参加して分析を共有</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+
+    <div id="coach-section" class="role-section" style="display: none;">
+      <h2 class="empty-state-title">指導者としてチームを作成</h2>
+      <p class="empty-state-description">選手たちと試合の分析や戦術の共有を始めましょう。</p>
+      <%= link_to "チームを作成", new_group_path, class: "button button-primary", "data-turbo": false %>
+      <p class="empty-state-description text-decoration-underline text-muted mt-3" onclick="showPlayerSection()">選手ですか？</p>
+    </div>
+
+    <div id="player-section" class="role-section" style="display: none;">
+      <h2 class="empty-state-title">選手としてチームに参加</h2>
+      <p class="empty-state-description">チームメイトと試合の分析や戦術の共有を始めましょう。</p>
+      <p class="empty-state-description">チームコードをお持ちの場合は、コーチにご連絡ください。</p>
+      <p class="empty-state-description text-decoration-underline text-muted" onclick="showCoachSection()">指導者ですか？</p>
+    </div>
   </div>
+
+  <script>
+    function showCoachSection() {
+      document.getElementById('coach-section').style.display = 'block';
+      document.getElementById('player-section').style.display = 'none';
+      document.querySelector('.empty-state-content').style.display = 'none';
+    }
+
+    function showPlayerSection() {
+      document.getElementById('player-section').style.display = 'block';
+      document.getElementById('coach-section').style.display = 'none';
+      document.querySelector('.empty-state-content').style.display = 'none';
+    }
+  </script>
 
   <style>
     .empty-state {
@@ -1099,8 +1135,9 @@
     }
 
     .empty-state-content {
-      max-width: 400px;
+      max-width: 800px;
       margin: 0 auto;
+      display: flex;
     }
 
     .empty-state-icon {
@@ -1118,6 +1155,46 @@
     .empty-state-description {
       color: var(--muted-foreground);
       margin-bottom: 1.5rem;
+    }
+
+    .role-selection {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .role-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      background: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .role-button:hover {
+      border-color: var(--primary);
+      background-color: var(--primary-light);
+    }
+
+    .role-button span {
+      margin-top: 0.5rem;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    .role-section {
+      text-align: center;
+    }
+
+    @media (max-width: 576px) {
+      .card-text.text-muted {
+        font-size: 0.875rem;
+      }
     }
   </style>
   <% end %>

@@ -11,7 +11,12 @@ class GroupsController < ApplicationController
   end
 
   def show
-    @group = Group.find(params[:id])
+    @group = Group.find_by(id: params[:id])
+    if @group.nil?
+      redirect_to root_path, alert: 'トップページにリダイレクトしました。'
+      return 
+    end
+
     @videos = @group.videos
     @feeds = @group.notes.order('created_at DESC').first(7)
     @recent_videos = @videos.where("created_at > ?", Time.now - 14.days)
