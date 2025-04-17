@@ -53,10 +53,11 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         <span>ホーム</span>
     <% end %>
-    
-    <%= link_to group_video_path(session[:current_group_id]), class: "tab-item #{'active' if controller_name == 'groups' && action_name == 'video'}", "data-turbo": true do %>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>
-        <span>動画</span>
+    <% if @group != nil && @group_id != nil %>
+        <%= link_to group_video_path(session[:current_group_id]), class: "tab-item #{'active' if controller_name == 'groups' && action_name == 'video'}", "data-turbo": true do %>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>
+            <span>動画</span>
+        <% end %>
     <% end %>
     
     <%= link_to my_page_path, class: "tab-item #{'active' if controller_name == 'users' && action_name == 'show'}" do %>

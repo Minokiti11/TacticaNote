@@ -1,12 +1,5 @@
 <% if current_user %>
-  <% if current_user.groups.length != 0 %>
-    <% if !session[:current_group_id] %>
-      <% group_id = current_user.groups[0].id %>
-    <% else %>
-      <% group_id = session[:current_group_id] %>
-    <% end %>
-    <% group = Group.find(group_id) %>
-  <% end %>
+  <% if @group != nil && @group_id != nil %>
   <style>
     /* 基本スタイル */
     :root {
@@ -609,32 +602,39 @@
         <!-- 最近の動画 -->
         <div class="section-header">
           <h3 class="section-title" style="font-size: 1rem;">最近の動画</h3>
-          <button class="button button-outline button-sm">すべて見る</button>
+          <% if @group != nil && @group_id != nil %>
+            <%= link_to group_video_path(@group_id), "data-turbo": false, class: "button button-outline button-sm" do %>
+              すべて見る
+            <% end %>
+          <% end %>
+          
         </div>
 
         <div class="video-container">
-          <% group.videos.order(created_at: :desc).first(5).each do |video| %>
-            <%= link_to video_path(video.id), "data-turbo": false, style: "color: black;" do %>
-              <div class="video-card-small">
-                <div class="video-thumbnail">
-                  <% s3 = Aws::S3::Resource.new(
-                          region: "ap-northeast-1",
-                          credentials: Aws::Credentials.new(
-                          Rails.application.credentials.dig(:aws, :access_key_id),
-                          Rails.application.credentials.dig(:aws, :secret_access_key)
-                          )
-                      )
-                  signer = Aws::S3::Presigner.new(client: s3.client)
-                  presigned_url = signer.presigned_url(:get_object, bucket: Rails.application.credentials.dig(:aws, :bucket), key: "output/thumbnail/#{video.video.filename.base}/#{video.video.filename.base}_thumbnail.0000000.jpg", expires_in: 60) %>
-                  <% if presigned_url.present? %>
-                    <img src="<%= presigned_url %>">
-                  <% else %>
-                    <img src="https://placehold.co/600x400">
-                  <% end %>
+          <% if @group != nil && @group_id != nil %>
+            <% @group.videos.order(created_at: :desc).first(5).each do |video| %>
+              <%= link_to video_path(video.id), "data-turbo": false, style: "color: black;" do %>
+                <div class="video-card-small">
+                  <div class="video-thumbnail">
+                    <% s3 = Aws::S3::Resource.new(
+                            region: "ap-northeast-1",
+                            credentials: Aws::Credentials.new(
+                            Rails.application.credentials.dig(:aws, :access_key_id),
+                            Rails.application.credentials.dig(:aws, :secret_access_key)
+                            )
+                        )
+                    signer = Aws::S3::Presigner.new(client: s3.client)
+                    presigned_url = signer.presigned_url(:get_object, bucket: Rails.application.credentials.dig(:aws, :bucket), key: "output/thumbnail/#{video.video.filename.base}/#{video.video.filename.base}_thumbnail.0000000.jpg", expires_in: 60) %>
+                    <% if presigned_url.present? %>
+                      <img src="<%= presigned_url %>">
+                    <% else %>
+                      <img src="https://placehold.co/600x400">
+                    <% end %>
+                  </div>
+                  <h4 class="video-title"><%= video.title %></h4>
+                  <p class="video-date"><%= video.created_at.strftime('%Y年%-m月%-d日') %></p>
                 </div>
-                <h4 class="video-title"><%= video.title %></h4>
-                <p class="video-date"><%= video.created_at.strftime('%Y年%-m月%-d日') %></p>
-              </div>
+              <% end %>
             <% end %>
           <% end %>
         </div>
@@ -757,11 +757,13 @@
             <button class="member-button">
               <span>自分</span>
             </button>
-            <% group.users.each do |user| %>
-              <% if user != current_user %>
-                <button class="member-button">
-                  <span><%= user.username %></span>
-                </button>
+            <% if @group != nil && @group_id != nil %>
+              <% @group.users.each do |user| %>
+                <% if user != current_user %>
+                  <button class="member-button">
+                    <span><%= user.username %></span>
+                  </button>
+                <% end %>
               <% end %>
             <% end %>
           </div>
@@ -769,29 +771,31 @@
 
         <!-- ノートカード -->
         <!--
-        <% group.notes.each do |note| %>
-          <div class="card note-card">
-            <div class="card-content">
-              <div class="note-header">
-                <div>
-                  <div class="note-author">
-                    <span class="note-author-name"><%= note.user.username %></span>
-                    <div class="note-shared">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-                      共有中
+        <% if @group != nil && @group_id != nil %>
+          <% @group.notes.each do |note| %>
+            <div class="card note-card">
+              <div class="card-content">
+                <div class="note-header">
+                  <div>
+                    <div class="note-author">
+                      <span class="note-author-name"><%= note.user.username %></span>
+                      <div class="note-shared">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                        共有中
+                      </div>
+                    </div>
+                    <h3 class="note-title"><%= note.title %></h3>
+                    <div class="note-meta">
+                      <span class="note-date">2024年3月7日</span>
+                      <span class="note-match">FCトウキョウ vs FCオオサカ</span>
                     </div>
                   </div>
-                  <h3 class="note-title"><%= note.title %></h3>
-                  <div class="note-meta">
-                    <span class="note-date">2024年3月7日</span>
-                    <span class="note-match">FCトウキョウ vs FCオオサカ</span>
-                  </div>
+                  <%# <div class="note-category">試合分析</div> %>
                 </div>
-                <%# <div class="note-category">試合分析</div> %>
+                <p class="note-content">前半は相手のプレスに苦しんだが、後半からボールポゼッションを高めることができた。サイドからの攻撃が効果的だった。次回は中央突破のバリエーションも増やしたい。</p>
               </div>
-              <p class="note-content">前半は相手のプレスに苦しんだが、後半からボールポゼッションを高めることができた。サイドからの攻撃が効果的だった。次回は中央突破のバリエーションも増やしたい。</p>
             </div>
-          </div>
+          <% end %>
         <% end %>
         -->
 
@@ -1054,6 +1058,69 @@
       }
     });
   </script>
+  <% else %>
+  <div class="empty-state">
+    <div class="empty-state-content">
+      <h2 class="empty-state-title" style="margin-bottom: 2rem;">あなたはどちらですか？</h2>
+      
+      <div class="coach-section">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="empty-state-icon">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        <h2 class="empty-state-title">指導者としてチームを作成</h2>
+        <p class="empty-state-description">選手たちと試合の分析や戦術の共有を始めましょう。</p>
+        <%= link_to "チームを作成", new_group_path, class: "button button-primary", "data-turbo": false %>
+      </div>
+
+      <div class="player-section" style="margin-top: 2rem;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="empty-state-icon">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+        </svg>
+        <h2 class="empty-state-title">選手としてチームに参加</h2>
+        <p class="empty-state-description">チームメイトと試合の分析や戦術の共有を始めましょう。</p>
+        <p class="empty-state-description">チームコードをお持ちの場合は、コーチにご連絡ください。</p>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+      min-height: 400px;
+    }
+
+    .empty-state-content {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .empty-state-icon {
+      color: var(--muted-foreground);
+      margin-bottom: 1rem;
+    }
+
+    .empty-state-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--foreground);
+    }
+
+    .empty-state-description {
+      color: var(--muted-foreground);
+      margin-bottom: 1.5rem;
+    }
+  </style>
+  <% end %>
 <% else %>
   <style>
     /* Reset and base styles */
