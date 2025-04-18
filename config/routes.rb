@@ -14,7 +14,7 @@ Rails.application.routes.draw do
     )
     UPPY_S3_MULTIPART_APP = Uppy::S3Multipart::App.new(bucket: bucket, options: {
       create_multipart_upload: {
-        storage_class: "INTELLIGENT_TIERING",
+        storage_class: "STANDARD",
       },
     })
     mount UPPY_S3_MULTIPART_APP => '/s3/multipart'

@@ -114,9 +114,8 @@ onPageLoad('videos#new', function() {
             try {
                 const checksum = await computeChecksumInChunks(file.data);
                 file.meta.checksum = checksum // 後で使えるように保存
-                console.log("checksum", checksum)
             } catch (err) {
-                console.error("ファイル読み込みに失敗しました:", err)
+                console.error("ファイルの読み込みに失敗しました:", err)
             }
         })
     
