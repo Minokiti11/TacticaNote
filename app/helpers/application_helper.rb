@@ -38,6 +38,13 @@ module ApplicationHelper
     def page_specific_meta_tags
         case "#{controller_name}##{action_name}"
         when 'groups#join'
+
+        end
+    end
+
+    def meta_tags
+        case "#{controller_name}##{action_name}"
+        when 'groups#join'
             {
                 title: @group.name,
                 description: "招待リンクが届きました！「#{@group.name}」に参加しよう",
@@ -47,13 +54,8 @@ module ApplicationHelper
                     type: 'website'
                 }
             }
-        # 他のコントローラー・アクションのケースを追加
         else
-            {}
+            default_meta_tags.merge(page_specific_meta_tags)
         end
-    end
-
-    def meta_tags
-        default_meta_tags.merge(page_specific_meta_tags)
     end
 end
