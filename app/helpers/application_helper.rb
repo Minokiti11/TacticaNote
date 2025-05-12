@@ -34,4 +34,30 @@ module ApplicationHelper
         markdown = Redcarpet::Markdown.new(renderer)
         markdown.render(text).html_safe
     end
+
+    def page_specific_meta_tags
+        case "#{controller_name}##{action_name}"
+        when 'groups#join'
+            {
+                site_name: 'TacticaNote',
+                title: @group.name,
+                description: "グループ「#{@group.name}」に参加しよう",
+                og: {
+                    title: @group.name,
+                    description: "招待リンクが届きました！グループ「#{@group.name}」に参加しよう",
+                    type: 'website',
+                    image: 'https://tactica-note.com/images/tacticanote-logo.png'
+                }
+            }
+        # 他のコントローラー・アクションのケースを追加
+        else
+            {}
+        end
+    end
+
+    def meta_tags
+        default_meta_tags.merge(
+            MetaTags.config.page_specific_meta_tags["#{controller_name}##{action_name}"]&.transform_values { |v| v.is_a?(Proc) ? v.call : v } || {}
+        )
+    end
 end
