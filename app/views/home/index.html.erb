@@ -770,7 +770,6 @@
         </div>
 
         <!-- ノートカード -->
-        <!--
         <% if @group != nil && @group_id != nil %>
           <% @group.notes.each do |note| %>
             <div class="card note-card">
@@ -785,66 +784,13 @@
                       </div>
                     </div>
                     <h3 class="note-title"><%= note.title %></h3>
-                    <div class="note-meta">
-                      <span class="note-date">2024年3月7日</span>
-                      <span class="note-match">FCトウキョウ vs FCオオサカ</span>
-                    </div>
                   </div>
-                  <%# <div class="note-category">試合分析</div> %>
                 </div>
-                <p class="note-content">前半は相手のプレスに苦しんだが、後半からボールポゼッションを高めることができた。サイドからの攻撃が効果的だった。次回は中央突破のバリエーションも増やしたい。</p>
               </div>
             </div>
           <% end %>
         <% end %>
-        -->
-
-        <%# <div class="card note-card">
-          <div class="card-content">
-            <div class="note-header">
-              <div>
-                <div class="note-author">
-                  <span class="note-author-name">鈴木コーチ</span>
-                  <div class="note-shared">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-                    共有中
-                  </div>
-                </div>
-                <h3 class="note-title">FCトウキョウ vs FCオオサカ：戦術分析</h3>
-                <div class="note-meta">
-                  <span class="note-date">2024年3月8日</span>
-                  <span class="note-match">FCトウキョウ vs FCオオサカ</span>
-                </div>
-              </div>
-              <div class="note-category">戦術</div>
-            </div>
-            <p class="note-content">相手の4-3-3フォーメーションに対して、我々の3-5-2がどう機能したかを分析。サイドバックの高い位置取りが相手のウイングを抑制するのに効果的だった。</p>
-          </div>
-        </div>
-
-        <div class="card note-card">
-          <div class="card-content">
-            <div class="note-header">
-              <div>
-                <div class="note-author">
-                  <span class="note-author-name">高橋監督</span>
-                  <div class="note-shared">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-                    共有中
-                  </div>
-                </div>
-                <h3 class="note-title">FCトウキョウ vs FCナゴヤ：守備の課題</h3>
-                <div class="note-meta">
-                  <span class="note-date">2024年2月29日</span>
-                  <span class="note-match">FCトウキョウ vs FCナゴヤ</span>
-                </div>
-              </div>
-              <div class="note-category">試合分析</div>
-            </div>
-            <p class="note-content">セットプレーからの失点リスクが高かった。コーナーキックの守備体形を見直す必要がある。特に第2波の攻撃に対する対応が不十分。</p>
-          </div>
-        </div>
-      </div> %>
+      </div>
 
       <!-- 試合詳細ビュー (初期状態では非表示) -->
       <%# <div class="tab-content" id="match-detail-content" style="display: none;">
