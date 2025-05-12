@@ -34,28 +34,4 @@ module ApplicationHelper
         markdown = Redcarpet::Markdown.new(renderer)
         markdown.render(text).html_safe
     end
-
-    def page_specific_meta_tags
-        case "#{controller_name}##{action_name}"
-        when 'groups#join'
-
-        end
-    end
-
-    def meta_tags
-        case "#{controller_name}##{action_name}"
-        when 'groups#join'
-            {
-                title: @group.name,
-                description: "招待リンクが届きました！「#{@group.name}」に参加しよう",
-                og: {
-                    title: @group.name,
-                    description: "招待リンクが届きました！「#{@group.name}」に参加しよう",
-                    type: 'website'
-                }
-            }
-        else
-            default_meta_tags
-        end
-    end
 end
