@@ -55,7 +55,7 @@ module ApplicationHelper
                 }
             }
         else
-            default_meta_tags.merge(page_specific_meta_tags)
+            default_meta_tags
         end
     end
 end
