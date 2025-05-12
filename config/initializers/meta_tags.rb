@@ -22,19 +22,4 @@ MetaTags.configure do |config|
 
   # メタタグを自己終了タグとして出力
   config.open_meta_tags = true
-
-  # コントローラー・アクション別のメタタグ設定
-  config.page_specific_meta_tags = {
-    'groups#join' => {
-      site_name: 'TacticaNote',
-      title: -> { @group.name },
-      description: -> { "招待リンクが届きました！グループ「#{@group.name}」に参加しよう" },
-      og: {
-        site_name: 'TacticaNote',
-        title: -> { @group.name },
-        description: -> { "招待リンクが届きました！グループ「#{@group.name}」に参加しよう" },
-        type: 'website'
-      }
-    }
-  }
 end

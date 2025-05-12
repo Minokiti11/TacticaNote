@@ -39,14 +39,12 @@ module ApplicationHelper
         case "#{controller_name}##{action_name}"
         when 'groups#join'
             {
-                site_name: 'TacticaNote',
                 title: @group.name,
-                description: "グループ「#{@group.name}」に参加しよう",
+                description: "招待リンクが届きました！「#{@group.name}」に参加しよう",
                 og: {
                     title: @group.name,
-                    description: "招待リンクが届きました！グループ「#{@group.name}」に参加しよう",
-                    type: 'website',
-                    image: 'https://tactica-note.com/images/tacticanote-logo.png'
+                    description: "招待リンクが届きました！「#{@group.name}」に参加しよう",
+                    type: 'website'
                 }
             }
         # 他のコントローラー・アクションのケースを追加
@@ -56,8 +54,6 @@ module ApplicationHelper
     end
 
     def meta_tags
-        default_meta_tags.merge(
-            MetaTags.config.page_specific_meta_tags["#{controller_name}##{action_name}"]&.transform_values { |v| v.is_a?(Proc) ? v.call : v } || {}
-        )
+        default_meta_tags.merge(page_specific_meta_tags)
     end
 end
