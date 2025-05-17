@@ -6,10 +6,9 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="navbar-nav ml-auto">
-          <% p :current_user, current_user %>
+        <ul class="navbar-nav ms-auto">
           <% if current_user %>
-            <li> <%= link_to "グループを作成", new_group_path, class: "nav-link", "data-turbo": false %></li>
+            <li class="nav-item"> <%= link_to "グループを作成", new_group_path, class: "nav-link", "data-turbo": false %></li>
             <% if current_user.groups.length >= 2 %>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -22,13 +21,13 @@
                     <%= group.name %>
                   <% end %>
                 </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                   <% current_user.groups.each do |group| %>
                     <a class="dropdown-item" href="/groups/<%= group.id %>" data-turbo="false"><%= group.name %></a>
                   <% end %>
                 </div>
-                <li> <%= link_to "マイページ", my_page_path, class: "nav-link", style: "margin-right: 10px;", "data-turbo": false %></li>
               </li>
+              <li class="nav-item"> <%= link_to "マイページ", my_page_path, class: "nav-link", style: "margin-right: 10px;", "data-turbo": false %></li>
             <% else %>
               <li class="nav-item">
                 <% if current_user.groups.any? %>
