@@ -168,8 +168,9 @@ class GroupsController < ApplicationController
       @group_invite_link = "localhost:3000/groups/#{params[:id]}/join/#{@group.invite_token}"
     end
     
-    flash[:notice] = "招待リンクを発行しました: #{@group_invite_link}"
-    redirect_to group_path(@group)
+    respond_to do |format|
+      format.json { render json: { invite_link: @group_invite_link } }
+    end
   end
 
   def load_more_date_groups
