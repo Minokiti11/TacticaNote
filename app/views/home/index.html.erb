@@ -22,10 +22,13 @@
                 </div>
               </div>
 
-              <% if @group.owner_id != current_user.id %>
-                <%= link_to group_path(@group), data: { turbo_method: :delete, turbo_confirm: "本当に退会しますか？" }, class: "button", style: "width: 100%; background-color: var(--destructive); color: var(--destructive-foreground); border: none;" do %>
-                  <i class="fas fa-sign-out-alt me-2"></i>グループから退会
-                <% end %>
+              <%= link_to group_path(@group), data: { turbo_method: :delete, turbo_confirm: "本当に退会しますか？" }, class: "button", style: "width: 100%; background-color: var(--destructive); color: var(--destructive-foreground); border: none;" do %>
+                <i class="fas fa-sign-out-alt me-2"></i>グループから退会
+              <% end %>
+
+              <% if @group.owner_id == current_user.id %>
+                <%= link_to 'Edit', edit_group_path(@group), class: "btn btn-success", style: "width: 100%; margin-top: 30px;"%>
+                <%= button_to 'このグループを削除', group_all_destroy_path(@group), method: :delete, class: "btn btn-danger", style: "width: 100%; margin-top: 10px; background-color: var(--destructive); color: var(--destructive-foreground); border: none;"%>
               <% end %>
             </div>
           </div>
