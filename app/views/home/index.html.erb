@@ -1,1148 +1,1186 @@
 <% if current_user %>
   <% if @group != nil && @group_id != nil %>
-  <style>
-    /* 基本スタイル */
-    :root {
-      --background: #ffffff;
-      --foreground: #0f172a;
-      --muted: #f1f5f9;
-      --muted-foreground: #64748b;
-      --border: #e2e8f0;
-      --primary: #0ea5e9;
-      --primary-foreground: #ffffff;
-      --secondary: #f1f5f9;
-      --secondary-foreground: #0f172a;
-      --accent: #f1f5f9;
-      --accent-foreground: #0f172a;
-      --destructive: #ef4444;
-      --destructive-foreground: #ffffff;
-      --radius: 0.5rem;
-      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    }
-
-    .app-container {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      max-width: 100%;
-      margin: 0 auto;
-      background-color: #ffffff;
-    }
-
-    /* アイコンボタン */
-    .icon-button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 2.5rem;
-      height: 2.5rem;
-      border-radius: 50%;
-      background-color: transparent;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    .icon-button:hover {
-      background-color: var(--muted);
-    }
-
-    .icon-button svg {
-      width: 1.25rem;
-      height: 1.25rem;
-    }
-
-    /* タブ */
-    .tabs {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      border-bottom: 1px solid var(--border);
-      background-color: var(--background);
-    }
-
-    .tabs-list {
-      display: flex;
-      padding: 0 1rem;
-      padding-top: 0.5rem;
-    }
-
-    .tab {
-      padding: 0.5rem 1rem;
-      border: none;
-      background: none;
-      font-size: 1rem;
-      cursor: pointer;
-      position: relative;
-      color: var(--muted-foreground);
-    }
-
-    .tab.active {
-      color: var(--foreground);
-      font-weight: 500;
-    }
-
-    .tab.active::after {
-      content: '';
-      position: absolute;
-      bottom: -1px;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background-color: var(--primary);
-    }
-
-    /* メインコンテンツ */
-    .main-content {
-      flex: 1;
-      overflow: auto;
-      padding: 1rem;
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    /* セクションヘッダー */
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1rem;
-    }
-
-    .section-title {
-      font-size: 1.125rem;
-      font-weight: 600;
-    }
-
-    /* カード */
-    .card {
-      background-color: var(--background);
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      overflow: hidden;
-      margin-bottom: 1rem;
-    }
-
-    .card-content {
-      padding: 1rem;
-    }
-
-    .card-footer {
-      padding: 1rem;
-      border-top: 1px solid var(--border);
-    }
-
-    /* 試合カード */
-    .match-card {
-      margin-bottom: 1rem;
-    }
-
-    .match-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 0.5rem;
-    }
-
-    .match-badge {
-      font-size: 0.75rem;
-      padding: 0.25rem 0.5rem;
-      border-radius: 9999px;
-      background-color: var(--secondary);
-      color: var(--secondary-foreground);
-      border: 1px solid var(--border);
-    }
-
-    .match-date {
-      font-size: 0.875rem;
-      color: var(--muted-foreground);
-    }
-
-    .match-title {
-      font-size: 1.125rem;
-      font-weight: 600;
-      margin-bottom: 0.75rem;
-    }
-
-    .match-score {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1rem;
-    }
-
-    .team {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .team-logo {
-      width: 2.5rem;
-      height: 2.5rem;
-      border-radius: 50%;
-      background-color: var(--muted);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-    }
-
-    .team-score {
-      font-size: 1.25rem;
-      font-weight: 700;
-    }
-
-    .match-vs {
-      font-size: 0.875rem;
-      color: var(--muted-foreground);
-    }
-
-    .match-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .match-venue {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      font-size: 0.875rem;
-      color: var(--muted-foreground);
-    }
-
-    .match-actions {
-      display: flex;
-      gap: 0.5rem;
-    }
-
-    /* 動画カード */
-    .video-container {
-      display: flex;
-      gap: 1rem;
-      overflow-x: auto;
-      padding-bottom: 0.5rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .video-card-small {
-      min-width: 240px;
-      max-width: 240px;
-    }
-
-    .video-thumbnail {
-      position: relative;
-      aspect-ratio: 16 / 9;
-      border-radius: var(--radius);
-      overflow: hidden;
-      background-color: var(--muted);
-    }
-
-    .video-thumbnail img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .video-duration {
-      position: absolute;
-      bottom: 0.5rem;
-      right: 0.5rem;
-      background-color: rgba(0, 0, 0, 0.7);
-      color: white;
-      font-size: 0.75rem;
-      padding: 0.25rem 0.5rem;
-      border-radius: 0.25rem;
-    }
-
-    .video-title {
-      margin-top: 0.5rem;
-      font-size: 0.875rem;
-      font-weight: 500;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .video-date {
-      font-size: 0.75rem;
-      color: var(--muted-foreground);
-    }
-
-    /* ノートカード */
-    .note-card {
-      margin-bottom: 1rem;
-    }
-
-    .note-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-    }
-
-    .note-author {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .note-author-name {
-      font-size: 0.875rem;
-      font-weight: 500;
-    }
-
-    .note-shared {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      font-size: 0.75rem;
-      padding: 0.125rem 0.5rem;
-      border-radius: 9999px;
-      border: 1px solid var(--border);
-      height: 1.25rem;
-    }
-
-    .note-shared svg {
-      width: 0.75rem;
-      height: 0.75rem;
-    }
-
-    .note-title {
-      font-weight: 600;
-    }
-
-    .note-meta {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-top: 0.25rem;
-    }
-
-    .note-date {
-      font-size: 0.875rem;
-      color: var(--muted-foreground);
-    }
-
-    .note-match {
-      font-size: 0.75rem;
-      padding: 0.125rem 0.5rem;
-      border-radius: 0.25rem;
-      background-color: var(--secondary);
-    }
-
-    .note-category {
-      font-size: 0.75rem;
-      padding: 0.25rem 0.5rem;
-      border-radius: 0.25rem;
-      background-color: rgba(14, 165, 233, 0.1);
-    }
-
-    .note-content {
-      margin-top: 0.5rem;
-      font-size: 0.875rem;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    /* アコーディオン */
-    .accordion {
-      border-top: 1px solid var(--border);
-      margin-top: 1rem;
-    }
-
-    .accordion-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem 0;
-      font-size: 1.125rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .accordion-content {
-      display: none;
-      padding-bottom: 1rem;
-    }
-
-    .accordion-content.open {
-      display: block;
-    }
-
-    .accordion-icon {
-      transition: transform 0.2s;
-    }
-
-    .accordion.open .accordion-icon {
-      transform: rotate(180deg);
-    }
-
-    /* チームメンバーリスト */
-    .member-list {
-      display: flex;
-      gap: 0.5rem;
-      overflow-x: auto;
-      padding-bottom: 0.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .member-button {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      padding: 0.25rem 0.75rem;
-      border-radius: 9999px;
-      border: 1px solid var(--border);
-      background-color: var(--background);
-      font-size: 0.875rem;
-      white-space: nowrap;
-      cursor: pointer;
-    }
-
-    .member-button.active {
-      background-color: var(--primary);
-      color: var(--primary-foreground);
-      border-color: var(--primary);
-    }
-
-    /* フィルターバッジ */
-    .filter-badge {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.75rem;
-      background-color: rgba(241, 245, 249, 0.5);
-      border-radius: var(--radius);
-      margin-bottom: 1rem;
-    }
-
-    .filter-badge-content {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .filter-badge-clear {
-      background: none;
-      border: none;
-      font-size: 0.875rem;
-      color: var(--foreground);
-      cursor: pointer;
-    }
-
-    /* ボタン */
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: var(--radius);
-      font-size: 0.875rem;
-      font-weight: 500;
-      padding: 0.5rem 1rem;
-      cursor: pointer;
-      transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-    }
-
-    .button-primary {
-      background-color: var(--primary);
-      color: var(--primary-foreground);
-      border: 1px solid var(--primary);
-    }
-
-    .button-outline {
-      background-color: transparent;
-      color: var(--foreground);
-      border: 1px solid var(--border);
-    }
-
-    .button-sm {
-      padding: 0.25rem 0.75rem;
-      font-size: 0.75rem;
-    }
-
-    /* フローティングアクションボタン */
-    .fab {
-      position: fixed;
-      bottom: 5rem;
-      right: 1rem;
-      width: 3.5rem;
-      height: 3.5rem;
-      border-radius: 50%;
-      background-color: var(--primary);
-      color: var(--primary-foreground);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      border: none;
-      cursor: pointer;
-      z-index: 10;
-    }
-
-    .fab svg {
-      width: 1.5rem;
-      height: 1.5rem;
-    }
-
-    /* ユーティリティ */
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border-width: 0;
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 2rem 0;
-      color: var(--muted-foreground);
-    }
-
-    /* 試合詳細ビュー */
-    .match-detail-header {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .match-detail-title {
-      font-size: 1.125rem;
-      font-weight: 600;
-    }
-
-    .match-preview {
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid var(--border);
-    }
-
-    .match-preview-header {
-      font-size: 0.875rem;
-      font-weight: 500;
-      margin-bottom: 0.5rem;
-      margin-left: 0.5rem;
-    }
-
-    .match-preview-content {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .match-preview-thumbnail {
-      width: 6rem;
-      height: 3.5rem;
-      border-radius: 0.25rem;
-      overflow: hidden;
-      background-color: var(--muted);
-    }
-
-    .match-preview-thumbnail img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .match-preview-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .match-preview-title {
-      font-size: 0.875rem;
-      font-weight: 500;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .match-preview-duration {
-      font-size: 0.75rem;
-      color: var(--muted-foreground);
-    }
-  </style>
-
-  <div class="app-container">
-    <div class="tabs">
-      <div class="tabs-list">
-        <button class="tab active" data-tab="matches">試合</button>
-        <button class="tab" data-tab="notes">ノート</button>
+    <!-- 設定モーダル -->
+    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: var(--radius);">
+          <div class="modal-header">
+            <h5 class="modal-title" id="settingsModalLabel">設定</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="d-grid gap-3">
+              <button type="button" class="button button-outline" style="width: 100%;" onclick="generateInviteLink('<%= @group.id %>')">
+                <i class="fas fa-link me-2"></i>招待リンクを発行
+              </button>
+              <div id="inviteLinkContainer" class="mt-3" style="display: none;">
+                <div class="input-group">
+                  <input type="text" id="inviteLink" class="form-control" readonly>
+                  <button class="btn btn-outline-primary" type="button" onclick="copyInviteLink()">
+                    <i class="fas fa-copy"></i> コピー
+                  </button>
+                </div>
+              </div>
+
+              <% if @group.owner_id != current_user.id %>
+                <%= link_to group_path(@group), data: { turbo_method: :delete, turbo_confirm: "本当に退会しますか？" }, class: "button", style: "width: 100%; background-color: var(--destructive); color: var(--destructive-foreground); border: none;" do %>
+                  <i class="fas fa-sign-out-alt me-2"></i>グループから退会
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+    <style>
+      /* 基本スタイル */
+      :root {
+        --background: #ffffff;
+        --foreground: #0f172a;
+        --muted: #f1f5f9;
+        --muted-foreground: #64748b;
+        --border: #e2e8f0;
+        --primary: #0ea5e9;
+        --primary-foreground: #ffffff;
+        --secondary: #f1f5f9;
+        --secondary-foreground: #0f172a;
+        --accent: #f1f5f9;
+        --accent-foreground: #0f172a;
+        --destructive: #ef4444;
+        --destructive-foreground: #ffffff;
+        --radius: 0.5rem;
+        --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      }
 
-    <!-- メインコンテンツ -->
-    <main class="main-content">
-      <!-- 試合タブ -->
-      <div class="tab-content active" id="matches-content">
-        <div class="section-header">
-          <h2 class="section-title">試合一覧</h2>
-          <%# <select class="button button-outline button-sm">
-            <option value="all">すべて</option>
-            <option value="2024">2024年</option>
-            <option value="2023">2023年</option>
-          </select> %>
+      .app-container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        max-width: 100%;
+        margin: 0 auto;
+        background-color: #ffffff;
+      }
+
+      /* アイコンボタン */
+      .icon-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .icon-button:hover {
+        background-color: var(--muted);
+      }
+
+      .icon-button svg {
+        width: 1.25rem;
+        height: 1.25rem;
+      }
+
+      /* タブ */
+      .tabs {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        border-bottom: 1px solid var(--border);
+        background-color: var(--background);
+      }
+
+      .tabs-list {
+        display: flex;
+        padding: 0 1rem;
+        padding-top: 0.5rem;
+      }
+
+      .tab {
+        padding: 0.5rem 1rem;
+        border: none;
+        background: none;
+        font-size: 1rem;
+        cursor: pointer;
+        position: relative;
+        color: var(--muted-foreground);
+      }
+
+      .tab.active {
+        color: var(--foreground);
+        font-weight: 500;
+      }
+
+      .tab.active::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background-color: var(--primary);
+      }
+
+      /* メインコンテンツ */
+      .main-content {
+        flex: 1;
+        overflow: auto;
+        padding: 1rem;
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      /* セクションヘッダー */
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+      }
+
+      .section-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+      }
+
+      /* カード */
+      .card {
+        background-color: var(--background);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        overflow: hidden;
+        margin-bottom: 1rem;
+      }
+
+      .card-content {
+        padding: 1rem;
+      }
+
+      .card-footer {
+        padding: 1rem;
+        border-top: 1px solid var(--border);
+      }
+
+      /* 試合カード */
+      .match-card {
+        margin-bottom: 1rem;
+      }
+
+      .match-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+      }
+
+      .match-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 9999px;
+        background-color: var(--secondary);
+        color: var(--secondary-foreground);
+        border: 1px solid var(--border);
+      }
+
+      .match-date {
+        font-size: 0.875rem;
+        color: var(--muted-foreground);
+      }
+
+      .match-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+      }
+
+      .match-score {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+      }
+
+      .team {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .team-logo {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        background-color: var(--muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+      }
+
+      .team-score {
+        font-size: 1.25rem;
+        font-weight: 700;
+      }
+
+      .match-vs {
+        font-size: 0.875rem;
+        color: var(--muted-foreground);
+      }
+
+      .match-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .match-venue {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.875rem;
+        color: var(--muted-foreground);
+      }
+
+      .match-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      /* 動画カード */
+      .video-container {
+        display: flex;
+        gap: 1rem;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .video-card-small {
+        min-width: 240px;
+        max-width: 240px;
+      }
+
+      .video-thumbnail {
+        position: relative;
+        aspect-ratio: 16 / 9;
+        border-radius: var(--radius);
+        overflow: hidden;
+        background-color: var(--muted);
+      }
+
+      .video-thumbnail img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .video-duration {
+        position: absolute;
+        bottom: 0.5rem;
+        right: 0.5rem;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+      }
+
+      .video-title {
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .video-date {
+        font-size: 0.75rem;
+        color: var(--muted-foreground);
+      }
+
+      /* ノートカード */
+      .note-card {
+        margin-bottom: 1rem;
+      }
+
+      .note-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+
+      .note-author {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .note-author-name {
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+
+      .note-shared {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.75rem;
+        padding: 0.125rem 0.5rem;
+        border-radius: 9999px;
+        border: 1px solid var(--border);
+        height: 1.25rem;
+      }
+
+      .note-shared svg {
+        width: 0.75rem;
+        height: 0.75rem;
+      }
+
+      .note-title {
+        font-weight: 600;
+      }
+
+      .note-meta {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 0.25rem;
+      }
+
+      .note-date {
+        font-size: 0.875rem;
+        color: var(--muted-foreground);
+      }
+
+      .note-match {
+        font-size: 0.75rem;
+        padding: 0.125rem 0.5rem;
+        border-radius: 0.25rem;
+        background-color: var(--secondary);
+      }
+
+      .note-category {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        background-color: rgba(14, 165, 233, 0.1);
+      }
+
+      .note-content {
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      /* アコーディオン */
+      .accordion {
+        border-top: 1px solid var(--border);
+        margin-top: 1rem;
+      }
+
+      .accordion-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 0;
+        font-size: 1.125rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .accordion-content {
+        display: none;
+        padding-bottom: 1rem;
+      }
+
+      .accordion-content.open {
+        display: block;
+      }
+
+      .accordion-icon {
+        transition: transform 0.2s;
+      }
+
+      .accordion.open .accordion-icon {
+        transform: rotate(180deg);
+      }
+
+      /* チームメンバーリスト */
+      .member-list {
+        display: flex;
+        gap: 0.5rem;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .member-button {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        border: 1px solid var(--border);
+        background-color: var(--background);
+        font-size: 0.875rem;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+
+      .member-button.active {
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+        border-color: var(--primary);
+      }
+
+      /* フィルターバッジ */
+      .filter-badge {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem;
+        background-color: rgba(241, 245, 249, 0.5);
+        border-radius: var(--radius);
+        margin-bottom: 1rem;
+      }
+
+      .filter-badge-content {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .filter-badge-clear {
+        background: none;
+        border: none;
+        font-size: 0.875rem;
+        color: var(--foreground);
+        cursor: pointer;
+      }
+
+      /* ボタン */
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius);
+        font-size: 0.875rem;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+      }
+
+      .button-primary {
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+        border: 1px solid var(--primary);
+      }
+
+      .button-outline {
+        background-color: transparent;
+        color: var(--foreground);
+        border: 1px solid var(--border);
+      }
+
+      .button-sm {
+        padding: 0.25rem 0.75rem;
+        font-size: 0.75rem;
+      }
+
+      /* フローティングアクションボタン */
+      .fab {
+        position: fixed;
+        bottom: 5rem;
+        right: 1rem;
+        width: 3.5rem;
+        height: 3.5rem;
+        border-radius: 50%;
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border: none;
+        cursor: pointer;
+        z-index: 10;
+      }
+
+      .fab svg {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+
+      /* ユーティリティ */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 2rem 0;
+        color: var(--muted-foreground);
+      }
+
+      /* 試合詳細ビュー */
+      .match-detail-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .match-detail-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+      }
+
+      .match-preview {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border);
+      }
+
+      .match-preview-header {
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        margin-left: 0.5rem;
+      }
+
+      .match-preview-content {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .match-preview-thumbnail {
+        width: 6rem;
+        height: 3.5rem;
+        border-radius: 0.25rem;
+        overflow: hidden;
+        background-color: var(--muted);
+      }
+
+      .match-preview-thumbnail img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .match-preview-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .match-preview-title {
+        font-size: 0.875rem;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .match-preview-duration {
+        font-size: 0.75rem;
+        color: var(--muted-foreground);
+      }
+    </style>
+
+    <div class="app-container">
+      <div class="tabs">
+        <div class="tabs-list" style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="display: flex;">
+            <button class="tab active" data-tab="matches">試合</button>
+            <button class="tab" data-tab="notes">ノート</button>
+          </div>
+          <!-- 設定アイコンボタン -->
+          <div class="icon-button" data-bs-toggle="modal" data-bs-target="#settingsModal">
+            <i class="fas fa-cog"></i>
+          </div>
         </div>
+      </div>
 
-        <!-- 最近の動画 -->
-        <div class="section-header">
-          <h3 class="section-title" style="font-size: 1rem;">最近の動画</h3>
-          <% if @group != nil && @group_id != nil %>
-            <%= link_to group_video_path(@group_id), "data-turbo": false, class: "button button-outline button-sm" do %>
-              すべて見る
-            <% end %>
-          <% end %>
-          
-        </div>
+      <!-- メインコンテンツ -->
+      <main class="main-content">
+        <!-- 試合タブ -->
+        <div class="tab-content active" id="matches-content">
+          <div class="section-header">
+            <h2 class="section-title">試合一覧</h2>
+            <%# <select class="button button-outline button-sm">
+              <option value="all">すべて</option>
+              <option value="2024">2024年</option>
+              <option value="2023">2023年</option>
+            </select> %>
+          </div>
 
-        <div class="video-container">
-          <% if @group != nil && @group_id != nil %>
-            <% @group.videos.order(created_at: :desc).first(5).each do |video| %>
-              <%= link_to video_path(video.id), "data-turbo": false, style: "color: black;" do %>
-                <div class="video-card-small">
-                  <div class="video-thumbnail">
-                    <% s3 = Aws::S3::Resource.new(
-                            region: "ap-northeast-1",
-                            credentials: Aws::Credentials.new(
-                            Rails.application.credentials.dig(:aws, :access_key_id),
-                            Rails.application.credentials.dig(:aws, :secret_access_key)
-                            )
-                        )
-                    signer = Aws::S3::Presigner.new(client: s3.client)
-                    presigned_url = signer.presigned_url(:get_object, bucket: Rails.application.credentials.dig(:aws, :bucket), key: "output/thumbnail/#{video.video.filename.base}/#{video.video.filename.base}_thumbnail.0000000.jpg", expires_in: 60) %>
-                    <% if presigned_url.present? %>
-                      <img src="<%= presigned_url %>">
-                    <% else %>
-                      <img src="https://placehold.co/600x400">
-                    <% end %>
-                  </div>
-                  <h4 class="video-title"><%= video.title %></h4>
-                  <p class="video-date"><%= video.created_at.strftime('%Y年%-m月%-d日') %></p>
-                </div>
+          <!-- 最近の動画 -->
+          <div class="section-header">
+            <h3 class="section-title" style="font-size: 1rem;">最近の動画</h3>
+            <% if @group != nil && @group_id != nil %>
+              <%= link_to group_video_path(@group_id), "data-turbo": false, class: "button button-outline button-sm" do %>
+                すべて見る
               <% end %>
             <% end %>
-          <% end %>
-        </div>
-
-        <!-- 試合カード -->
-        <%# <div class="card match-card">
-          <div class="card-content">
-            <h3 class="match-title">FCトウキョウ vs FCオオサカ</h3>
-            <div class="match-score">
-              <div class="team">
-                <div class="team-logo">東京</div>
-                <div class="team-score">2</div>
-              </div>
-              <div class="match-vs">vs</div>
-              <div class="team">
-                <div class="team-score">1</div>
-                <div class="team-logo">大阪</div>
-              </div>
-            </div>
-            <div class="match-footer">
-              <div class="match-actions">
-                <button class="button button-outline button-sm">ノート (2)</button>
-                <button class="button button-primary button-sm">詳細</button>
-              </div>
-            </div>
+            
           </div>
-          <div class="match-preview">
-            <div class="match-preview-header">試合の動画 (2)</div>
-            <div class="match-preview-content">
-              <div class="match-preview-thumbnail">
-                <img src="https://via.placeholder.com/320x180" alt="FCトウキョウ vs FCオオサカ ハイライト">
-              </div>
-              <div class="match-preview-info">
-                <h4 class="match-preview-title">FCトウキョウ vs FCオオサカ ハイライト</h4>
-                <p class="match-preview-duration">15:24</p>
-              </div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-            </div>
-          </div>
-        </div>
 
-        <div class="card match-card">
-          <div class="card-content">
-            <h3 class="match-title">FCトウキョウ vs FCナゴヤ</h3>
-            <div class="match-score">
-              <div class="team">
-                <div class="team-logo">東京</div>
-                <div class="team-score">0</div>
-              </div>
-              <div class="match-vs">vs</div>
-              <div class="team">
-                <div class="team-score">0</div>
-                <div class="team-logo">名古屋</div>
-              </div>
-            </div>
-            <div class="match-footer">
-              <div class="match-actions">
-                <button class="button button-outline button-sm">ノート (1)</button>
-                <button class="button button-primary button-sm">詳細</button>
-              </div>
-            </div>
-          </div>
-          <div class="match-preview">
-            <div class="match-preview-header">試合の動画 (1)</div>
-            <div class="match-preview-content">
-              <div class="match-preview-thumbnail">
-                <img src="https://via.placeholder.com/320x180" alt="FCトウキョウ vs FCナゴヤ ハイライト">
-              </div>
-              <div class="match-preview-info">
-                <h4 class="match-preview-title">FCトウキョウ vs FCナゴヤ ハイライト</h4>
-                <p class="match-preview-duration">18:45</p>
-              </div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-            </div>
-          </div>
-        </div>
-
-        <div class="card match-card">
-          <div class="card-content">
-            <h3 class="match-title">FCヨコハマ vs FCトウキョウ</h3>
-            <div class="match-score">
-              <div class="team">
-                <div class="team-logo">横浜</div>
-                <div class="team-score">1</div>
-              </div>
-              <div class="match-vs">vs</div>
-              <div class="team">
-                <div class="team-score">3</div>
-                <div class="team-logo">東京</div>
-              </div>
-            </div>
-            <div class="match-footer">
-              <div class="match-actions">
-                <button class="button button-outline button-sm">ノート (2)</button>
-                <button class="button button-primary button-sm">詳細</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> %>
-
-      <!-- ノートタブ -->
-      <div class="tab-content" id="notes-content">
-        <div class="section-header">
-          <h2 class="section-title">ノート一覧</h2>
-          <button class="button button-outline button-sm">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-            フィルター
-          </button>
-        </div>
-
-        <!-- メンバーリスト -->
-        <div class="member-list-container">
-          <h3 class="section-title" style="font-size: 0.875rem; margin-bottom: 0.5rem;">チームメンバー</h3>
-          <div class="member-list">
-            <button class="member-button active">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              <span>全員</span>
-            </button>
-            <button class="member-button">
-              <span>自分</span>
-            </button>
+          <div class="video-container">
             <% if @group != nil && @group_id != nil %>
-              <% @group.users.each do |user| %>
-                <% if user != current_user %>
-                  <button class="member-button">
-                    <span><%= user.username %></span>
-                  </button>
+              <% @group.videos.order(created_at: :desc).first(5).each do |video| %>
+                <%= link_to video_path(video.id), "data-turbo": false, style: "color: black;" do %>
+                  <div class="video-card-small">
+                    <div class="video-thumbnail">
+                      <% s3 = Aws::S3::Resource.new(
+                              region: "ap-northeast-1",
+                              credentials: Aws::Credentials.new(
+                              Rails.application.credentials.dig(:aws, :access_key_id),
+                              Rails.application.credentials.dig(:aws, :secret_access_key)
+                              )
+                          )
+                      signer = Aws::S3::Presigner.new(client: s3.client)
+                      presigned_url = signer.presigned_url(:get_object, bucket: Rails.application.credentials.dig(:aws, :bucket), key: "output/thumbnail/#{video.video.filename.base}/#{video.video.filename.base}_thumbnail.0000000.jpg", expires_in: 60) %>
+                      <% if presigned_url.present? %>
+                        <img src="<%= presigned_url %>">
+                      <% else %>
+                        <img src="https://placehold.co/600x400">
+                      <% end %>
+                    </div>
+                    <h4 class="video-title"><%= video.title %></h4>
+                    <p class="video-date"><%= video.created_at.strftime('%Y年%-m月%-d日') %></p>
+                  </div>
                 <% end %>
               <% end %>
             <% end %>
           </div>
-        </div>
 
-        <!-- ノートカード -->
-        <% if @group != nil && @group_id != nil %>
-          <% @group.notes.each do |note| %>
-            <div class="card note-card">
-              <div class="card-content">
-                <div class="note-header">
-                  <div>
-                    <div class="note-author">
-                      <span class="note-author-name"><%= note.user.username %></span>
-                      <div class="note-shared">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-                        共有中
-                      </div>
-                    </div>
-                    <h3 class="note-title"><%= note.title %></h3>
-                  </div>
+          <!-- 試合カード -->
+          <%# <div class="card match-card">
+            <div class="card-content">
+              <h3 class="match-title">FCトウキョウ vs FCオオサカ</h3>
+              <div class="match-score">
+                <div class="team">
+                  <div class="team-logo">東京</div>
+                  <div class="team-score">2</div>
+                </div>
+                <div class="match-vs">vs</div>
+                <div class="team">
+                  <div class="team-score">1</div>
+                  <div class="team-logo">大阪</div>
+                </div>
+              </div>
+              <div class="match-footer">
+                <div class="match-actions">
+                  <button class="button button-outline button-sm">ノート (2)</button>
+                  <button class="button button-primary button-sm">詳細</button>
                 </div>
               </div>
             </div>
+            <div class="match-preview">
+              <div class="match-preview-header">試合の動画 (2)</div>
+              <div class="match-preview-content">
+                <div class="match-preview-thumbnail">
+                  <img src="https://via.placeholder.com/320x180" alt="FCトウキョウ vs FCオオサカ ハイライト">
+                </div>
+                <div class="match-preview-info">
+                  <h4 class="match-preview-title">FCトウキョウ vs FCオオサカ ハイライト</h4>
+                  <p class="match-preview-duration">15:24</p>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="card match-card">
+            <div class="card-content">
+              <h3 class="match-title">FCトウキョウ vs FCナゴヤ</h3>
+              <div class="match-score">
+                <div class="team">
+                  <div class="team-logo">東京</div>
+                  <div class="team-score">0</div>
+                </div>
+                <div class="match-vs">vs</div>
+                <div class="team">
+                  <div class="team-score">0</div>
+                  <div class="team-logo">名古屋</div>
+                </div>
+              </div>
+              <div class="match-footer">
+                <div class="match-actions">
+                  <button class="button button-outline button-sm">ノート (1)</button>
+                  <button class="button button-primary button-sm">詳細</button>
+                </div>
+              </div>
+            </div>
+            <div class="match-preview">
+              <div class="match-preview-header">試合の動画 (1)</div>
+              <div class="match-preview-content">
+                <div class="match-preview-thumbnail">
+                  <img src="https://via.placeholder.com/320x180" alt="FCトウキョウ vs FCナゴヤ ハイライト">
+                </div>
+                <div class="match-preview-info">
+                  <h4 class="match-preview-title">FCトウキョウ vs FCナゴヤ ハイライト</h4>
+                  <p class="match-preview-duration">18:45</p>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="card match-card">
+            <div class="card-content">
+              <h3 class="match-title">FCヨコハマ vs FCトウキョウ</h3>
+              <div class="match-score">
+                <div class="team">
+                  <div class="team-logo">横浜</div>
+                  <div class="team-score">1</div>
+                </div>
+                <div class="match-vs">vs</div>
+                <div class="team">
+                  <div class="team-score">3</div>
+                  <div class="team-logo">東京</div>
+                </div>
+              </div>
+              <div class="match-footer">
+                <div class="match-actions">
+                  <button class="button button-outline button-sm">ノート (2)</button>
+                  <button class="button button-primary button-sm">詳細</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> %>
+
+        <!-- ノートタブ -->
+        <div class="tab-content" id="notes-content">
+          <div class="section-header">
+            <h2 class="section-title">ノート一覧</h2>
+            <button class="button button-outline button-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+              フィルター
+            </button>
+          </div>
+
+          <!-- メンバーリスト -->
+          <div class="member-list-container">
+            <h3 class="section-title" style="font-size: 0.875rem; margin-bottom: 0.5rem;">チームメンバー</h3>
+            <div class="member-list">
+              <button class="member-button active">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <span>全員</span>
+              </button>
+              <button class="member-button">
+                <span>自分</span>
+              </button>
+              <% if @group != nil && @group_id != nil %>
+                <% @group.users.each do |user| %>
+                  <% if user != current_user %>
+                    <button class="member-button">
+                      <span><%= user.username %></span>
+                    </button>
+                  <% end %>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+
+          <!-- ノートカード -->
+          <% if @group != nil && @group_id != nil %>
+            <% @group.notes.each do |note| %>
+              <div class="card note-card">
+                <div class="card-content">
+                  <div class="note-header">
+                    <div>
+                      <div class="note-author">
+                        <span class="note-author-name"><%= note.user.username %></span>
+                        <div class="note-shared">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                          共有中
+                        </div>
+                      </div>
+                      <h3 class="note-title"><%= note.title %></h3>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
           <% end %>
-        <% end %>
-      </div>
-
-      <!-- 試合詳細ビュー (初期状態では非表示) -->
-      <%# <div class="tab-content" id="match-detail-content" style="display: none;">
-        <div class="match-detail-header">
-          <button class="icon-button">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-            <span class="sr-only">戻る</span>
-          </button>
-          <h2 class="match-detail-title">FCトウキョウ vs FCオオサカ</h2>
         </div>
 
-        <div class="card">
-          <div class="card-content">
-            <div class="match-header">
-              <div class="match-badge">リーグ戦 第5節</div>
-              <div class="match-date">2024年3月7日</div>
-            </div>
-            
-            <div class="match-score" style="margin: 1rem 0;">
-              <div class="team">
-                <div class="team-logo" style="width: 3rem; height: 3rem;">東京</div>
-                <div class="team-score" style="font-size: 1.5rem;">2</div>
-              </div>
-              <div class="match-vs">vs</div>
-              <div class="team">
-                <div class="team-score" style="font-size: 1.5rem;">1</div>
-                <div class="team-logo" style="width: 3rem; height: 3rem;">大阪</div>
-              </div>
-            </div>
-            
-            <div class="match-venue">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
-              <span>東京スタジアム</span>
-            </div>
+        <!-- 試合詳細ビュー (初期状態では非表示) -->
+        <%# <div class="tab-content" id="match-detail-content" style="display: none;">
+          <div class="match-detail-header">
+            <button class="icon-button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+              <span class="sr-only">戻る</span>
+            </button>
+            <h2 class="match-detail-title">FCトウキョウ vs FCオオサカ</h2>
           </div>
-        </div>
 
-        <!-- アコーディオン：試合の動画 -->
-        <div class="accordion open">
-          <div class="accordion-header">
-            <span>試合の動画 (2)</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="accordion-icon"><path d="m6 9 6 6 6-6"/></svg>
-          </div>
-          <div class="accordion-content open">
-            <div class="card">
-              <div class="card-content" style="padding: 0;">
-                <div class="video-thumbnail" style="border-radius: 0.5rem 0.5rem 0 0;">
-                  <div class="video-duration">15:24</div>
+          <div class="card">
+            <div class="card-content">
+              <div class="match-header">
+                <div class="match-badge">リーグ戦 第5節</div>
+                <div class="match-date">2024年3月7日</div>
+              </div>
+              
+              <div class="match-score" style="margin: 1rem 0;">
+                <div class="team">
+                  <div class="team-logo" style="width: 3rem; height: 3rem;">東京</div>
+                  <div class="team-score" style="font-size: 1.5rem;">2</div>
+                </div>
+                <div class="match-vs">vs</div>
+                <div class="team">
+                  <div class="team-score" style="font-size: 1.5rem;">1</div>
+                  <div class="team-logo" style="width: 3rem; height: 3rem;">大阪</div>
                 </div>
               </div>
-              <div class="card-footer">
-                <h3 class="video-title" style="font-size: 1rem; margin-bottom: 0.5rem;">FCトウキョウ vs FCオオサカ ハイライト</h3>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <span class="video-date">2024年3月7日</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="card" style="margin-top: 1rem;">
-              <div class="card-content" style="padding: 0;">
-                <div class="video-thumbnail" style="border-radius: 0.5rem 0.5rem 0 0;">
-                  <div class="video-duration">22:10</div>
-                </div>
-              </div>
-              <div class="card-footer">
-                <h3 class="video-title" style="font-size: 1rem; margin-bottom: 0.5rem;">FCトウキョウ vs FCオオサカ 戦術分析</h3>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <span class="video-date">2024年3月8日</span>
-                </div>
+              
+              <div class="match-venue">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
+                <span>東京スタジアム</span>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- アコーディオン：試合のノート -->
-        <div class="accordion open">
-          <div class="accordion-header">
-            <span>試合のノート (2)</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="accordion-icon"><path d="m6 9 6 6 6-6"/></svg>
+          <!-- アコーディオン：試合の動画 -->
+          <div class="accordion open">
+            <div class="accordion-header">
+              <span>試合の動画 (2)</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="accordion-icon"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+            <div class="accordion-content open">
+              <div class="card">
+                <div class="card-content" style="padding: 0;">
+                  <div class="video-thumbnail" style="border-radius: 0.5rem 0.5rem 0 0;">
+                    <div class="video-duration">15:24</div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <h3 class="video-title" style="font-size: 1rem; margin-bottom: 0.5rem;">FCトウキョウ vs FCオオサカ ハイライト</h3>
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span class="video-date">2024年3月7日</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card" style="margin-top: 1rem;">
+                <div class="card-content" style="padding: 0;">
+                  <div class="video-thumbnail" style="border-radius: 0.5rem 0.5rem 0 0;">
+                    <div class="video-duration">22:10</div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <h3 class="video-title" style="font-size: 1rem; margin-bottom: 0.5rem;">FCトウキョウ vs FCオオサカ 戦術分析</h3>
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span class="video-date">2024年3月8日</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="accordion-content open">
-            <div class="card note-card">
-              <div class="card-content">
-                <div class="note-header">
-                  <div>
-                    <div class="note-author">
-                      <span class="note-author-name">田中太郎</span>
-                      <div class="note-shared">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-                        共有中
+
+          <!-- アコーディオン：試合のノート -->
+          <div class="accordion open">
+            <div class="accordion-header">
+              <span>試合のノート (2)</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="accordion-icon"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+            <div class="accordion-content open">
+              <div class="card note-card">
+                <div class="card-content">
+                  <div class="note-header">
+                    <div>
+                      <div class="note-author">
+                        <span class="note-author-name">田中太郎</span>
+                        <div class="note-shared">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                          共有中
+                        </div>
+                      </div>
+                      <h3 class="note-title">試合メモ：FCトウキョウ vs FCオオサカ</h3>
+                      <div class="note-meta">
+                        <span class="note-date">2024年3月7日</span>
                       </div>
                     </div>
-                    <h3 class="note-title">試合メモ：FCトウキョウ vs FCオオサカ</h3>
-                    <div class="note-meta">
-                      <span class="note-date">2024年3月7日</span>
-                    </div>
+                    <div class="note-category">試合分析</div>
                   </div>
-                  <div class="note-category">試合分析</div>
+                  <p class="note-content">前半は相手のプレスに苦しんだが、後半からボールポゼッションを高めることができた。サイドからの攻撃が効果的だった。次回は中央突破のバリエーションも増やしたい。</p>
                 </div>
-                <p class="note-content">前半は相手のプレスに苦しんだが、後半からボールポゼッションを高めることができた。サイドからの攻撃が効果的だった。次回は中央突破のバリエーションも増やしたい。</p>
               </div>
-            </div>
 
-            <div class="card note-card">
-              <div class="card-content">
-                <div class="note-header">
-                  <div>
-                    <div class="note-author">
-                      <span class="note-author-name">鈴木コーチ</span>
-                      <div class="note-shared">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-                        共有中
+              <div class="card note-card">
+                <div class="card-content">
+                  <div class="note-header">
+                    <div>
+                      <div class="note-author">
+                        <span class="note-author-name">鈴木コーチ</span>
+                        <div class="note-shared">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                          共有中
+                        </div>
+                      </div>
+                      <h3 class="note-title">FCトウキョウ vs FCオオサカ：戦術分析</h3>
+                      <div class="note-meta">
+                        <span class="note-date">2024年3月8日</span>
                       </div>
                     </div>
-                    <h3 class="note-title">FCトウキョウ vs FCオオサカ：戦術分析</h3>
-                    <div class="note-meta">
-                      <span class="note-date">2024年3月8日</span>
-                    </div>
+                    <div class="note-category">戦術</div>
                   </div>
-                  <div class="note-category">戦術</div>
+                  <p class="note-content">相手の4-3-3フォーメーションに対して、我々の3-5-2がどう機能したかを分析。サイドバックの高い位置取りが相手のウイングを抑制するのに効果的だった。</p>
                 </div>
-                <p class="note-content">相手の4-3-3フォーメーションに対して、我々の3-5-2がどう機能したかを分析。サイドバックの高い位置取りが相手のウイングを抑制するのに効果的だった。</p>
               </div>
             </div>
           </div>
-        </div>
-      </div> %>
-    </main>
+        </div> %>
+      </main>
 
-    <!-- フローティングアクションボタン -->
-    <button class="fab">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-      <span class="sr-only">追加</span>
-    </button>
-  </div>
-  <script>
-    document.addEventListener('turbo:load', () => {
-      const tabButtons = document.querySelectorAll('.tab');
-      const tabContents = document.querySelectorAll('.tab-content');
-      
-      // 既存のイベントリスナーを削除（イベントの重複を防ぐ）
-      tabButtons.forEach(tabButton => {
-        tabButton.replaceWith(tabButton.cloneNode(true));
-      });
-      
-      // 新しいイベントリスナーを追加
-      document.querySelectorAll('.tab').forEach(tabButton => {
-        tabButton.addEventListener('click', () => {
-          const tabId = tabButton.getAttribute('data-tab');
-          
-          // タブのアクティブ状態を切り替え
-          document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-          tabButton.classList.add('active');
-          
-          // コンテンツの表示/非表示を切り替え
-          tabContents.forEach(content => {
-            content.classList.remove('active');
-            if (content.id === `${tabId}-content`) {
-              content.classList.add('active');
-            }
+      <!-- フローティングアクションボタン -->
+      <button class="fab">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+        <span class="sr-only">追加</span>
+      </button>
+    </div>
+    <script>
+      document.addEventListener('turbo:load', () => {
+        const tabButtons = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        // 既存のイベントリスナーを削除（イベントの重複を防ぐ）
+        tabButtons.forEach(tabButton => {
+          tabButton.replaceWith(tabButton.cloneNode(true));
+        });
+        
+        // 新しいイベントリスナーを追加
+        document.querySelectorAll('.tab').forEach(tabButton => {
+          tabButton.addEventListener('click', () => {
+            const tabId = tabButton.getAttribute('data-tab');
+            
+            // タブのアクティブ状態を切り替え
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            tabButton.classList.add('active');
+            
+            // コンテンツの表示/非表示を切り替え
+            tabContents.forEach(content => {
+              content.classList.remove('active');
+              if (content.id === `${tabId}-content`) {
+                content.classList.add('active');
+              }
+            });
           });
         });
-      });
 
-      const accordions = document.querySelectorAll('.accordion');
-      
-      // 既存のイベントリスナーを削除
-      accordions.forEach(accordion => {
-        const header = accordion.querySelector('.accordion-header');
-        header.replaceWith(header.cloneNode(true));
-      });
-      
-      // 新しいイベントリスナーを追加
-      document.querySelectorAll('.accordion').forEach(accordion => {
-        const header = accordion.querySelector('.accordion-header');
-        const content = accordion.querySelector('.accordion-content');
+        const accordions = document.querySelectorAll('.accordion');
         
-        header.addEventListener('click', () => {
-          accordion.classList.toggle('open');
-          content.classList.toggle('open');
+        // 既存のイベントリスナーを削除
+        accordions.forEach(accordion => {
+          const header = accordion.querySelector('.accordion-header');
+          header.replaceWith(header.cloneNode(true));
         });
-      });
+        
+        // 新しいイベントリスナーを追加
+        document.querySelectorAll('.accordion').forEach(accordion => {
+          const header = accordion.querySelector('.accordion-header');
+          const content = accordion.querySelector('.accordion-content');
+          
+          header.addEventListener('click', () => {
+            accordion.classList.toggle('open');
+            content.classList.toggle('open');
+          });
+        });
 
-      const detailButtons = document.querySelectorAll('.button-primary');
-      const backButton = document.querySelector('.match-detail-header .icon-button');
-      const matchesContent = document.getElementById('matches-content');
-      const matchDetailContent = document.getElementById('match-detail-content');
-      
-      // 既存のイベントリスナーを削除
-      detailButtons.forEach(button => {
-        button.replaceWith(button.cloneNode(true));
-      });
-      if (backButton) {
-        backButton.replaceWith(backButton.cloneNode(true));
-      }
-      
-      // 新しいイベントリスナーを追加
-      document.querySelectorAll('.button-primary').forEach(button => {
-        button.addEventListener('click', () => {
-          matchesContent.style.display = 'none';
-          matchDetailContent.style.display = 'block';
+        const detailButtons = document.querySelectorAll('.button-primary');
+        const backButton = document.querySelector('.match-detail-header .icon-button');
+        const matchesContent = document.getElementById('matches-content');
+        const matchDetailContent = document.getElementById('match-detail-content');
+        
+        // 既存のイベントリスナーを削除
+        detailButtons.forEach(button => {
+          button.replaceWith(button.cloneNode(true));
         });
-      });
-      
-      const newBackButton = document.querySelector('.match-detail-header .icon-button');
-      if (newBackButton) {
-        newBackButton.addEventListener('click', () => {
-          matchDetailContent.style.display = 'none';
-          matchesContent.style.display = 'block';
+        if (backButton) {
+          backButton.replaceWith(backButton.cloneNode(true));
+        }
+        
+        // 新しいイベントリスナーを追加
+        document.querySelectorAll('.button-primary').forEach(button => {
+          button.addEventListener('click', () => {
+            matchesContent.style.display = 'none';
+            matchDetailContent.style.display = 'block';
+          });
         });
-      }
-    });
-  </script>
+        
+        const newBackButton = document.querySelector('.match-detail-header .icon-button');
+        if (newBackButton) {
+          newBackButton.addEventListener('click', () => {
+            matchDetailContent.style.display = 'none';
+            matchesContent.style.display = 'block';
+          });
+        }
+      });
+    </script>
   <% else %>
-  <div class="empty-state">
-    <div class="empty-state-content" style="display: block;">
-      <h2 class="empty-state-title" style="margin-bottom: 2rem;">あなたはどちらですか？</h2>
-      
-      <div class="row justify-content-center g-4">
-        <div class="col-6 col-sm-6 col-md-6 col-lg-6">
-          <div class="card h-100 shadow-sm" role="button" onclick="showCoachSection()">
-            <div class="card-body text-center p-4">
-              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-3">
-                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-                <circle cx="9" cy="7" r="4"/>
-                <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-              </svg>
-              <h3 class="card-title h5">指導者</h3>
-              <p class="card-text text-muted">チームを作成して選手たちと分析を共有</p>
+    <div class="empty-state">
+      <div class="empty-state-content" style="display: block;">
+        <h2 class="empty-state-title" style="margin-bottom: 2rem;">あなたはどちらですか？</h2>
+        
+        <div class="row justify-content-center g-4">
+          <div class="col-6 col-sm-6 col-md-6 col-lg-6">
+            <div class="card h-100 shadow-sm" role="button" onclick="showCoachSection()">
+              <div class="card-body text-center p-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-3">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                <h3 class="card-title h5">指導者</h3>
+                <p class="card-text text-muted">チームを作成して選手たちと分析を共有</p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="col-6 col-sm-6 col-md-6 col-lg-6">
-          <div class="card h-100 shadow-sm" role="button" onclick="showPlayerSection()">
-            <div class="card-body text-center p-4">
-              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-3">
-                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-                <circle cx="9" cy="7" r="4"/>
-              </svg>
-              <h3 class="card-title h5">選手</h3>
-              <p class="card-text text-muted">チームに参加して分析を共有</p>
+          <div class="col-6 col-sm-6 col-md-6 col-lg-6">
+            <div class="card h-100 shadow-sm" role="button" onclick="showPlayerSection()">
+              <div class="card-body text-center p-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-3">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                </svg>
+                <h3 class="card-title h5">選手</h3>
+                <p class="card-text text-muted">チームに参加して分析を共有</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      <div id="coach-section" class="role-section" style="display: none;">
+        <h2 class="empty-state-title">指導者としてチームを作成</h2>
+        <p class="empty-state-description">選手たちと試合の分析や戦術の共有を始めましょう。</p>
+        <%= link_to "チームを作成", new_group_path, class: "button button-primary", "data-turbo": false %>
+        <p class="empty-state-description text-decoration-underline text-muted mt-3" onclick="showPlayerSection()">選手ですか？</p>
+      </div>
+
+      <div id="player-section" class="role-section" style="display: none;">
+        <h2 class="empty-state-title">選手としてチームに参加</h2>
+        <p class="empty-state-description">チームメイトと試合の分析や戦術の共有を始めましょう。</p>
+        <p class="empty-state-description">チームコードをお持ちの場合は、コーチにご連絡ください。</p>
+        <p class="empty-state-description text-decoration-underline text-muted" onclick="showCoachSection()">指導者ですか？</p>
+      </div>
     </div>
 
-    <div id="coach-section" class="role-section" style="display: none;">
-      <h2 class="empty-state-title">指導者としてチームを作成</h2>
-      <p class="empty-state-description">選手たちと試合の分析や戦術の共有を始めましょう。</p>
-      <%= link_to "チームを作成", new_group_path, class: "button button-primary", "data-turbo": false %>
-      <p class="empty-state-description text-decoration-underline text-muted mt-3" onclick="showPlayerSection()">選手ですか？</p>
-    </div>
-
-    <div id="player-section" class="role-section" style="display: none;">
-      <h2 class="empty-state-title">選手としてチームに参加</h2>
-      <p class="empty-state-description">チームメイトと試合の分析や戦術の共有を始めましょう。</p>
-      <p class="empty-state-description">チームコードをお持ちの場合は、コーチにご連絡ください。</p>
-      <p class="empty-state-description text-decoration-underline text-muted" onclick="showCoachSection()">指導者ですか？</p>
-    </div>
-  </div>
-
-  <script>
-    function showCoachSection() {
-      document.getElementById('coach-section').style.display = 'block';
-      document.getElementById('player-section').style.display = 'none';
-      document.querySelector('.empty-state-content').style.display = 'none';
-    }
-
-    function showPlayerSection() {
-      document.getElementById('player-section').style.display = 'block';
-      document.getElementById('coach-section').style.display = 'none';
-      document.querySelector('.empty-state-content').style.display = 'none';
-    }
-  </script>
-
-  <style>
-    .empty-state {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-      text-align: center;
-      min-height: 400px;
-    }
-
-    .empty-state-content {
-      max-width: 800px;
-      margin: 0 auto;
-      display: flex;
-    }
-
-    .empty-state-icon {
-      color: var(--muted-foreground);
-      margin-bottom: 1rem;
-    }
-
-    .empty-state-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: var(--foreground);
-    }
-
-    .empty-state-description {
-      color: var(--muted-foreground);
-      margin-bottom: 1.5rem;
-    }
-
-    .role-selection {
-      display: flex;
-      gap: 2rem;
-      justify-content: center;
-      margin-bottom: 2rem;
-    }
-
-    .role-button {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 1.5rem;
-      border: 2px solid var(--border);
-      border-radius: 8px;
-      background: none;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .role-button:hover {
-      border-color: var(--primary);
-      background-color: var(--primary-light);
-    }
-
-    .role-button span {
-      margin-top: 0.5rem;
-      font-size: 1.1rem;
-      font-weight: 500;
-    }
-
-    .role-section {
-      text-align: center;
-    }
-
-    @media (max-width: 576px) {
-      .card-text.text-muted {
-        font-size: 0.875rem;
+    <script>
+      function showCoachSection() {
+        document.getElementById('coach-section').style.display = 'block';
+        document.getElementById('player-section').style.display = 'none';
+        document.querySelector('.empty-state-content').style.display = 'none';
       }
-    }
-  </style>
+
+      function showPlayerSection() {
+        document.getElementById('player-section').style.display = 'block';
+        document.getElementById('coach-section').style.display = 'none';
+        document.querySelector('.empty-state-content').style.display = 'none';
+      }
+    </script>
+
+    <style>
+      .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        text-align: center;
+        min-height: 400px;
+      }
+
+      .empty-state-content {
+        max-width: 800px;
+        margin: 0 auto;
+        display: flex;
+      }
+
+      .empty-state-icon {
+        color: var(--muted-foreground);
+        margin-bottom: 1rem;
+      }
+
+      .empty-state-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--foreground);
+      }
+
+      .empty-state-description {
+        color: var(--muted-foreground);
+        margin-bottom: 1.5rem;
+      }
+
+      .role-selection {
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+        margin-bottom: 2rem;
+      }
+
+      .role-button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1.5rem;
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        background: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .role-button:hover {
+        border-color: var(--primary);
+        background-color: var(--primary-light);
+      }
+
+      .role-button span {
+        margin-top: 0.5rem;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      .role-section {
+        text-align: center;
+      }
+
+      @media (max-width: 576px) {
+        .card-text.text-muted {
+          font-size: 0.875rem;
+        }
+      }
+    </style>
   <% end %>
 <% else %>
   <style>
