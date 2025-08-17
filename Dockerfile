@@ -15,7 +15,7 @@ WORKDIR /rails
 COPY bin/docker-entrypoint /rails/bin/
 RUN chmod +x /rails/bin/docker-entrypoint
 
-ENV PATH $PATH:/usr/local/src/bin
+ENV PATH=$PATH:/usr/local/src/bin
 
 # Install base packages
 RUN apt-get update -qq && \

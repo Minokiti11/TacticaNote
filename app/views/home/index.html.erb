@@ -27,8 +27,12 @@
               <% end %>
 
               <% if @group.owner_id == current_user.id %>
-                <%= link_to 'Edit', edit_group_path(@group), class: "btn btn-success", style: "width: 100%; margin-top: 30px;"%>
-                <%= button_to 'このグループを削除', group_all_destroy_path(@group), method: :delete, class: "btn btn-danger", style: "width: 100%; margin-top: 10px; background-color: var(--destructive); color: var(--destructive-foreground); border: none;"%>
+                <%= link_to edit_group_path(@group), class: "btn btn-success" do %>
+                  <i class="fas fa-edit me-2"></i>編集
+                <% end %>
+                <%= link_to group_all_destroy_path(@group), data: { turbo_method: :delete, turbo_confirm: "本当に削除しますか？" }, class: "button", style: "width: 100%; background-color: var(--destructive); color: var(--destructive-foreground); border: none;" do %>
+                  <i class="fas fa-trash me-2"></i>グループを削除
+                <% end %>
               <% end %>
             </div>
           </div>
@@ -260,22 +264,30 @@
 
       /* 動画カード */
       .video-container {
-        display: flex;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 1rem;
-        overflow-x: auto;
-        padding-bottom: 0.5rem;
         margin-bottom: 1.5rem;
       }
 
       .video-card-small {
-        min-width: 240px;
-        max-width: 240px;
+        display: flex;
+        flex-direction: column;
+        background-color: var(--background);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+
+      .video-card-small:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       }
 
       .video-thumbnail {
         position: relative;
         aspect-ratio: 16 / 9;
-        border-radius: var(--radius);
         overflow: hidden;
         background-color: var(--muted);
       }
@@ -297,18 +309,86 @@
         border-radius: 0.25rem;
       }
 
+      .video-content {
+        padding: 1rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
       .video-title {
-        margin-top: 0.5rem;
         font-size: 0.875rem;
         font-weight: 500;
-        white-space: nowrap;
+        margin-bottom: 0.5rem;
+        line-height: 1.3;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
         overflow: hidden;
-        text-overflow: ellipsis;
       }
 
       .video-date {
         font-size: 0.75rem;
         color: var(--muted-foreground);
+        margin-bottom: 0.75rem;
+      }
+
+      .video-notes {
+        margin-top: auto;
+        padding-top: 0.5rem;
+        border-top: 1px solid var(--border);
+      }
+
+      .video-notes a:hover {
+        text-decoration: underline !important;
+      }
+
+      /* レスポンシブ対応 */
+      @media (max-width: 768px) {
+        .video-container {
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+          gap: 0.75rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .video-container {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 0.5rem;
+        }
+        
+        .video-card-small {
+          max-width: none;
+        }
+        
+        .video-title {
+          font-size: 0.75rem;
+          -webkit-line-clamp: 1;
+        }
+        
+        .video-date {
+          font-size: 0.65rem;
+        }
+        
+        .video-notes {
+          font-size: 0.65rem;
+        }
+        
+        .video-content {
+          padding: 0.5rem;
+        }
+        
+        .note-users {
+          font-size: 0.6rem;
+          line-height: 1.2;
+        }
+        
+        .note-users small {
+          display: block;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
       }
 
       /* ノートカード */
@@ -529,6 +609,261 @@
         height: 1.5rem;
       }
 
+      /* モーダルスタイル（ノート作成モーダル専用にスコープ） */
+      #note-modal.modal-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(15, 23, 42, 0.55);
+        backdrop-filter: saturate(140%) blur(6px);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+
+      #note-modal.modal-container.show {
+        display: flex !important;
+        opacity: 1;
+        visibility: visible;
+      }
+
+      #note-modal .modal-body {
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        border-radius: 16px;
+        padding: 28px 24px 24px 24px;
+        max-width: 480px;
+        width: min(92vw, 480px);
+        box-shadow: 0 16px 40px rgba(2, 6, 23, 0.2);
+        border: 1px solid #e2e8f0;
+        position: relative;
+        margin: 0;
+        transform: translateY(6px) scale(0.98);
+        transition: transform 0.25s ease;
+      }
+      #note-modal.show .modal-body,
+      #note-modal[style*="opacity: 1"] .modal-body {
+        transform: translateY(0) scale(1);
+      }
+
+      #note-modal .modal-close {
+        position: absolute;
+        top: 18px;
+        right: 18px;
+        font-size: 18px;
+        color: #334155;
+        background: #e2e8f0;
+        border-radius: 50%;
+        width: 34px;
+        height: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border: none;
+        transition: background 0.2s, color 0.2s;
+        z-index: 10;
+      }
+      #note-modal .modal-close:hover {
+        background: #cbd5e1;
+        color: #0ea5e9;
+      }
+      #note-modal .modal-content {
+        color: #1e293b;
+      }
+      #note-modal .modal-content .modal-title {
+        font-size: 1.125rem;
+        font-weight: 700;
+        margin-bottom: 6px;
+        letter-spacing: 0.01em;
+        color: #0f172a;
+        text-align: center;
+      }
+      #note-modal .modal-subtitle {
+        font-size: 0.9rem;
+        color: #64748b;
+        text-align: center;
+        margin-bottom: 16px;
+      }
+      #note-modal .radio-input {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        justify-content: flex-start;
+        margin-bottom: 18px;
+      }
+      #note-modal .label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 10px 18px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: background 0.2s;
+      }
+      #note-modal .label:hover {
+        background: #e0e7ef;
+      }
+      #note-modal .label input[type="radio"] {
+        accent-color: #0ea5e9;
+        width: 20px;
+        height: 20px;
+      }
+      #note-modal .text {
+        color: #334155;
+        font-size: 1rem;
+        font-weight: 500;
+        margin: 0;
+      }
+      #note-modal .toggle_button {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 18px;
+        margin-left: 10px;
+        padding: 10px 0;
+      }
+      #note-modal .toggle_button span {
+        color: #334155;
+        font-size: 1rem;
+        font-weight: 500;
+      }
+      #note-modal .toggle_input {
+        display: none;
+      }
+      #note-modal .toggle_label {
+        position: relative;
+        display: inline-block;
+        width: 48px;
+        height: 28px;
+        background: #e5e7eb;
+        border-radius: 14px;
+        cursor: pointer;
+        transition: background 0.1s;
+      }
+      #note-modal .toggle_label:before {
+        content: '';
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 22px;
+        height: 22px;
+        background: #fff;
+        border-radius: 50%;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        transition: transform 0.1s;
+      }
+      #note-modal .toggle_input:checked + .toggle_label {
+        background: #0ea5e9;
+      }
+      #note-modal .toggle_input:checked + .toggle_label:before {
+        transform: translateX(20px);
+      }
+      #note-modal .video-index {
+        margin-bottom: 18px;
+      }
+      #note-modal .list-group {
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+        background: #f8fafc;
+      }
+      #note-modal .list-group-item {
+        padding: 13px 18px;
+        border: none;
+        border-bottom: 1px solid #e2e8f0;
+        cursor: pointer;
+        font-size: 1rem;
+        color: #334155;
+        background: #f8fafc;
+        transition: background 0.2s, color 0.2s;
+      }
+      #note-modal .list-group-item:last-child {
+        border-bottom: none;
+      }
+      #note-modal .list-group-item:hover {
+        background: #e0e7ef !important;
+        color: #0ea5e9;
+      }
+      #note-modal .list-group-item.selected {
+        background: #0ea5e9 !important;
+        color: #fff !important;
+        font-weight: 600;
+      }
+      #note-modal #create-note-btn {
+        width: 100%;
+        padding: 14px 0;
+        font-size: 1.1rem;
+        font-weight: 700;
+        border-radius: 24px;
+        background: linear-gradient(90deg, #0ea5e9 0%, #2563eb 100%);
+        color: #fff;
+        border: none;
+        margin-top: 18px;
+        transition: box-shadow 0.2s, background 0.2s;
+        box-shadow: 0 2px 8px rgba(14,165,233,0.08);
+      }
+      #note-modal #create-note-btn:hover:not(.disabled) {
+        background: linear-gradient(90deg, #2563eb 0%, #0ea5e9 100%);
+        box-shadow: 0 4px 16px rgba(14,165,233,0.15);
+      }
+      #note-modal #create-note-btn.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background: #e5e7eb;
+        color: #94a3b8;
+        box-shadow: none;
+      }
+
+      /* 設定モーダル（Bootstrap）の見た目改善 */
+      #settingsModal .modal-content {
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 24px 56px rgba(2, 6, 23, 0.18);
+      }
+      #settingsModal .modal-header {
+        border-bottom: none;
+        background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+        color: #fff;
+        border-radius: 16px 16px 0 0;
+        padding: 16px 20px;
+      }
+      #settingsModal .modal-title {
+        font-weight: 700;
+      }
+      #settingsModal .btn-close {
+        filter: invert(1);
+        opacity: 0.9;
+      }
+      #settingsModal .modal-body {
+        padding-top: 20px;
+      }
+      #settingsModal .settings-description {
+        font-size: 0.9rem;
+        color: #64748b;
+        margin: -4px 0 12px 0;
+      }
+      #settingsModal .input-group input.form-control {
+        border-radius: 10px 0 0 10px !important;
+        background: #f8fafc;
+      }
+      #settingsModal .input-group .btn {
+        border-radius: 0 10px 10px 0 !important;
+      }
+      #settingsModal .button,
+      #settingsModal .btn {
+        border-radius: 12px !important;
+        padding: 10px 14px;
+      }
+
       /* ユーティリティ */
       .sr-only {
         position: absolute;
@@ -633,29 +968,33 @@
         <div class="tab-content active" id="matches-content">
           <div class="section-header">
             <h2 class="section-title">試合一覧</h2>
-            <%# <select class="button button-outline button-sm">
-              <option value="all">すべて</option>
-              <option value="2024">2024年</option>
-              <option value="2023">2023年</option>
-            </select> %>
-          </div>
-
-          <!-- 最近の動画 -->
-          <div class="section-header">
-            <h3 class="section-title" style="font-size: 1rem;">最近の動画</h3>
             <% if @group != nil && @group_id != nil %>
-              <%= link_to group_video_path(@group_id), "data-turbo": false, class: "button button-outline button-sm" do %>
-                すべて見る
+              <%= link_to new_video_path, class: "button button-primary button-sm" do %>
+                <i class="fas fa-upload me-1"></i>映像をアップロード
               <% end %>
             <% end %>
-            
+          </div>
+
+          <!-- 検索ボックス -->
+          <div class="search-container" style="margin-bottom: 1.5rem;">
+            <div class="input-group">
+              <input type="text" id="video-search" class="form-control" placeholder="映像を検索..." style="border-radius: var(--radius) 0 0 var(--radius);">
+              <button class="btn btn-outline-secondary" type="button" id="search-btn" style="border-radius: 0 var(--radius) var(--radius) 0;">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- 全ての動画 -->
+          <div class="section-header">
+            <h3 class="section-title" style="font-size: 1rem;">全ての動画</h3>
           </div>
 
           <div class="video-container">
             <% if @group != nil && @group_id != nil %>
-              <% @group.videos.order(created_at: :desc).first(5).each do |video| %>
-                <%= link_to video_path(video.id), "data-turbo": false, style: "color: black;" do %>
-                  <div class="video-card-small">
+              <% @group.videos.order(created_at: :desc).each do |video| %>
+                <div class="video-card-small">
+                  <%= link_to video_path(video.id), "data-turbo": false, style: "color: black; text-decoration: none;" do %>
                     <div class="video-thumbnail">
                       <% s3 = Aws::S3::Resource.new(
                               region: "ap-northeast-1",
@@ -672,119 +1011,140 @@
                         <img src="https://placehold.co/600x400">
                       <% end %>
                     </div>
-                    <h4 class="video-title"><%= video.title %></h4>
-                    <p class="video-date"><%= video.created_at.strftime('%Y年%-m月%-d日') %></p>
+                  <% end %>
+                  
+                  <div class="video-content">
+                    <%= link_to video_path(video.id), "data-turbo": false, style: "color: black; text-decoration: none;" do %>
+                      <h4 class="video-title"><%= video.title %></h4>
+                      <p class="video-date"><%= video.created_at.strftime('%Y年%-m月%-d日') %></p>
+                    <% end %>
+                    
+                    <!-- ノートへのリンク -->
+                    <% video_notes = @group.notes.where(video_id: video.id) %>
+                    <% if video_notes.any? %>
+                      <div class="video-notes">
+                        <small class="text-muted">
+                          <i class="fas fa-sticky-note me-1"></i>
+                          <%= link_to "#{video_notes.count}件のノート", notes_path(video_id: video.id), class: "text-primary", style: "text-decoration: none;" %>
+                        </small>
+                        <div class="note-users" style="margin-top: 0.25rem;">
+                          <small class="text-muted">
+                            <% unique_users = video_notes.map(&:user).uniq %>
+                            <% if unique_users.length <= 3 %>
+                              <%= unique_users.map(&:username).join(', ') %>
+                            <% else %>
+                              <%= unique_users.first(3).map(&:username).join(', ') %> その他
+                            <% end %>
+                          </small>
+                        </div>
+                      </div>
+                    <% else %>
+                      <div class="video-notes">
+                        <small class="text-muted">
+                          <i class="fas fa-plus me-1"></i>
+                          <%= link_to "ノートを作成", new_note_path(video_id: video.id, note_for: "match"), class: "text-primary", style: "text-decoration: none;" %>
+                        </small>
+                      </div>
+                    <% end %>
                   </div>
-                <% end %>
+                </div>
               <% end %>
             <% end %>
+            
+            <!-- モックデータ（実際のデータがない場合の表示） -->
+            <% if @group == nil || @group_id == nil || @group&.videos&.empty? %>
+              <div class="video-card-small">
+                <div class="video-thumbnail">
+                  <img src="https://placehold.co/600x400">
+                </div>
+                <div class="video-content">
+                  <h4 class="video-title">2024年春季リーグ vs 強豪チーム</h4>
+                  <p class="video-date">2024年1月15日</p>
+                  <div class="video-notes">
+                    <small class="text-muted">
+                      <i class="fas fa-sticky-note me-1"></i>
+                      <span class="text-primary">3件のノート</span>
+                    </small>
+                    <div class="note-users" style="margin-top: 0.25rem;">
+                      <small class="text-muted">
+                        田中太郎, 鈴木コーチ, 佐藤選手
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="video-card-small">
+                <div class="video-thumbnail">
+                  <img src="https://placehold.co/600x400">
+                </div>
+                <div class="video-content">
+                  <h4 class="video-title">練習試合 対抗戦</h4>
+                  <p class="video-date">2024年1月12日</p>
+                  <div class="video-notes">
+                    <small class="text-muted">
+                      <i class="fas fa-sticky-note me-1"></i>
+                      <span class="text-primary">2件のノート</span>
+                    </small>
+                    <div class="note-users" style="margin-top: 0.25rem;">
+                      <small class="text-muted">
+                        高橋選手, 山田コーチ
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="video-card-small">
+                <div class="video-thumbnail">
+                  <img src="https://placehold.co/600x400">
+                </div>
+                <div class="video-content">
+                  <h4 class="video-title">地区大会 決勝戦</h4>
+                  <p class="video-date">2024年1月8日</p>
+                  <div class="video-notes">
+                    <small class="text-muted">
+                      <i class="fas fa-plus me-1"></i>
+                      <span class="text-primary">ノートを作成</span>
+                    </small>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="video-card-small">
+                <div class="video-thumbnail">
+                  <img src="https://placehold.co/600x400">
+                </div>
+                <div class="video-content">
+                  <h4 class="video-title">オープン戦 技術確認</h4>
+                  <p class="video-date">2024年1月1日</p>
+                  <div class="video-notes">
+                    <small class="text-muted">
+                      <i class="fas fa-sticky-note me-1"></i>
+                      <span class="text-primary">1件のノート</span>
+                    </small>
+                    <div class="note-users" style="margin-top: 0.25rem;">
+                      <small class="text-muted">
+                        伊藤選手
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
           </div>
-
-          <!-- 試合カード -->
-          <%# <div class="card match-card">
-            <div class="card-content">
-              <h3 class="match-title">FCトウキョウ vs FCオオサカ</h3>
-              <div class="match-score">
-                <div class="team">
-                  <div class="team-logo">東京</div>
-                  <div class="team-score">2</div>
-                </div>
-                <div class="match-vs">vs</div>
-                <div class="team">
-                  <div class="team-score">1</div>
-                  <div class="team-logo">大阪</div>
-                </div>
-              </div>
-              <div class="match-footer">
-                <div class="match-actions">
-                  <button class="button button-outline button-sm">ノート (2)</button>
-                  <button class="button button-primary button-sm">詳細</button>
-                </div>
-              </div>
-            </div>
-            <div class="match-preview">
-              <div class="match-preview-header">試合の動画 (2)</div>
-              <div class="match-preview-content">
-                <div class="match-preview-thumbnail">
-                  <img src="https://via.placeholder.com/320x180" alt="FCトウキョウ vs FCオオサカ ハイライト">
-                </div>
-                <div class="match-preview-info">
-                  <h4 class="match-preview-title">FCトウキョウ vs FCオオサカ ハイライト</h4>
-                  <p class="match-preview-duration">15:24</p>
-                </div>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-              </div>
-            </div>
-          </div>
-
-          <div class="card match-card">
-            <div class="card-content">
-              <h3 class="match-title">FCトウキョウ vs FCナゴヤ</h3>
-              <div class="match-score">
-                <div class="team">
-                  <div class="team-logo">東京</div>
-                  <div class="team-score">0</div>
-                </div>
-                <div class="match-vs">vs</div>
-                <div class="team">
-                  <div class="team-score">0</div>
-                  <div class="team-logo">名古屋</div>
-                </div>
-              </div>
-              <div class="match-footer">
-                <div class="match-actions">
-                  <button class="button button-outline button-sm">ノート (1)</button>
-                  <button class="button button-primary button-sm">詳細</button>
-                </div>
-              </div>
-            </div>
-            <div class="match-preview">
-              <div class="match-preview-header">試合の動画 (1)</div>
-              <div class="match-preview-content">
-                <div class="match-preview-thumbnail">
-                  <img src="https://via.placeholder.com/320x180" alt="FCトウキョウ vs FCナゴヤ ハイライト">
-                </div>
-                <div class="match-preview-info">
-                  <h4 class="match-preview-title">FCトウキョウ vs FCナゴヤ ハイライト</h4>
-                  <p class="match-preview-duration">18:45</p>
-                </div>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-              </div>
-            </div>
-          </div>
-
-          <div class="card match-card">
-            <div class="card-content">
-              <h3 class="match-title">FCヨコハマ vs FCトウキョウ</h3>
-              <div class="match-score">
-                <div class="team">
-                  <div class="team-logo">横浜</div>
-                  <div class="team-score">1</div>
-                </div>
-                <div class="match-vs">vs</div>
-                <div class="team">
-                  <div class="team-score">3</div>
-                  <div class="team-logo">東京</div>
-                </div>
-              </div>
-              <div class="match-footer">
-                <div class="match-actions">
-                  <button class="button button-outline button-sm">ノート (2)</button>
-                  <button class="button button-primary button-sm">詳細</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> %>
+        </div>
 
         <!-- ノートタブ -->
         <div class="tab-content" id="notes-content">
           <div class="section-header">
             <h2 class="section-title">ノート一覧</h2>
-            <button class="button button-outline button-sm">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-              フィルター
-            </button>
+            <div style="display: flex; gap: 0.5rem;">
+              <button class="button button-outline button-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                フィルター
+              </button>
+            </div>
           </div>
 
           <!-- メンバーリスト -->
@@ -830,6 +1190,141 @@
                 </div>
               </div>
             <% end %>
+          <% end %>
+          
+          <!-- モックデータ（実際のデータがない場合の表示） -->
+          <% if @group == nil || @group_id == nil || @group.notes.empty? %>
+            <div class="card note-card">
+              <div class="card-content">
+                <div class="note-header">
+                  <div>
+                    <div class="note-author">
+                      <span class="note-author-name">田中太郎</span>
+                      <div class="note-shared">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                        共有中
+                      </div>
+                    </div>
+                    <h3 class="note-title">2024年春季リーグの振り返り</h3>
+                    <div class="note-meta">
+                      <span class="note-date">2024年1月15日</span>
+                    </div>
+                  </div>
+                  <div class="note-category">試合分析</div>
+                </div>
+                <p class="note-content">前半は相手のプレスに苦しんだが、後半からボールポゼッションを高めることができた。サイドからの攻撃が効果的だった。</p>
+              </div>
+            </div>
+            
+            <div class="card note-card">
+              <div class="card-content">
+                <div class="note-header">
+                  <div>
+                    <div class="note-author">
+                      <span class="note-author-name">鈴木コーチ</span>
+                      <div class="note-shared">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                        共有中
+                      </div>
+                    </div>
+                    <h3 class="note-title">練習試合での課題と改善点</h3>
+                    <div class="note-meta">
+                      <span class="note-date">2024年1月12日</span>
+                    </div>
+                  </div>
+                  <div class="note-category">戦術</div>
+                </div>
+                <p class="note-content">相手の4-3-3フォーメーションに対して、我々の3-5-2がどう機能したかを分析。サイドバックの高い位置取りが効果的だった。</p>
+              </div>
+            </div>
+            
+            <div class="card note-card">
+              <div class="card-content">
+                <div class="note-header">
+                  <div>
+                    <div class="note-author">
+                      <span class="note-author-name">佐藤選手</span>
+                      <div class="note-shared">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                        共有中
+                      </div>
+                    </div>
+                    <h3 class="note-title">地区大会決勝戦の分析</h3>
+                    <div class="note-meta">
+                      <span class="note-date">2024年1月8日</span>
+                    </div>
+                  </div>
+                  <div class="note-category">個人分析</div>
+                </div>
+                <p class="note-content">決勝戦での自分のプレーを振り返り、改善すべき点を整理。特にフィニッシュの精度向上が必要。</p>
+              </div>
+            </div>
+            
+            <div class="card note-card">
+              <div class="card-content">
+                <div class="note-header">
+                  <div>
+                    <div class="note-author">
+                      <span class="note-author-name">高橋選手</span>
+                      <div class="note-shared">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                        共有中
+                      </div>
+                    </div>
+                    <h3 class="note-title">オープン戦での技術向上ポイント</h3>
+                    <div class="note-meta">
+                      <span class="note-date">2024年1月1日</span>
+                    </div>
+                  </div>
+                  <div class="note-category">技術</div>
+                </div>
+                <p class="note-content">オープン戦を通じて、ドリブル技術とパス精度の向上を実感。次回の練習でさらに磨きをかけたい。</p>
+              </div>
+            </div>
+            
+            <div class="card note-card">
+              <div class="card-content">
+                <div class="note-header">
+                  <div>
+                    <div class="note-author">
+                      <span class="note-author-name">山田コーチ</span>
+                      <div class="note-shared">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                        共有中
+                      </div>
+                    </div>
+                    <h3 class="note-title">チーム戦術の見直し</h3>
+                    <div class="note-meta">
+                      <span class="note-date">2023年12月25日</span>
+                    </div>
+                  </div>
+                  <div class="note-category">戦術</div>
+                </div>
+                <p class="note-content">今シーズンの戦術を総括し、来シーズンに向けた改善点を整理。特に守備の組織化が課題。</p>
+              </div>
+            </div>
+            
+            <div class="card note-card">
+              <div class="card-content">
+                <div class="note-header">
+                  <div>
+                    <div class="note-author">
+                      <span class="note-author-name">伊藤選手</span>
+                      <div class="note-shared">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                        共有中
+                      </div>
+                    </div>
+                    <h3 class="note-title">個人スキル向上のための練習計画</h3>
+                    <div class="note-meta">
+                      <span class="note-date">2023年12月15日</span>
+                    </div>
+                  </div>
+                  <div class="note-category">練習</div>
+                </div>
+                <p class="note-content">冬休み期間を活用して、個人の弱点を克服するための練習計画を立てた。特にシュート精度の向上に注力。</p>
+              </div>
+            </div>
           <% end %>
         </div>
 
@@ -962,10 +1457,58 @@
       </main>
 
       <!-- フローティングアクションボタン -->
-      <button class="fab">
+      <button class="fab" id="write_note">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-        <span class="sr-only">追加</span>
+        <span class="sr-only">ノートを書く</span>
       </button>
+
+      <!-- ノート作成モーダル -->
+      <div class="modal-container" id="note-modal" style="display: none; opacity: 0; visibility: hidden;">
+        <div class="modal-body">
+          <!-- 閉じるボタン -->
+          <div class="modal-close" id="modal-close">×</div>
+          <div class="modal-content">
+            <div class="modal-title">ノートを作成</div>
+            <div class="modal-subtitle">ノートの種類 / 動画の有無を選択</div>
+            <p style="margin-top: 8px; margin-bottom: 0px;"><span style="font-weight: 600; color: #1f2937;">このノートは</span></p>
+            <div class="radio-input">
+              <label class="label">
+                <input
+                  type="radio"
+                  id="value-1"
+                  checked=""
+                  name="value-radio"
+                  value="value-1"
+                />
+                <p class="text">試合の振り返り</p>
+              </label>
+              <label class="label">
+                <input type="radio" id="value-2" name="value-radio" value="value-2" />
+                <p class="text">練習の振り返り</p>
+              </label>
+            </div>
+            <div class="toggle_button">
+              <span>動画の有無</span>
+              <input id="toggle" class="toggle_input" type='checkbox'/>
+              <label for="toggle" class="toggle_label"></label>
+            </div>
+
+            <div class="video-index" id="video-index" style="margin-bottom: 10px;">
+                <div class="list-group">
+                  <% if @group != nil && @group_id != nil %>
+                    <% @group.videos.order(created_at: :desc).first(7).each do |video| %>
+                      <div class="list-group-item list-group-item-action" data-video-id='<%= video.id %>' onclick="selectVideo(this)"><%= video.title %></div>
+                    <% end %>
+                  <% end %>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center w-100">
+              <%= link_to 'ノートを作成', '#', "data-turbo": false, id: "create-note-btn", class: "btn btn-outline-dark", style: "width: 60%; border-width: 1px; border-radius: 30px;", onclick: "window.location.href = createNotePath();" %>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <script>
       document.addEventListener('turbo:load', () => {
@@ -1042,6 +1585,167 @@
             matchDetailContent.style.display = 'none';
             matchesContent.style.display = 'block';
           });
+        }
+
+        // 動画検索機能
+        const searchInput = document.getElementById('video-search');
+        const searchBtn = document.getElementById('search-btn');
+        const videoCards = document.querySelectorAll('.video-card-small');
+
+        function filterVideos() {
+          const searchTerm = searchInput.value.toLowerCase();
+          
+          videoCards.forEach(card => {
+            const title = card.querySelector('.video-title').textContent.toLowerCase();
+            const date = card.querySelector('.video-date').textContent.toLowerCase();
+            
+            if (title.includes(searchTerm) || date.includes(searchTerm)) {
+              card.style.display = 'block';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        }
+
+        if (searchInput) {
+          searchInput.addEventListener('input', filterVideos);
+        }
+
+        if (searchBtn) {
+          searchBtn.addEventListener('click', filterVideos);
+        }
+
+        // モーダル機能
+        const writeNoteBtn = document.getElementById('write_note');
+        const noteModal = document.getElementById('note-modal');
+        const modalClose = document.getElementById('modal-close');
+
+        console.log('writeNoteBtn:', writeNoteBtn);
+        console.log('noteModal:', noteModal);
+        console.log('noteModal computed style:', noteModal ? window.getComputedStyle(noteModal) : 'not found');
+
+        if (writeNoteBtn) {
+          writeNoteBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log("write_note button clicked");
+            if (noteModal) {
+              noteModal.style.display = 'flex';
+              noteModal.style.opacity = '1';
+              noteModal.style.visibility = 'visible';
+              noteModal.classList.add('show');
+              console.log("Modal should be visible now");
+              console.log("Modal display:", noteModal.style.display);
+              console.log("Modal opacity:", noteModal.style.opacity);
+            } else {
+              console.log("noteModal not found");
+            }
+          });
+        } else {
+          console.log("writeNoteBtn not found");
+        }
+
+        if (modalClose) {
+          modalClose.addEventListener('click', () => {
+            console.log("Modal close clicked");
+            noteModal.style.display = 'none';
+            noteModal.style.opacity = '0';
+            noteModal.style.visibility = 'hidden';
+            noteModal.classList.remove('show');
+          });
+        }
+
+        // モーダル外クリックで閉じる
+        if (noteModal) {
+          noteModal.addEventListener('click', (e) => {
+            if (e.target === noteModal) {
+              noteModal.style.display = 'none';
+              noteModal.style.opacity = '0';
+              noteModal.style.visibility = 'hidden';
+              noteModal.classList.remove('show');
+            }
+          });
+        }
+
+        // 動画選択機能
+        let selectedVideoId;
+        function selectVideo(element) {
+          // すべてのリストアイテムのスタイルをリセット
+          document.querySelectorAll('.list-group-item').forEach(item => {
+            item.classList.remove('selected');
+          });
+          
+          // クリックされたアイテムの選択状態を切り替え
+          if (parseInt(element.getAttribute('data-video-id')) == selectedVideoId) {
+            selectedVideoId = null;
+            element.classList.remove('selected');
+            document.getElementById('create-note-btn').classList.add("disabled");
+          } else {
+            selectedVideoId = element.getAttribute('data-video-id');
+            element.classList.add('selected');
+            document.getElementById('create-note-btn').classList.remove("disabled");
+          }
+        }
+        // グローバルに公開（inline onclick 用）
+        window.selectVideo = selectVideo;
+
+        // トグルボタンの制御
+        document.addEventListener('DOMContentLoaded', function() {
+          selectedVideoId = null;
+          const toggle = document.getElementById('toggle');
+          const createNoteBtn = document.getElementById('create-note-btn');
+          
+          if (toggle) {
+            toggle.addEventListener('change', function() {
+              if (this.checked) {
+                if (selectedVideoId) {
+                  createNoteBtn.classList.remove("disabled");
+                } else {
+                  createNoteBtn.classList.add("disabled");
+                }
+              } else {
+                createNoteBtn.classList.remove("disabled");
+              }
+            });
+          }
+        });
+
+        // ノート作成パス生成
+        function createNotePath() {
+          const toggle = document.getElementById('toggle');
+          let path;
+          
+          if (getSelectedRadioValue() == "value-1") { 
+            path = '<%= new_note_path(group_id: @group&.id, with_video: false, note_for: "match") %>';
+          } else {
+            path = '<%= new_note_path(group_id: @group&.id, with_video: false, note_for: "practice") %>';
+          }
+          
+          if (toggle && toggle.checked) {
+            if (selectedVideoId) {
+              document.getElementById('create-note-btn').classList.remove("disabled");
+              if (getSelectedRadioValue() == "value-1") {
+                path = '<%= new_note_path(group_id: @group&.id, with_video: true, note_for: "match") %>' + `&video_id=${selectedVideoId}`;
+              } else {
+                path = '<%= new_note_path(group_id: @group&.id, with_video: true, note_for: "practice") %>' + `&video_id=${selectedVideoId}`;
+              }
+            } else {
+              document.getElementById('create-note-btn').classList.add("disabled");
+            }
+          }
+          return path;
+        }
+        // グローバルに公開（inline onclick 用）
+        window.createNotePath = createNotePath;
+
+        function getSelectedRadioValue() {
+          const radios = document.getElementsByName('value-radio');
+          let selectedValue;
+          radios.forEach(radio => {
+            if (radio.checked) {
+              selectedValue = radio.value;
+            }
+          });
+          return selectedValue;
         }
       });
     </script>

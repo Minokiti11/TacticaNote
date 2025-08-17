@@ -68,9 +68,9 @@ env:
 # aliases:
 #   shell: app exec --interactive --reuse "bash"
 
-# Use a different ssh user than root
-#ssh:
-#   user: app
+#Use a different ssh user than root
+ssh:
+  user: ubuntu
 
 # Use a persistent storage volume.
 #
