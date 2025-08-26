@@ -1,0 +1,42 @@
+# Prevent Docker.raw bloat by excluding large/unnecessary files
+
+# Storage files (7.8GB) - これが最も重要
+storage/
+tmp/
+log/
+
+# Node modules backups
+node_modules.bak/
+
+# Development files
+*.log
+.git/
+.DS_Store
+*.dump
+*.sql
+
+# Test files
+test/
+coverage/
+
+# Documentation
+README.md
+CHANGELOG.md
+*.md
+
+# Development configuration
+.gitignore
+.gitattributes
+.ruby-version
+
+# Backup files
+backup.*
+dump.*
+
+# IDE files
+.vscode/
+.idea/
+
+# OS generated files
+Thumbs.db
+.DS_Store?
