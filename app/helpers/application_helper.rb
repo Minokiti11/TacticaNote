@@ -30,8 +30,6 @@ module ApplicationHelper
     end
 
     def markdown(text)
-        renderer = Redcarpet::Render::HTML.new(filter_html: true, hard_wrap: true)
-        markdown = Redcarpet::Markdown.new(renderer)
-        markdown.render(text).html_safe
+        CommonMarker.render_html(text, :DEFAULT, [:table, :strikethrough, :autolink])
     end
 end

@@ -112,7 +112,8 @@ gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-github'
 gem 'omniauth-google-oauth2'
 
-# gem 'serviceworker-rails'
+gem 'serviceworker-rails'
+gem "web-push"
 
 gem 'rack-cors', require: 'rack/cors'
 
@@ -125,7 +126,7 @@ gem 'whenever', require: false
 gem 'sassc-rails'
 # gem 'bootstrap-sass'
 
-gem 'redcarpet'
+gem 'commonmarker'
 
 gem 'mini_racer'
 gem "kamal", "~> 2.5"
@@ -137,3 +138,5 @@ gem 'high_voltage'
 gem 'sitemap_generator'
 
 gem "jsbundling-rails", "~> 1.3"
+
+gem "bigdecimal", "~> 3.2"
